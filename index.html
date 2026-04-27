@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Ouvidoria | Companhia dos Treinadores (TRE)</title>
+    <title>Ouvidoria | Companhia dos Treinadores (TRE)</title>
     
     <link rel="icon" type="image/png" href="trelogo.png">
     <link rel="apple-touch-icon" href="trelogo.png">
@@ -33,7 +33,7 @@
 
     <style>
         /* ==========================================
-           ESTILOS GERAIS E BACKGROUND VIVO
+           ESTILOS GERAIS E BACKGROUND VIVO (PADRÃO TRE)
            ========================================== */
         body { 
             background: #0A0102; 
@@ -44,36 +44,43 @@
             scroll-behavior: smooth; 
         }
 
-        .glass-nav-premium { background: rgba(10, 1, 2, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); box-shadow: theme('boxShadow.glass'); }
+        /* NAVEGAÇÃO PREMIUM APPLE-GLASS */
+        .glass-nav-premium { 
+            background: rgba(0, 0, 0, 0.4); 
+            backdrop-filter: blur(24px); 
+            -webkit-backdrop-filter: blur(24px); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+            box-shadow: theme('boxShadow.glass'); 
+        }
+        
+        .nav-tab { transition: all 0.3s; color: rgba(255,255,255,0.6); position: relative; padding-bottom: 0.5rem; }
+        .nav-tab::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: theme('colors.tre.brand'); transform: scaleX(0); transition: transform 0.3s ease; }
+        .nav-tab.active { color: #FFFFFF; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+        .nav-tab.active::after { transform: scaleX(1); }
+        .nav-tab:hover { color: #FFFFFF; }
+
+        .tab-content { transition: opacity 0.4s ease, transform 0.4s ease; }
+
+        /* CARDS E INPUTS DE VIDRO */
         .glass-card { background: linear-gradient(145deg, rgba(35, 6, 8, 0.4) 0%, rgba(10, 1, 2, 0.6) 100%); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1.5rem; transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); backdrop-filter: blur(16px); }
         .glass-card:hover { border-color: rgba(211, 21, 34, 0.3); transform: translateY(-4px); box-shadow: 0 10px 40px -10px rgba(211, 21, 34, 0.4); }
         
         .glass-input { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); color: white; transition: all 0.3s ease; }
         .glass-input:focus, .glass-input:focus-within { background: rgba(255, 255, 255, 0.07); border-color: theme('colors.tre.brand'); outline: none; box-shadow: 0 0 15px rgba(211, 21, 34, 0.2); }
 
-        .nav-tab { transition: all 0.3s; border-bottom: 2px solid transparent; color: rgba(255,255,255,0.5); padding-bottom: 4px; }
-        .nav-tab.active { border-bottom: 2px solid theme('colors.tre.brand'); color: #FFFFFF; }
-        .nav-tab:hover:not(.active) { color: rgba(255,255,255,0.9); }
-
-        .tab-content { transition: opacity 0.4s ease, transform 0.4s ease; }
-
-        /* ==========================================
-           TÍTULO ANIMADO: DEGRADÊ E EFEITO VIDRO
-           ========================================== */
-        .text-tre-neon {
-            background: linear-gradient(135deg, #FF4D5A 0%, #D31522 100%);
+        /* TÍTULO ANIMADO (NEON/GLASS EFFECT) */
+        .animate-text-gradient {
+            background: linear-gradient(to right, #FFFFFF, #D31522, #FA1C2A, #FFFFFF);
+            background-size: 300% auto;
+            color: transparent;
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0px 0px 15px rgba(211, 21, 34, 0.6));
+            background-clip: text;
+            animation: textGradient 4s linear infinite;
+            filter: drop-shadow(0 2px 10px rgba(211, 21, 34, 0.4));
         }
-        .text-glass-premium {
-            background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.3) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0px 10px 20px rgba(0,0,0,0.5));
-        }
+        @keyframes textGradient { to { background-position: 300% center; } }
 
-        /* AVATARES IMPECCABLE (HD CROP) */
+        /* AVATARES HD (PADRÃO ADMIN) */
         .avatar-red-glass { background: radial-gradient(circle at center, rgba(211, 21, 34, 0.4) 0%, rgba(10, 1, 2, 0.8) 100%); border: 1px solid rgba(211, 21, 34, 0.4); box-shadow: inset 0 0 10px rgba(211, 21, 34, 0.2); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 50%; aspect-ratio: 1 / 1; flex-shrink: 0; }
         .avatar-red-glass img { max-width: none; width: 140%; height: auto; object-fit: contain; transform: translateY(12%); }
 
@@ -88,7 +95,7 @@
 
         #auth-loader { z-index: 99999; }
 
-        /* QUILL EDITOR - FUNDO BRANCO E TEXTO PRETO */
+        /* QUILL EDITOR - FUNDO BRANCO, TEXTO PRETO, SUPER PROFISSIONAL */
         #editor-container { background-color: #FFFFFF !important; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.75rem; overflow: hidden; color: #000000; box-shadow: inset 0 2px 10px rgba(0,0,0,0.1); }
         .ql-toolbar.ql-snow { background-color: #F9FAFB !important; border: none !important; border-bottom: 1px solid #E5E7EB !important; padding: 12px 16px !important; }
         .ql-container.ql-snow { border: none !important; font-family: 'Inter', sans-serif; font-size: 15px; }
@@ -97,19 +104,22 @@
         .ql-snow .ql-stroke { stroke: #1F2937 !important; } .ql-snow .ql-fill { fill: #1F2937 !important; }
         .ql-snow .ql-picker { color: #1F2937 !important; font-weight: 600; }
 
-        /* LEITURA BRANCA LIMPA (MODAL) */
+        /* LEITURA BRANCA LIMPA (MODAL LER) */
         .white-reading-pane { background-color: #FFFFFF !important; color: #000000 !important; border-radius: 0.75rem; padding: 1.5rem; }
         .white-reading-pane .ql-editor { color: #000000 !important; padding: 0 !important; }
-        .ql-editor img { max-width: 100%; border-radius: 8px; margin-top: 10px; margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.1); }
+        .ql-editor img { max-width: 100%; border-radius: 8px; margin-top: 10px; margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.1); cursor: pointer; }
         .ql-editor p { margin-bottom: 0.8em; }
         .ql-editor strong { font-weight: 800; color: inherit; }
+        
+        /* SOMBRA RCC NO FUNDO */
+        .rcc-bg-shadow { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) scale(1.4); width: 100%; height: 100%; background-image: url('trelogo.png'); background-position: center; background-repeat: no-repeat; background-size: contain; opacity: 0.03; filter: blur(2px) grayscale(100%); z-index: -1; pointer-events: none; }
     </style>
 </head>
 <body class="antialiased selection:bg-tre-brand selection:text-white flex flex-col">
 
-    <div id="auth-loader" class="fixed inset-0 bg-[#0A0102] flex flex-col items-center justify-center backdrop-blur-3xl transition-opacity duration-700">
+    <div id="auth-loader" class="fixed inset-0 bg-[#0A0102] flex flex-col items-center justify-center backdrop-blur-3xl transition-opacity duration-700 z-[99999]">
         <img src="trelogo.png" alt="Logo TRE" class="h-16 mb-6 animate-pulse" onerror="this.src='https://via.placeholder.com/80x80/D31522/FFFFFF?text=TRE'">
-        <i class="fa-solid fa-shield-check text-4xl text-tre-brand mb-4"></i>
+        <i class="fa-solid fa-shield-halved text-4xl text-tre-brand mb-4"></i>
         <h2 class="text-white font-black tracking-widest uppercase text-sm">Carregando Ouvidoria</h2>
     </div>
 
@@ -118,14 +128,14 @@
             <div class="flex items-center gap-4 group cursor-pointer" onclick="switchTab('nova')">
                 <img src="trelogo.png" alt="TRE" class="h-10 transition-transform duration-500 group-hover:scale-110 drop-shadow-[0_0_10px_rgba(211,21,34,0.5)]">
                 <div class="border-l border-white/10 h-6 hidden md:block"></div>
-                <span class="text-white font-black text-xl tracking-tight hidden md:flex items-center gap-2">
-                    [TRE] <span class="text-white/70 font-semibold">Ouvidoria</span>
+                <span class="animate-text-gradient font-black text-2xl tracking-tight hidden md:block">
+                    [TRE] <span class="text-white/80 font-semibold">OUVIDORIA</span>
                 </span>
             </div>
             <nav class="flex items-center gap-8">
-                <button onclick="switchTab('nova')" id="tab-btn-nova" class="nav-tab active text-[12px] md:text-sm font-bold uppercase tracking-widest">Nova Proposta</button>
-                <button onclick="switchTab('lista')" id="tab-btn-lista" class="nav-tab text-[12px] md:text-sm font-bold uppercase tracking-widest">Projetos Enviados</button>
-                <button onclick="abrirModalAuth()" class="bg-white/10 border border-white/10 hover:bg-white/20 hover:border-white/30 text-white font-bold px-4 md:px-6 py-2 md:py-2.5 rounded-full transition-all flex items-center gap-2 shadow-lg text-[11px] md:text-sm">
+                <button onclick="switchTab('nova')" id="tab-btn-nova" class="nav-tab active text-xs md:text-sm font-bold uppercase tracking-widest">Nova Proposta</button>
+                <button onclick="switchTab('lista')" id="tab-btn-lista" class="nav-tab text-xs md:text-sm font-bold uppercase tracking-widest">Arquivo de Protocolos</button>
+                <button onclick="abrirModalAuth()" class="bg-white/10 border border-white/10 hover:bg-white/20 hover:border-white/30 text-white font-bold px-5 py-2.5 rounded-full transition-all flex items-center gap-2 shadow-lg text-[11px] md:text-xs uppercase tracking-widest">
                     <i class="fa-solid fa-lock text-tre-brand"></i> <span class="hidden md:inline">Restrito</span>
                 </button>
             </nav>
@@ -136,15 +146,13 @@
         
         <div id="tab-nova" class="tab-content block opacity-100">
             <section class="text-center mb-16 relative">
-                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-5 pointer-events-none filter blur-sm">
-                    <img src="trelogo.png" alt="Sombra" class="w-96">
-                </div>
+                <div class="rcc-bg-shadow"></div>
                 <div class="inline-flex items-center justify-center bg-tre-brand/10 border border-tre-brand/20 px-5 py-2 rounded-full mb-6 shadow-vivid backdrop-blur-sm relative z-10">
                     <span class="text-[10px] font-black tracking-[0.2em] uppercase text-tre-brand"><i class="fa-solid fa-scale-balanced mr-2"></i>Companhia dos Treinadores</span>
                 </div>
                 
-                <h1 class="text-5xl md:text-7xl font-black leading-tight tracking-tighter mb-4 relative z-10 flex flex-wrap items-center justify-center gap-x-4">
-                    <span class="text-tre-neon">[TRE]</span> <span class="text-glass-premium">OUVIDORIA</span>
+                <h1 class="text-5xl md:text-7xl font-black leading-tight tracking-tighter mb-4 relative z-10 flex items-center justify-center gap-3 flex-wrap">
+                    <span class="animate-text-gradient">[TRE] OUVIDORIA</span>
                 </h1>
                 
                 <p class="text-lg text-white/60 max-w-2xl mx-auto font-medium relative z-10">Portal oficial para envio de projetos e sugestões. Sua voz constrói o futuro da Companhia.</p>
@@ -157,7 +165,7 @@
                     </div>
                     <div>
                         <h2 class="text-2xl font-black tracking-tight text-white uppercase">Submeter Proposta</h2>
-                        <p class="text-white/40 text-xs font-medium mt-1">Preencha os dados e utilize o editor abaixo.</p>
+                        <p class="text-white/40 text-xs font-medium mt-1">Preencha os dados e utilize o editor profissional abaixo.</p>
                     </div>
                 </div>
 
@@ -170,10 +178,10 @@
                         <div class="space-y-1.5">
                             <label class="text-[10px] font-bold uppercase tracking-widest text-white/50 ml-1">Tipo de Envio</label>
                             <div class="flex gap-4">
-                                <label class="flex-1 glass-input rounded-xl px-4 py-4 text-sm font-bold flex items-center justify-center gap-3 cursor-pointer hover:bg-white/5 transition-all has-[:checked]:border-tre-brand has-[:checked]:bg-tre-brand/20 has-[:checked]:text-white text-white/60">
+                                <label class="flex-1 glass-input rounded-xl px-4 py-4 text-sm font-bold flex items-center justify-center gap-3 cursor-pointer hover:bg-white/5 transition-all has-[:checked]:border-tre-brand has-[:checked]:bg-tre-brand/20 has-[:checked]:text-white text-white/60 shadow-inner">
                                     <input type="radio" name="tipo_envio" value="Sugestão" class="hidden" required> <i class="fa-solid fa-lightbulb text-tre-brand"></i> Sugestão
                                 </label>
-                                <label class="flex-1 glass-input rounded-xl px-4 py-4 text-sm font-bold flex items-center justify-center gap-3 cursor-pointer hover:bg-white/5 transition-all has-[:checked]:border-tre-brand has-[:checked]:bg-tre-brand/20 has-[:checked]:text-white text-white/60">
+                                <label class="flex-1 glass-input rounded-xl px-4 py-4 text-sm font-bold flex items-center justify-center gap-3 cursor-pointer hover:bg-white/5 transition-all has-[:checked]:border-tre-brand has-[:checked]:bg-tre-brand/20 has-[:checked]:text-white text-white/60 shadow-inner">
                                     <input type="radio" name="tipo_envio" value="Projeto" class="hidden" required> <i class="fa-solid fa-folder-open text-tre-brand"></i> Projeto
                                 </label>
                             </div>
@@ -263,7 +271,7 @@
             </div>
             
             <div class="shrink-0 pt-4 border-t border-white/5">
-                 <button onclick="fecharModalAuth('modal-ler-proposta')" class="w-full bg-white/10 hover:bg-white/20 text-white font-bold py-3.5 rounded-xl transition-all text-sm">Fechar Detalhes</button>
+                 <button onclick="fecharModalAuth('modal-ler-proposta')" class="w-full bg-white/10 hover:bg-white/20 text-white font-bold py-3.5 rounded-xl transition-all text-sm uppercase tracking-widest">Fechar Detalhes</button>
             </div>
         </div>
     </div>
@@ -290,8 +298,8 @@
                 <h2 class="text-2xl font-black text-white uppercase mb-6 flex items-center gap-3 border-b border-white/10 pb-5"><i class="fa-solid fa-user-plus text-tre-brand"></i> Novo Acesso</h2>
                 <div id="reg-feedback" class="hidden mb-5 p-3 rounded-xl text-center text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30"></div>
                 <form onsubmit="enviarCadastro(event)" class="space-y-4">
-                    <div class="space-y-1.5"><label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Nick (Habbo)</label><input type="text" id="reg-nick" required class="w-full glass-input rounded-xl px-5 py-3.5 text-sm"></div>
-                    <div class="space-y-1.5"><label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Criar Senha</label><input type="password" id="reg-senha" required class="w-full glass-input rounded-xl px-5 py-3.5 text-sm"></div>
+                    <div class="space-y-1.5"><label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Nick (Habbo)</label><input type="text" id="reg-nick" required class="w-full glass-input rounded-xl px-5 py-3.5 text-sm" placeholder="Seu nick com espaços (se houver)"></div>
+                    <div class="space-y-1.5"><label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Criar Senha</label><input type="password" id="reg-senha" required class="w-full glass-input rounded-xl px-5 py-3.5 text-sm" placeholder="Mínimo 6 caracteres"></div>
                     <button type="submit" id="btn-cadastro" class="w-full bg-white/10 hover:bg-white/20 text-white font-black uppercase tracking-widest py-4 rounded-xl border border-white/10 transition-all text-xs mt-2">Enviar Pedido</button>
                 </form>
                 <div class="mt-6 pt-5 border-t border-white/5 text-center">
@@ -315,7 +323,7 @@
 
     <script>
         // ==========================================
-        // 1. CONFIGURAÇÃO FIREBASE E VARIÁVEIS GLOBAIS
+        // 1. CONFIGURAÇÃO FIREBASE 
         // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyD2vf35brFqXqO5WB2rdGwLT3Rg3lIFxEo",
@@ -329,17 +337,13 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        let projetosPublicosAll = [];
-
-        // Remoção do Loader
-        function removerLoader() { const l = document.getElementById('auth-loader'); if(l) gsap.to(l, { opacity: 0, duration: 0.5, onComplete: () => l.style.display = 'none' }); }
-        setTimeout(removerLoader, 4000); 
-
         // Autenticação Anônima para Leitura
+        function removerLoader() { const l = document.getElementById('auth-loader'); if(l) gsap.to(l, { opacity: 0, duration: 0.5, onComplete: () => l.style.display = 'none' }); }
+        setTimeout(removerLoader, 3000); 
         auth.signInAnonymously().then(() => { removerLoader(); iniciarEscutaPublica(); }).catch(() => { removerLoader(); iniciarEscutaPublica(); });
 
         // ==========================================
-        // 2. INICIALIZAÇÃO QUILLJS FULL
+        // 2. INICIALIZAÇÃO QUILLJS FULL (WORD-LIKE)
         // ==========================================
         Quill.register('modules/imageResize', window.ImageResize.default);
         const quill = new Quill('#quill-editor', {
@@ -352,7 +356,7 @@
                     [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                     [{ 'align': [] }],
                     ['link', 'image'],
-                    ['clean']
+                    ['clean'] // Botão de limpar fundo/formato (borracha)
                 ],
                 imageResize: { displaySize: true }
             },
@@ -363,11 +367,10 @@
         // 3. UI E FUNÇÕES AUXILIARES 
         // ==========================================
         function sanitize(str) { const temp = document.createElement('div'); temp.textContent = str; return temp.innerHTML; }
-        // Avatares HD (size=l)
         function getAvatarUrl(nick) { return `https://www.habbo.com.br/habbo-imaging/avatarimage?user=${encodeURIComponent(nick)}&action=std&direction=2&head_direction=2&gesture=sml&size=l`; }
         function formatarDataHora(fsTimestamp) { if(!fsTimestamp) return '---'; const d = fsTimestamp.toDate(); return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth()+1).padStart(2, '0')} às ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; }
 
-        // SISTEMA DE ABAS (SPA)
+        // SISTEMA DE ABAS (SPA) - Janela Separada de Protocolos
         function switchTab(tabId) {
             document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
             document.getElementById(`tab-btn-${tabId}`).classList.add('active');
@@ -392,6 +395,7 @@
         function fecharModalAuth(id) { const m = document.getElementById(id), c = m.querySelector('div.relative.transform'); c.classList.replace('scale-100', 'scale-95'); setTimeout(() => m.classList.add('opacity-0', 'invisible'), 200); }
         function switchViewAuth(v) { document.getElementById('view-login').classList.add('hidden'); document.getElementById('view-register').classList.add('hidden'); document.getElementById('view-feedback').classList.add('hidden'); document.getElementById('view-'+v).classList.replace('hidden', 'flex'); if(v==='login'||v==='register') document.getElementById('view-'+v).classList.replace('flex', 'block'); }
 
+        let projetosPublicosAll = [];
         let debounceTimerBusca;
         function filtrarProtocolosBusca() { clearTimeout(debounceTimerBusca); debounceTimerBusca = setTimeout(() => { const t = document.getElementById('search-public').value.toLowerCase(); document.querySelectorAll('#public-projects-container .filter-card').forEach(r => { r.style.display = r.innerText.toLowerCase().includes(t) ? '' : 'none'; }); }, 250); }
 
@@ -405,14 +409,12 @@
             const textContent = quill.getText().trim();
             const tipoSelecionado = document.querySelector('input[name="tipo_envio"]:checked');
 
-            if(!tipoSelecionado) { alert("Selecione o Tipo de Envio (Sugestão ou Projeto)."); return; }
-            if (!quill.getContents().ops.some(op => op.image) && textContent.length < 20) { alert("A descrição está muito curta."); return; }
+            if(!tipoSelecionado) { alert("Escolha o tipo de envio."); return; }
+            if (!quill.getContents().ops.some(op => op.image) && textContent.length < 20) { alert("A descrição está muito curta. Detalhe mais."); return; }
             
             if(confirm("Confirmar envio oficial desta proposta para o Ministério TRE?")) {
-                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Processando...';
+                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Enviando...';
                 
-                // Salvamos o documento no banco de dados. O número de ordem será gerado e exibido
-                // pelo Listener, que lê todos os documentos em ordem crescente de data.
                 const docData = { 
                     nick: document.getElementById('autor-nick').value.trim(), 
                     tipo: tipoSelecionado.value, 
@@ -433,12 +435,12 @@
         });
 
         // ==========================================
-        // 5. MOTOR DE ESCUTA PÚBLICA (SISTEMA DE ORDEM IDÊNTICO AO ADMIN)
+        // 5. MOTOR DE ESCUTA PÚBLICA (ORDEM 01, 02... SINCRONIZADA)
         // ==========================================
         let unsubPublic = null;
         function iniciarEscutaPublica() {
             if(unsubPublic) unsubPublic();
-            // Para garantir a mesma numeração (01, 02, 03...), lemos ASCENDENTE primeiro
+            // Lemos ASCENDENTE primeiro para gerar a Ordem igual do Admin
             unsubPublic = db.collection("ouvidoria_tre").orderBy("dataEnvio", "asc").onSnapshot((snap) => {
                 const container = document.getElementById('public-projects-container');
                 const empty = document.getElementById('empty-protocolos');
@@ -448,15 +450,13 @@
                 
                 snap.forEach((doc) => {
                     const d = doc.data(); d.id = doc.id;
-                    // Gera o número de Ordem visual em tempo real (igualzinho no Admin)
                     d.numOrdemVisual = String(contadorOrdem).padStart(2, '0');
                     tempArray.push(d);
                     contadorOrdem++;
                 });
                 
-                // Inverte para exibir o mais recente no topo da tela
+                // Inverte para exibir o mais recente no topo
                 projetosPublicosAll = tempArray.reverse();
-                
                 container.innerHTML = '';
 
                 if (projetosPublicosAll.length === 0) { 
@@ -490,7 +490,7 @@
                             
                             <div class="mt-auto flex items-center justify-between">
                                 <span class="point-badge ${stCl} shadow-lg"><i class="fa-solid fa-${icon} mr-1.5"></i> ${sanitize(d.status)}</span>
-                                <button onclick="lerPropostaPublica('${d.id}')" class="text-xs font-bold text-white/50 hover:text-white transition-colors">Ver Mais <i class="fa-solid fa-arrow-right"></i></button>
+                                <button onclick="lerPropostaPublica('${d.id}')" class="text-xs font-bold text-white/50 hover:text-white transition-colors uppercase tracking-widest">Ver Detalhes <i class="fa-solid fa-arrow-right"></i></button>
                             </div>
                             ${areaVeredito}
                         </div>`;
@@ -512,10 +512,46 @@
         }
 
         // ==========================================
-        // 7. LOGIN E CADASTRO 
+        // 7. LOGIN/CADASTRO E TRATAMENTO DE EMAIL
         // ==========================================
-        function realizarLogin(e) { e.preventDefault(); const btn = document.getElementById('btn-login-submit'); btn.disabled=true; btn.innerHTML='Processando...'; const n = document.getElementById('login-nick').value.trim(); const s = document.getElementById('login-senha').value; auth.signInWithEmailAndPassword(n.toLowerCase()+"@treinadores.rcc", s).then(() => window.location.href="admin.html").catch(() => { document.getElementById('login-feedback').innerText="Nick ou Senha incorretos."; document.getElementById('login-feedback').classList.remove('hidden'); btn.disabled=false; btn.innerHTML='Autenticar'; }); }
-        function enviarCadastro(e) { e.preventDefault(); const btn = document.getElementById('btn-cadastro'); btn.disabled=true; btn.innerHTML='Processando...'; const n = document.getElementById('reg-nick').value.trim(); const s = document.getElementById('reg-senha').value; auth.createUserWithEmailAndPassword(n.toLowerCase()+"@treinadores.rcc", s).then(res => { db.collection("solicitacoes_acesso").doc(res.user.uid).set({ nick: n, status: "Pendente", role: "Convidado", dataSolicitacao: firebase.firestore.FieldValue.serverTimestamp() }).then(() => switchViewAuth('feedback')); }).catch(err => { document.getElementById('reg-feedback').innerText=err.message; document.getElementById('reg-feedback').classList.remove('hidden'); btn.disabled=false; btn.innerHTML='Enviar Pedido'; }); }
+        function gerarEmailSeguro(nick) {
+            // Remove espaços e caracteres estranhos para evitar "Formato de e-mail inválido" no Firebase
+            return nick.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '') + "@tre.rcc";
+        }
+
+        function realizarLogin(e) { 
+            e.preventDefault(); 
+            const btn = document.getElementById('btn-login-submit'); 
+            btn.disabled=true; btn.innerHTML='Processando...'; 
+            const n = document.getElementById('login-nick').value.trim(); 
+            const s = document.getElementById('login-senha').value; 
+            
+            auth.signInWithEmailAndPassword(gerarEmailSeguro(n), s).then(() => {
+                window.location.href="admin.html";
+            }).catch(() => { 
+                document.getElementById('login-feedback').innerText="Nick ou Senha incorretos."; 
+                document.getElementById('login-feedback').classList.remove('hidden'); 
+                btn.disabled=false; btn.innerHTML='Autenticar'; 
+            }); 
+        }
+
+        function enviarCadastro(e) { 
+            e.preventDefault(); 
+            const btn = document.getElementById('btn-cadastro'); 
+            btn.disabled=true; btn.innerHTML='Processando...'; 
+            const n = document.getElementById('reg-nick').value.trim(); 
+            const s = document.getElementById('reg-senha').value; 
+            
+            auth.createUserWithEmailAndPassword(gerarEmailSeguro(n), s).then(res => { 
+                db.collection("solicitacoes_acesso").doc(res.user.uid).set({ 
+                    nick: n, status: "Pendente", role: "Convidado", dataSolicitacao: firebase.firestore.FieldValue.serverTimestamp() 
+                }).then(() => switchViewAuth('feedback')); 
+            }).catch(err => { 
+                document.getElementById('reg-feedback').innerText= (err.code === 'auth/weak-password') ? 'A senha precisa ter no mínimo 6 caracteres.' : err.message; 
+                document.getElementById('reg-feedback').classList.remove('hidden'); 
+                btn.disabled=false; btn.innerHTML='Enviar Pedido'; 
+            }); 
+        }
     </script>
 </body>
 </html>
