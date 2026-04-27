@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ouvidoria | Treinadores • RCC</title>
+    <title>[TRE] Ouvidoria Oficial</title>
     
     <link rel="icon" type="image/png" href="trelogo.png">
     <link rel="apple-touch-icon" href="trelogo.png">
@@ -11,6 +11,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -55,7 +57,7 @@
         .glass-panel-simple:hover { background: rgba(35, 6, 8, 0.6); border-color: rgba(255, 255, 255, 0.1); }
 
         .glass-input { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); color: white; transition: all 0.3s ease; }
-        .glass-input:focus { background: rgba(255, 255, 255, 0.07); border-color: theme('colors.tre.brand'); outline: none; box-shadow: 0 0 15px rgba(211, 21, 34, 0.2); }
+        .glass-input:focus, .glass-input:focus-within { background: rgba(255, 255, 255, 0.07); border-color: theme('colors.tre.brand'); outline: none; box-shadow: 0 0 15px rgba(211, 21, 34, 0.2); }
         .glass-input::placeholder { color: rgba(255, 255, 255, 0.2); }
 
         /* ==========================================
@@ -92,6 +94,25 @@
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+
+        /* Estilos customizados para o Editor Word (QuillJS) no tema Glassmorphism */
+        .ql-toolbar.ql-snow { background: rgba(255, 255, 255, 0.03); border: none !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; padding: 12px; }
+        .ql-container.ql-snow { border: none !important; color: white; font-family: 'Inter', sans-serif; font-size: 14px; min-height: 250px; }
+        .ql-snow .ql-stroke { stroke: rgba(255, 255, 255, 0.7); } .ql-snow .ql-fill, .ql-snow .ql-stroke.ql-fill { fill: rgba(255, 255, 255, 0.7); } .ql-snow .ql-picker { color: rgba(255, 255, 255, 0.7); } .ql-snow .ql-picker-options { background-color: #0A0102; border-color: rgba(255,255,255,0.1); }
+        .ql-snow.ql-toolbar button:hover .ql-stroke, .ql-snow .ql-toolbar button.ql-active .ql-stroke { stroke: #D31522; } .ql-snow.ql-toolbar button:hover .ql-fill, .ql-snow .ql-toolbar button.ql-active .ql-fill { fill: #D31522; }
+        .ql-editor p { margin-bottom: 0.75em; }
+        .ql-editor img { border-radius: 0.5rem; max-width: 100%; border: 1px solid rgba(255,255,255,0.1); }
+
+        /* FORMATADOR DE TEXTO PARA LEITURA (WORD) */
+        .regras-html-format { color: rgba(255,255,255,0.8); font-size: 14px; line-height: 1.6; }
+        .regras-html-format h1 { font-size: 1.5em; font-weight: 800; color: white; margin-bottom: 0.5em; }
+        .regras-html-format h2 { font-size: 1.2em; font-weight: 700; color: white; margin-bottom: 0.5em; }
+        .regras-html-format p { margin-bottom: 0.8em; }
+        .regras-html-format strong { color: white; font-weight: 800; }
+        .regras-html-format ol { list-style-type: decimal; margin-left: 1.5em; margin-bottom: 1em; }
+        .regras-html-format ul { list-style-type: disc; margin-left: 1.5em; margin-bottom: 1em; }
+        .regras-html-format a { color: #3b82f6; text-decoration: underline; }
+        .regras-html-format img { border-radius: 0.5rem; max-width: 100%; margin: 10px 0; border: 1px solid rgba(255,255,255,0.1); }
     </style>
 </head>
 <body class="antialiased selection:bg-tre-brand selection:text-white flex flex-col" id="topo">
@@ -99,11 +120,10 @@
     <header class="sticky top-0 z-50 w-full glass-navbar shadow-nav opacity-0" id="anim-header">
         <div class="container mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
             <div class="flex items-center gap-4 md:gap-10">
-                <a href="#topo" class="flex items-center hover:opacity-80 transition-opacity">
-                    <img src="trelogo.png" alt="Logo" class="h-8 md:h-12 object-contain" onerror="this.src='https://via.placeholder.com/150x50/D31522/FFFFFF?text=LOGO'">
+                <a href="#topo" class="flex items-center group">
+                    <img src="trelogo.png" alt="Logo" class="h-10 md:h-14 object-contain transition-all duration-500 group-hover:scale-110 filter drop-shadow-[0_0_8px_rgba(211,21,34,0.3)] group-hover:drop-shadow-[0_0_15px_rgba(211,21,34,0.8)]" onerror="this.src='https://via.placeholder.com/150x50/D31522/FFFFFF?text=LOGO'">
                 </a>
                 <nav class="flex gap-4 md:gap-8 text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/70 items-center">
-                    <a href="https://ranking-treinadores.vercel.app" class="hover:text-white transition-colors"><i class="fa-solid fa-ranking-star mr-1"></i> Ranking</a>
                     <button onclick="switchTab('nova')" id="tab-btn-nova" class="nav-tab active pb-1 hover:text-white transition-colors cursor-pointer">Nova Proposta</button>
                     <button onclick="switchTab('lista')" id="tab-btn-lista" class="nav-tab pb-1 hover:text-white transition-colors cursor-pointer">Projetos Enviados</button>
                 </nav>
@@ -119,12 +139,9 @@
     <main class="flex-grow container mx-auto px-4 md:px-6 max-w-6xl">
         
         <section class="pt-10 md:pt-16 pb-6 text-center relative z-40 opacity-0" id="anim-title">
-            <div class="inline-flex items-center justify-center bg-white/5 border border-white/10 px-4 py-1.5 rounded-full mb-6">
-                <span class="text-[10px] font-bold tracking-[0.2em] uppercase text-white/60"><i class="fa-solid fa-scale-balanced text-tre-brand mr-2"></i>Ministério dos Treinadores</span>
-            </div>
             <h1 class="flex flex-col items-center text-4xl md:text-7xl font-black tracking-tight mb-4 uppercase drop-shadow-2xl">
-                <span class="text-white leading-none">OUVIDORIA</span>
-                <span class="text-transparent bg-clip-text bg-gradient-to-b from-[#FA1C2A] to-[#800A12] leading-none mt-2 drop-shadow-md">OFICIAL</span>
+                <span class="text-white leading-none">[TRE]</span>
+                <span class="text-transparent bg-clip-text bg-gradient-to-b from-[#FA1C2A] to-[#800A12] leading-none mt-2 drop-shadow-md">OUVIDORIA</span>
             </h1>
             <p class="text-white/50 text-xs md:text-sm font-bold tracking-[0.2em] uppercase mt-2 max-w-2xl mx-auto">
                 Envie suas propostas, projetos, sugestões ou correções normativas para avaliação da Liderança.
@@ -143,15 +160,18 @@
                         <input type="text" id="form-nick" required placeholder="Seu nick no Habbo" class="w-full glass-input rounded-xl px-5 py-3.5 text-sm font-medium">
                     </div>
                     
-                    <div class="space-y-2 md:col-span-1">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-white/50 ml-1">Tipo de Proposta</label>
-                        <select id="form-tipo" required class="w-full glass-input rounded-xl px-5 py-3.5 text-sm font-medium appearance-none cursor-pointer custom-scrollbar">
-                            <option value="" disabled selected class="text-black">Selecione uma categoria...</option>
-                            <option value="Projeto" class="text-black">Projeto Estrutural</option>
-                            <option value="Sugestão" class="text-black">Sugestão de Melhoria</option>
-                            <option value="Correção Normativa" class="text-black">Correção Normativa (Regimento/Estatuto)</option>
-                            <option value="Reclamação" class="text-black">Reclamação / Denúncia</option>
-                        </select>
+                    <div class="space-y-3 md:col-span-1">
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-white/50 ml-1">Tipo de Envio</label>
+                        <div class="flex gap-4">
+                            <label class="flex-1 glass-input rounded-xl px-4 py-3.5 text-sm font-bold flex items-center justify-center gap-3 cursor-pointer hover:bg-white/5 transition-all has-[:checked]:border-tre-brand has-[:checked]:bg-tre-brand/20 has-[:checked]:text-white text-white/60">
+                                <input type="radio" name="tipo_envio" value="Sugestão" class="hidden" required> 
+                                <i class="fa-solid fa-lightbulb text-tre-brand"></i> Sugestão
+                            </label>
+                            <label class="flex-1 glass-input rounded-xl px-4 py-3.5 text-sm font-bold flex items-center justify-center gap-3 cursor-pointer hover:bg-white/5 transition-all has-[:checked]:border-tre-brand has-[:checked]:bg-tre-brand/20 has-[:checked]:text-white text-white/60">
+                                <input type="radio" name="tipo_envio" value="Projeto" class="hidden" required> 
+                                <i class="fa-solid fa-folder-open text-tre-brand"></i> Projeto
+                            </label>
+                        </div>
                     </div>
 
                     <div class="space-y-2 md:col-span-2">
@@ -160,11 +180,11 @@
                     </div>
 
                     <div class="space-y-2 md:col-span-2">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-white/50 ml-1">Descrição Detalhada</label>
-                        <div class="bg-black/20 border border-white/10 rounded-xl p-1">
-                            <textarea id="form-descricao" required rows="8" placeholder="Descreva sua proposta em detalhes. Explique o problema atual e como sua ideia irá resolvê-lo..." class="w-full bg-transparent text-white p-4 outline-none text-sm font-medium custom-scrollbar resize-y"></textarea>
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-white/50 ml-1">Corpo do Projeto</label>
+                        <div class="glass-input rounded-xl overflow-hidden shadow-inner">
+                            <div id="form-descricao-editor"></div>
                         </div>
-                        <p class="text-[10px] text-white/30 ml-1 mt-1">Seja claro, objetivo e forneça exemplos se necessário.</p>
+                        <p class="text-[9px] text-white/30 ml-1 mt-1"><i class="fa-solid fa-circle-info text-tre-brand mr-1"></i> Você pode colar imagens (Ctrl+V) ou usar o botão de foto no menu acima.</p>
                     </div>
 
                     <div class="md:col-span-2 pt-4">
@@ -178,7 +198,6 @@
         </section>
 
         <section id="view-lista" class="py-10 relative z-10 hidden opacity-0 transition-all duration-500">
-            
             <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
                 <h2 class="text-2xl font-black text-white uppercase flex items-center gap-3">
                     <i class="fa-solid fa-folder-tree text-white/40"></i> Arquivo de Protocolos
@@ -203,10 +222,17 @@
         </section>
     </main>
 
-    <footer class="w-full border-t border-white/5 bg-[#050101] mt-10 md:mt-16 pb-8 md:pb-10">
-        <div class="container mx-auto px-6 pt-8 md:pt-10 text-center text-white/30 grayscale hover:grayscale-0 transition-all duration-700 hover:text-white/60">
-            <p class="text-lg sm:text-xl md:text-2xl font-black tracking-tighter uppercase mb-1">Companhia dos Treinadores</p>
-            <p class="text-[8px] sm:text-[10px] md:text-xs font-medium uppercase tracking-[0.2em] sm:tracking-[0.3em]">RCC • Todos os direitos reservados</p>
+    <footer class="w-full border-t border-white/5 bg-[#050101] mt-10 md:mt-16 pb-8 md:pb-10 relative overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_center,rgba(211,21,34,0.1)_0%,transparent_70%)] opacity-50 pointer-events-none"></div>
+        <div class="container mx-auto px-6 pt-8 md:pt-10 flex flex-col items-center text-center relative z-10">
+            <img src="trelogo.png" alt="TRE" class="h-10 md:h-12 mb-4 opacity-50 hover:opacity-100 hover:scale-110 transition-all duration-500 filter drop-shadow-[0_0_15px_rgba(211,21,34,0.5)]">
+            <p class="text-lg sm:text-xl md:text-2xl font-black tracking-tighter uppercase mb-1 text-white/40 hover:text-white/80 transition-colors duration-500">Companhia dos Treinadores</p>
+            <p class="text-[8px] sm:text-[10px] md:text-xs font-medium uppercase tracking-[0.2em] sm:tracking-[0.3em] text-white/30">RCC • Todos os direitos reservados</p>
+            <div class="mt-6 pt-5 border-t border-white/5 inline-block w-48">
+                <p class="text-[9px] sm:text-[11px] md:text-xs font-semibold tracking-widest text-white/40 flex items-center justify-center gap-2 group cursor-default">
+                    <span class="font-mono text-tre-brand font-bold text-xs sm:text-sm group-hover:animate-pulse">&lt;/&gt;</span> por <span class="text-white/80 group-hover:text-white transition-colors duration-300">G4VET4</span>
+                </p>
+            </div>
         </div>
     </footer>
 
@@ -222,7 +248,7 @@
                     <div class="flex items-center gap-3 mt-3 text-xs text-white/50 font-medium">
                         <span><i class="fa-solid fa-user text-white/30 mr-1"></i> <span id="det-autor" class="text-white">...</span></span>
                         <span>&bull;</span>
-                        <span id="det-tipo" class="bg-white/5 px-2 py-1 rounded border border-white/5">...</span>
+                        <span id="det-tipo" class="bg-white/5 px-2 py-1 rounded border border-white/5 text-tre-brand font-bold">...</span>
                         <span>&bull;</span>
                         <span id="det-data"><i class="fa-regular fa-calendar mr-1"></i> ...</span>
                     </div>
@@ -232,7 +258,7 @@
             <div class="overflow-y-auto custom-scrollbar flex-grow pr-2">
                 <div class="mb-6">
                     <h3 class="text-[10px] font-black uppercase tracking-widest text-white/30 mb-3">Corpo da Proposta</h3>
-                    <div id="det-descricao" class="text-sm md:text-base text-white/80 leading-relaxed whitespace-pre-wrap bg-white/5 p-5 rounded-xl border border-white/5 font-medium">
+                    <div id="det-descricao" class="text-sm md:text-base text-white/80 bg-white/5 p-5 rounded-xl border border-white/5 regras-html-format">
                         ...
                     </div>
                 </div>
@@ -257,21 +283,83 @@
 
     <div id="modal-login" class="fixed inset-0 z-[100] flex items-center justify-center p-4 opacity-0 invisible transition-all duration-300">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="toggleModal('modal-login')"></div>
-        <div class="relative w-full max-w-md bg-gradient-to-b from-[#1A0305] to-[#0A0102] border border-white/10 rounded-3xl shadow-2xl p-8 transform scale-95 transition-all">
-            <button onclick="toggleModal('modal-login')" class="absolute top-6 right-6 text-white/40 hover:text-tre-brand z-10"><i class="fa-solid fa-xmark text-xl"></i></button>
-            <h2 class="text-2xl font-black tracking-tight text-white uppercase mb-4 flex items-center gap-3 border-b border-white/10 pb-4">
-                <i class="fa-solid fa-lock text-tre-brand"></i> Acesso Restrito
-            </h2>
-            <div class="bg-tre-brand/10 border border-tre-brand/20 text-tre-brand text-[10px] font-bold uppercase tracking-widest p-3 rounded-lg text-center mb-6">
-                <i class="fa-solid fa-triangle-exclamation mr-1"></i> Painel da Ouvidoria
-            </div>
-            <div id="login-feedback" class="hidden mb-4 p-2 rounded text-center text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30"></div>
+        <div class="relative w-full max-w-md bg-gradient-to-b from-[#1A0305] to-[#0A0102] border border-white/10 rounded-2xl md:rounded-3xl shadow-2xl p-6 md:p-8 transform scale-95 transition-all duration-300">
             
-            <form id="form-login" class="space-y-4" onsubmit="realizarLogin(event)">
-                <div class="space-y-1.5"><label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Nickname</label><input type="text" id="login-nick" required class="w-full glass-input rounded-xl px-4 py-3 text-sm font-medium"></div>
-                <div class="space-y-1.5"><label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Senha</label><input type="password" id="login-senha" required class="w-full glass-input rounded-xl px-4 py-3 text-sm font-medium"></div>
-                <button type="submit" id="btn-login-submit" class="w-full bg-tre-brand hover:bg-tre-brandHover text-white font-bold py-3.5 rounded-xl shadow-lg transition-all mt-4 text-sm">Entrar no Painel</button>
-            </form>
+            <button onclick="toggleModal('modal-login')" class="absolute top-4 right-4 md:top-6 md:right-6 text-white/40 hover:text-tre-brand transition-colors z-10">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <div id="view-login" class="block transition-all duration-300">
+                <h2 class="text-xl md:text-2xl font-black tracking-tight text-white uppercase mb-4 flex items-center gap-3 border-b border-white/10 pb-4">
+                    <i class="fa-solid fa-lock text-tre-brand"></i> Acesso Restrito
+                </h2>
+                
+                <div class="bg-tre-brand/10 border border-tre-brand/20 text-tre-brand text-[9px] md:text-[10px] font-bold uppercase tracking-widest p-3 rounded-lg text-center mb-6">
+                    <i class="fa-solid fa-triangle-exclamation mr-1"></i> Área exclusiva do Ministério
+                </div>
+
+                <div id="login-feedback" class="hidden mb-4 p-2 rounded text-center text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30"></div>
+
+                <form id="form-login" class="space-y-4" onsubmit="realizarLogin(event)">
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Nickname no Habbo</label>
+                        <input type="text" id="login-nick" required placeholder="Seu nick..." class="w-full glass-input rounded-xl px-4 py-3 text-sm font-medium">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Senha de Acesso</label>
+                        <input type="password" id="login-senha" required placeholder="••••••••" class="w-full glass-input rounded-xl px-4 py-3 text-sm font-medium">
+                    </div>
+                    <button type="submit" id="btn-login-submit" class="w-full bg-tre-brand hover:bg-tre-brandHover text-white font-bold py-3.5 rounded-xl shadow-lg transition-all mt-4 cursor-pointer text-sm flex justify-center items-center">
+                        Entrar no Painel
+                    </button>
+                </form>
+
+                <div class="mt-6 text-center border-t border-white/5 pt-4">
+                    <p class="text-xs text-white/50">Ainda não tem acesso?</p>
+                    <button onclick="switchView('register')" class="text-tre-brand font-bold text-sm hover:text-white transition-colors mt-1 cursor-pointer">Solicitar Cadastro</button>
+                </div>
+            </div>
+
+            <div id="view-register" class="hidden opacity-0 translate-x-4 transition-all duration-300">
+                <h2 class="text-xl md:text-2xl font-black tracking-tight text-white uppercase mb-4 flex items-center gap-3 border-b border-white/10 pb-4">
+                    <i class="fa-solid fa-user-plus text-tre-brand"></i> Solicitar Acesso
+                </h2>
+                
+                <div id="reg-feedback" class="hidden mb-4 p-2 rounded text-center text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30"></div>
+
+                <form id="form-cadastro" class="space-y-4" onsubmit="enviarCadastro(event)">
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Nickname no Habbo</label>
+                        <input type="text" id="reg-nick" required placeholder="Ex: G4VET4" class="w-full glass-input rounded-xl px-4 py-2.5 text-sm font-medium">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Criar Senha</label>
+                        <input type="password" id="reg-senha" required placeholder="••••••••" class="w-full glass-input rounded-xl px-4 py-2.5 text-sm font-medium">
+                    </div>
+                    <button type="submit" id="btn-cadastro" class="w-full bg-white/10 hover:bg-white/20 border border-white/10 text-white font-bold py-3 rounded-xl shadow-lg transition-all mt-4 cursor-pointer text-sm flex justify-center items-center">
+                        Enviar Solicitação
+                    </button>
+                </form>
+
+                <div class="mt-4 text-center border-t border-white/5 pt-4">
+                    <button type="button" onclick="switchView('login')" class="text-white/50 text-xs hover:text-white transition-colors cursor-pointer flex items-center justify-center w-full">
+                        <i class="fa-solid fa-arrow-left mr-1.5"></i> Voltar para Login
+                    </button>
+                </div>
+            </div>
+
+            <div id="view-feedback" class="hidden opacity-0 translate-y-4 transition-all duration-300 flex-col items-center justify-center text-center pt-4">
+                <div class="w-20 h-20 bg-amber-500/10 border-2 border-amber-500/30 rounded-full flex items-center justify-center mb-6 mx-auto">
+                    <i class="fa-solid fa-clock-rotate-left text-3xl text-amber-500"></i>
+                </div>
+                <h2 class="text-xl font-black text-white uppercase mb-3">Solicitação Recebida</h2>
+                <p class="text-white/60 text-sm leading-relaxed mb-8">
+                    Aguarde enquanto o Ministério analisa sua solicitação de acesso à Ouvidoria.
+                </p>
+                <button onclick="toggleModal('modal-login')" class="w-full bg-white/10 hover:bg-white/20 border border-white/10 text-white font-bold py-3 rounded-xl transition-all cursor-pointer text-sm">
+                    Entendido
+                </button>
+            </div>
         </div>
     </div>
 
@@ -280,26 +368,28 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 
     <script>
         // ==========================================
-        // 1. INICIALIZAÇÃO FIREBASE (Mesma da RCC)
+        // 1. INICIALIZAÇÃO FIREBASE (COM AS CHAVES REAIS)
         // ==========================================
         const firebaseConfig = {
-  apiKey: "AIzaSyD2vf35brFqXqO5WB2rdGwLT3Rg3lIFxEo",
-  authDomain: "tre-ouvidoria.firebaseapp.com",
-  projectId: "tre-ouvidoria",
-  storageBucket: "tre-ouvidoria.firebasestorage.app",
-  messagingSenderId: "772876635425",
-  appId: "1:772876635425:web:079c1b3f3b0f7dcb91c260"
-};
+            apiKey: "AIzaSyD2vf35brFqXqO5WB2rdGwLT3Rg3lIFxEo",
+            authDomain: "tre-ouvidoria.firebaseapp.com",
+            projectId: "tre-ouvidoria",
+            storageBucket: "tre-ouvidoria.firebasestorage.app",
+            messagingSenderId: "772876635425",
+            appId: "1:772876635425:web:079c1b3f3b0f7dcb91c260"
+        };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
 
         let projetosGlobais = [];
+        let quillNovaProposta; 
 
-        // Utilitários de Data e Limpeza
         function formatarDataStr(fsTimestamp) {
             if(!fsTimestamp) return 'Data Desconhecida';
             const d = fsTimestamp.toDate();
@@ -308,7 +398,7 @@
         function sanitize(str) { const temp = document.createElement('div'); temp.textContent = str; return temp.innerHTML; }
 
         // ==========================================
-        // 2. NAVEGAÇÃO SPA (Abas)
+        // 2. NAVEGAÇÃO SPA (Abas) E CONTROLE DE MODAL
         // ==========================================
         function switchTab(tabId) {
             document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
@@ -330,41 +420,80 @@
             }
         }
 
+        function toggleModal(id) { 
+            const m = document.getElementById(id), c = m.querySelector('div.relative.transform'); 
+            if(id === 'modal-login' && m.classList.contains('opacity-0')){ switchView('login'); }
+            if (m.classList.contains('opacity-0')) { m.classList.remove('opacity-0', 'invisible'); setTimeout(() => c.classList.replace('scale-95', 'scale-100'), 10); } 
+            else { c.classList.replace('scale-100', 'scale-95'); setTimeout(() => m.classList.add('opacity-0', 'invisible'), 200); } 
+        }
+
         // ==========================================
-        // 3. ENVIO DE FORMULÁRIO (NOVA PROPOSTA)
+        // 3. INICIALIZAÇÃO DO EDITOR DE PROJETOS (QUILLJS)
+        // ==========================================
+        function initQuillProposta() {
+            quillNovaProposta = new Quill('#form-descricao-editor', {
+                theme: 'snow',
+                placeholder: 'Escreva e formate sua proposta aqui (você pode usar o botão de imagem para inserir fotos ou dar Ctrl+V)...',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'align': [] }],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['link', 'image', 'clean'] 
+                    ]
+                }
+            });
+        }
+
+        // ==========================================
+        // 4. ENVIO DE FORMULÁRIO (NOVA PROPOSTA)
         // ==========================================
         document.getElementById('form-ouvidoria').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-enviar');
             const feedback = document.getElementById('form-feedback');
             
+            const tipoSelecionado = document.querySelector('input[name="tipo_envio"]:checked');
+            if(!tipoSelecionado) {
+                alert("Por favor, selecione se é uma Sugestão ou um Projeto.");
+                return;
+            }
+
+            const descricaoHTML = quillNovaProposta.root.innerHTML;
+            if(quillNovaProposta.getText().trim().length === 0 && !descricaoHTML.includes('<img')) {
+                alert("O corpo do projeto não pode estar vazio.");
+                return;
+            }
+
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processando...';
             feedback.classList.add('hidden');
 
             const docData = {
                 nick: document.getElementById('form-nick').value.trim(),
-                tipo: document.getElementById('form-tipo').value,
+                tipo: tipoSelecionado.value,
                 tema: document.getElementById('form-tema').value.trim(),
-                descricao: document.getElementById('form-descricao').value.trim(),
+                descricao: descricaoHTML, 
                 status: "Pendente",
                 dataEnvio: firebase.firestore.FieldValue.serverTimestamp()
             };
 
             db.collection("ouvidoria_tre").add(docData)
             .then((docRef) => {
-                // Atualiza com um numero de ordem baseado nos últimos caracteres do ID para simular o "ORDEM #007"
                 const numOrdem = docRef.id.slice(-5).toUpperCase();
                 return docRef.update({ ordem: numOrdem });
             })
             .then(() => {
-                feedback.innerHTML = '<i class="fa-solid fa-check-circle mr-2"></i>Proposta enviada com sucesso! Acompanhe na aba "Projetos Enviados".';
+                feedback.innerHTML = '<i class="fa-solid fa-check-circle mr-2"></i>Enviado com sucesso! Acompanhe na aba "Projetos Enviados".';
                 feedback.className = "mt-4 p-4 rounded-xl text-center text-sm font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 block";
                 document.getElementById('form-ouvidoria').reset();
-                setTimeout(() => switchTab('lista'), 2500); // Muda de aba automaticamente após sucesso
+                quillNovaProposta.root.innerHTML = ''; 
+                setTimeout(() => switchTab('lista'), 2500); 
             })
             .catch(err => {
-                feedback.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-2"></i>Erro ao conectar com o Ministério. Tente novamente.';
+                feedback.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-2"></i>Erro ao conectar. A imagem colada pode ser muito grande.';
                 feedback.className = "mt-4 p-4 rounded-xl text-center text-sm font-bold bg-red-500/20 text-red-400 border border-red-500/30 block";
                 console.error(err);
             })
@@ -375,7 +504,7 @@
         });
 
         // ==========================================
-        // 4. LISTAGEM DE PROJETOS E PESQUISA
+        // 5. LISTAGEM DE PROJETOS E PESQUISA
         // ==========================================
         db.collection("ouvidoria_tre").orderBy("dataEnvio", "desc").onSnapshot((snap) => {
             projetosGlobais = [];
@@ -422,10 +551,10 @@
                             </div>
                             
                             <h3 class="text-lg font-black text-white leading-tight mb-2 line-clamp-2 group-hover:text-tre-brand transition-colors">${sanitize(p.tema)}</h3>
-                            <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-6"><i class="fa-solid fa-layer-group mr-1"></i> ${sanitize(p.tipo)} &bull; Por ${sanitize(p.nick)}</p>
+                            <p class="text-[10px] font-bold text-tre-brand uppercase tracking-widest mb-6"><i class="fa-solid fa-layer-group mr-1"></i> ${sanitize(p.tipo)} <span class="text-white/40 ml-1"> &bull; Por ${sanitize(p.nick)}</span></p>
                             
                             <button onclick="abrirDetalhes('${p.id}')" class="mt-auto w-full bg-white/5 hover:bg-white/10 text-white text-xs font-bold py-3 rounded-xl border border-white/10 transition-all shadow-inner flex items-center justify-center gap-2">
-                                Ver Detalhes <i class="fa-solid fa-arrow-right"></i>
+                                Ler Detalhes <i class="fa-solid fa-arrow-right"></i>
                             </button>
                         </div>
                     `;
@@ -435,20 +564,11 @@
         }
 
         let debounceTimer;
-        function filtrarProjetos() {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(renderizarListaProjetos, 300);
-        }
+        function filtrarProjetos() { clearTimeout(debounceTimer); debounceTimer = setTimeout(renderizarListaProjetos, 300); }
 
         // ==========================================
-        // 5. MODAIS (DETALHES E LOGIN)
+        // 6. VISUALIZAÇÃO DE DETALHES (Modal HTML)
         // ==========================================
-        function toggleModal(id) { 
-            const m = document.getElementById(id), c = m.querySelector('div.relative.transform'); 
-            if (m.classList.contains('opacity-0')) { m.classList.remove('opacity-0', 'invisible'); setTimeout(() => c.classList.replace('scale-95', 'scale-100'), 10); } 
-            else { c.classList.replace('scale-100', 'scale-95'); setTimeout(() => m.classList.add('opacity-0', 'invisible'), 200); } 
-        }
-
         function abrirDetalhes(id) {
             const p = projetosGlobais.find(x => x.id === id);
             if(!p) return;
@@ -458,7 +578,8 @@
             document.getElementById('det-autor').innerText = sanitize(p.nick);
             document.getElementById('det-tipo').innerText = sanitize(p.tipo);
             document.getElementById('det-data').innerText = formatarDataStr(p.dataEnvio);
-            document.getElementById('det-descricao').innerText = p.descricao; // Preserva quebras de linha no css whitespace-pre-wrap
+            
+            document.getElementById('det-descricao').innerHTML = p.descricao; 
 
             const areaVeredito = document.getElementById('area-veredito');
             if(p.status === 'Pendente') {
@@ -479,30 +600,64 @@
             toggleModal('modal-detalhes');
         }
 
-        // Lógica de Login para Painel Admin
-        function realizarLogin(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btn-login-submit');
-            const feedback = document.getElementById('login-feedback');
-            const nick = document.getElementById('login-nick').value.trim();
-            const senha = document.getElementById('login-senha').value;
-            const emailFake = `${nick.toLowerCase()}@treinadores.rcc`;
-
-            btn.disabled = true; 
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Autenticando...';
-            feedback.classList.add('hidden');
-
-            auth.signInWithEmailAndPassword(emailFake, senha)
-                .then(() => { window.location.href = 'admin.html'; })
-                .catch(() => {
-                    btn.disabled = false; btn.innerHTML = 'Entrar no Painel';
-                    feedback.innerText = "Nick ou senha incorretos ou sem permissão.";
-                    feedback.classList.remove('hidden'); feedback.classList.add('block');
-                });
+        // ==========================================
+        // 7. MOTOR DE ACESSO (Login / Cadastro)
+        // ==========================================
+        function switchView(view) {
+            const viewLogin = document.getElementById('view-login'); const viewRegister = document.getElementById('view-register'); const viewFeedback = document.getElementById('view-feedback');
+            viewLogin.classList.add('opacity-0'); viewRegister.classList.add('opacity-0'); viewFeedback.classList.add('opacity-0');
+            setTimeout(() => {
+                viewLogin.classList.add('hidden'); viewLogin.classList.remove('block');
+                viewRegister.classList.add('hidden'); viewRegister.classList.remove('block'); viewRegister.classList.add('translate-x-4');
+                viewFeedback.classList.add('hidden'); viewFeedback.classList.remove('flex'); viewFeedback.classList.add('translate-y-4');
+                
+                if(view === 'login') { viewLogin.classList.remove('hidden'); viewLogin.classList.add('block'); setTimeout(() => viewLogin.classList.remove('opacity-0'), 50); } 
+                else if(view === 'register') { viewRegister.classList.remove('hidden'); viewRegister.classList.add('block'); setTimeout(() => viewRegister.classList.remove('opacity-0', 'translate-x-4'), 50); } 
+                else if(view === 'feedback') { viewFeedback.classList.remove('hidden'); viewFeedback.classList.add('flex'); setTimeout(() => viewFeedback.classList.remove('opacity-0', 'translate-y-4'), 50); }
+            }, 200);
         }
 
-        // Inicialização Visual
+        function realizarLogin(e) {
+            e.preventDefault(); const btn = document.getElementById('btn-login-submit'); const feedback = document.getElementById('login-feedback');
+            const nick = document.getElementById('login-nick').value.trim(); const senha = document.getElementById('login-senha').value;
+            const emailFake = `${nick.toLowerCase()}@treinadores.rcc`;
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Autenticando...'; feedback.classList.add('hidden');
+
+            auth.signInWithEmailAndPassword(emailFake, senha).then(() => { window.location.href = 'admin.html'; }).catch(() => {
+                btn.disabled = false; btn.innerHTML = 'Entrar no Painel'; feedback.innerText = "Nick ou senha incorretos ou sem permissão."; feedback.classList.remove('hidden'); feedback.classList.add('block');
+            });
+        }
+
+        function enviarCadastro(e) {
+            e.preventDefault(); const btn = document.getElementById('btn-cadastro'); const feedback = document.getElementById('reg-feedback');
+            const nick = document.getElementById('reg-nick').value.trim(); const senha = document.getElementById('reg-senha').value; const emailFake = `${nick.toLowerCase()}@treinadores.rcc`;
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processando...'; feedback.classList.add('hidden');
+
+            db.collection("solicitacoes_acesso").where("nick", "==", nick).get().then(snap => {
+                if (!snap.empty) {
+                    const status = snap.docs[0].data().status;
+                    if (status === "Aprovado") { feedback.innerText = "Usuário já possui acesso."; feedback.className = "mt-4 p-2 rounded text-center text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30 block"; btn.disabled = false; btn.innerHTML = 'Enviar Solicitação'; } 
+                    else if (status === "Pendente") { feedback.innerText = "Nick já possui solicitação em análise."; feedback.className = "mt-4 p-2 rounded text-center text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30 block"; btn.disabled = false; btn.innerHTML = 'Enviar Solicitação'; } 
+                    else {
+                        auth.signInWithEmailAndPassword(emailFake, senha).then((userCred) => {
+                            db.collection("solicitacoes_acesso").doc(userCred.user.uid).update({ status: "Pendente", dataSolicitacao: firebase.firestore.FieldValue.serverTimestamp() }).then(() => { auth.signOut(); document.getElementById('form-cadastro').reset(); btn.disabled = false; btn.innerHTML = 'Enviar Solicitação'; switchView('feedback'); });
+                        }).catch(err => { feedback.innerText = "Nick registrado. Use a MESMA SENHA para solicitar novamente."; feedback.className = "mt-4 p-2 rounded text-center text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30 block"; btn.disabled = false; btn.innerHTML = 'Enviar Solicitação'; });
+                    }
+                } else {
+                    auth.createUserWithEmailAndPassword(emailFake, senha).then(res => {
+                        return db.collection("solicitacoes_acesso").doc(res.user.uid).set({ nick: nick, status: "Pendente", role: "Convidado", dataSolicitacao: firebase.firestore.FieldValue.serverTimestamp() });
+                    }).then(() => { auth.signOut(); document.getElementById('form-cadastro').reset(); btn.disabled = false; btn.innerHTML = 'Enviar Solicitação'; switchView('feedback'); })
+                    .catch(err => { feedback.innerText = err.code === 'auth/weak-password' ? "Mínimo de 6 caracteres na senha." : "Erro: " + err.message; feedback.className = "mt-4 p-2 rounded text-center text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30 block"; btn.disabled = false; btn.innerHTML = 'Enviar Solicitação'; });
+                }
+            }).catch(err => { feedback.innerText = "Erro de conexão com o servidor."; feedback.className = "mt-4 p-2 rounded text-center text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30 block"; btn.disabled = false; btn.innerHTML = 'Enviar Solicitação'; });
+        }
+
+        // ==========================================
+        // 8. INICIALIZAÇÃO VISUAL
+        // ==========================================
         window.addEventListener('DOMContentLoaded', () => {
+            initQuillProposta(); 
+            
             const tl = gsap.timeline();
             tl.to("#anim-header", { y: 0, opacity: 1, duration: 0.8, ease: "expo.out" })
               .to("#anim-title", { y: 0, opacity: 1, duration: 0.8, ease: "expo.out" }, "-=0.5")
