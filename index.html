@@ -236,7 +236,7 @@
     </main>
 
     <footer class="border-t border-white/5 bg-[#050101] py-12 px-6 text-center relative overflow-hidden mt-auto">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_center,rgba(211,21,34,0.1)_0%,transparent_60%)] opacity-50 pointer-events-none"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_center,rgba(211,21,34,0.02)_0%,transparent_60%)] opacity-50 pointer-events-none"></div>
         <img src="trelogo.png" alt="TRE" class="h-10 mx-auto mb-4 opacity-40 hover:opacity-100 transition-opacity duration-500 filter drop-shadow-[0_0_10px_rgba(211,21,34,0.5)] relative z-10">
         <p class="text-sm text-white/50 font-bold tracking-[0.2em] uppercase mb-1 relative z-10">Companhia dos Treinadores</p>
         <p class="text-[10px] text-white/20 font-medium tracking-widest uppercase relative z-10">RCC &copy; Todos os direitos reservados</p>
@@ -515,9 +515,7 @@
         // 7. LOGIN/CADASTRO BLINDADO (Domínio corrigido para G4VET4)
         // ==========================================
         function gerarEmailSeguro(nick) {
-            // O replace tira apenas os espaços do nick, garantindo que "G4VET4" continue funcionando 
-            // e os novos nicks "Com Espaço" virem "comespaco@treinadores.rcc", evitando erros do Firebase.
-            return nick.toLowerCase().replace(/\s+/g, '') + "@treinadores.rcc";
+            return nick.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '') + "@treinadores.rcc";
         }
 
         function realizarLogin(e) { 
