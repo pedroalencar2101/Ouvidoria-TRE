@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[TRE] Ouvidoria Oficial</title>
+    <title>Portal Ouvidoria | Ministério RCC TRE</title>
     
     <link rel="icon" type="image/png" href="trelogo.png">
     <link rel="apple-touch-icon" href="trelogo.png">
@@ -13,367 +13,174 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
 
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        tre: {
-                            brand: '#D31522',
-                            brandHover: '#FA1C2A',
-                            bgPanel: 'rgba(20, 4, 5, 0.5)',
-                            glassNav: 'rgba(25, 3, 4, 0.85)',
-                        }
-                    },
-                    boxShadow: {
-                        '3xl': '0 35px 60px -15px rgba(0, 0, 0, 0.5)',
-                        'nav': '0 10px 40px -10px rgba(0, 0, 0, 0.7)',
-                        'vivid': '0 0 20px -5px rgba(211, 21, 34, 0.4)'
-                    }
+                    colors: { tre: { brand: '#D31522', brandHover: '#FA1C2A', bgPanel: 'rgba(20, 4, 5, 0.5)', glassNav: 'rgba(25, 3, 4, 0.85)' } },
+                    boxShadow: { 'vivid': '0 0 20px -5px rgba(211, 21, 34, 0.4)', 'gold': '0 0 20px -2px rgba(255, 191, 0, 0.6)' }
                 }
             }
         }
     </script>
 
     <style>
-        /* ==========================================
-           ESTILOS GERAIS E BACKGROUND (DARK GLASS)
-           ========================================== */
-        body {
-            background: #0A0102;
-            background-image: radial-gradient(circle at top center, #35060A 0%, #0A0102 90%);
-            color: #FFFFFF;
-            min-height: 100vh;
-            background-attachment: fixed;
-            font-size: 15px;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
+        body { background: #0A0102; background-image: radial-gradient(circle at top left, #2B0508 0%, #0A0102 100%); color: #FFFFFF; min-height: 100vh; font-size: 15px; scroll-behavior: smooth; }
+        .glass-nav { background: rgba(10, 1, 2, 0.9); backdrop-filter: blur(24px); border-b: 1px solid rgba(255, 255, 255, 0.05); }
+        .glass-panel { background: rgba(20, 4, 5, 0.6); backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .glass-card { background: linear-gradient(145deg, rgba(35, 6, 8, 0.4) 0%, rgba(10, 1, 2, 0.6) 100%); border: 1px solid rgba(255, 255, 255, 0.08); transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); }
+        .glass-card:hover { border-color: rgba(211, 21, 34, 0.3); transform: translateY(-3px); box-shadow: 0 10px 40px -10px rgba(0,0,0,0.6); }
         
-        .glass-navbar { background: theme('colors.tre.glassNav'); backdrop-filter: blur(24px); border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
-        .glass-panel-simple { background: theme('colors.tre.bgPanel'); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.06); transition: all 0.4s; }
-        .glass-panel-simple:hover { background: rgba(35, 6, 8, 0.6); border-color: rgba(255, 255, 255, 0.1); }
-
         .glass-input { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); color: white; transition: all 0.3s ease; }
         .glass-input:focus, .glass-input:focus-within { background: rgba(255, 255, 255, 0.07); border-color: theme('colors.tre.brand'); outline: none; box-shadow: 0 0 15px rgba(211, 21, 34, 0.2); }
-        .glass-input::placeholder { color: rgba(255, 255, 255, 0.2); }
+        
+        .avatar-red-glass { background: radial-gradient(circle at center, rgba(211, 21, 34, 0.4) 0%, rgba(10, 1, 2, 0.8) 100%); border: 1px solid rgba(211, 21, 34, 0.4); box-shadow: inset 0 0 10px rgba(211, 21, 34, 0.2); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 50%; aspect-ratio: 1 / 1; flex-shrink: 0; }
+        .avatar-red-glass img { max-width: none; width: 140%; height: auto; object-fit: contain; transform: translateY(12%); }
 
-        /* ==========================================
-           CUBOS 3D E CARDS DE PROJETO
-           ========================================== */
-        .tilt-card {
-            transform-style: preserve-3d;
-            background: linear-gradient(145deg, rgba(35, 6, 8, 0.7) 0%, rgba(10, 1, 2, 0.85) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(16px);
-            border-radius: 1.25rem;
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7);
-            position: relative;
-            overflow: hidden;
-            transition: border-color 0.3s;
-        }
-        .tilt-card:hover { border-color: rgba(211, 21, 34, 0.3); }
-
-        .neon-glow { position: absolute; width: 70%; height: 70%; top: 15%; left: 15%; filter: blur(60px); z-index: -1; opacity: 0; transition: opacity 0.8s ease; background: #D31522; }
-        .tilt-card:hover .neon-glow { opacity: 0.15; }
-
-        .point-badge { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 10px; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.05em; text-transform: uppercase; }
+        .point-badge { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 10px; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; }
         .badge-pendente { background: rgba(245, 158, 11, 0.15); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.3); }
         .badge-aprovado { background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-ressalvas { background: rgba(37, 99, 235, 0.15); color: #60A5FA; border: 1px solid rgba(37, 99, 235, 0.3); }
         .badge-rejeitado { background: rgba(239, 68, 68, 0.15); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+        
+        ::-webkit-scrollbar { width: 6px; height: 6px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; } ::-webkit-scrollbar-thumb:hover { background: #D31522; }
+        
+        #auth-loader-public { z-index: 99999; }
 
-        .nav-tab { transition: all 0.3s; border-bottom: 2px solid transparent; color: rgba(255,255,255,0.4); }
-        .nav-tab.active { border-bottom: 2px solid #D31522; color: #FFFFFF; }
-        .nav-tab:hover:not(.active) { color: rgba(255,255,255,0.8); }
-
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #0A0102; }
-        ::-webkit-scrollbar-thumb { background: #D31522; border-radius: 3px; }
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
-
-        /* Estilos customizados para o Editor Word (QuillJS) no tema Glassmorphism */
-        .ql-toolbar.ql-snow { background: rgba(255, 255, 255, 0.03); border: none !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; padding: 12px; }
-        .ql-container.ql-snow { border: none !important; color: white; font-family: 'Inter', sans-serif; font-size: 14px; min-height: 250px; }
-        .ql-snow .ql-stroke { stroke: rgba(255, 255, 255, 0.7); } .ql-snow .ql-fill, .ql-snow .ql-stroke.ql-fill { fill: rgba(255, 255, 255, 0.7); } .ql-snow .ql-picker { color: rgba(255, 255, 255, 0.7); } .ql-snow .ql-picker-options { background-color: #0A0102; border-color: rgba(255,255,255,0.1); }
-        .ql-snow.ql-toolbar button:hover .ql-stroke, .ql-snow .ql-toolbar button.ql-active .ql-stroke { stroke: #D31522; } .ql-snow.ql-toolbar button:hover .ql-fill, .ql-snow .ql-toolbar button.ql-active .ql-fill { fill: #D31522; }
-        .ql-editor p { margin-bottom: 0.75em; }
-        .ql-editor img { border-radius: 0.5rem; max-width: 100%; border: 1px solid rgba(255,255,255,0.1); }
-
-        /* FORMATADOR DE TEXTO PARA LEITURA (WORD) */
-        .regras-html-format { color: rgba(255,255,255,0.8); font-size: 14px; line-height: 1.6; }
-        .regras-html-format h1 { font-size: 1.5em; font-weight: 800; color: white; margin-bottom: 0.5em; }
-        .regras-html-format h2 { font-size: 1.2em; font-weight: 700; color: white; margin-bottom: 0.5em; }
-        .regras-html-format p { margin-bottom: 0.8em; }
-        .regras-html-format strong { color: white; font-weight: 800; }
-        .regras-html-format ol { list-style-type: decimal; margin-left: 1.5em; margin-bottom: 1em; }
-        .regras-html-format ul { list-style-type: disc; margin-left: 1.5em; margin-bottom: 1em; }
-        .regras-html-format a { color: #3b82f6; text-decoration: underline; }
-        .regras-html-format img { border-radius: 0.5rem; max-width: 100%; margin: 10px 0; border: 1px solid rgba(255,255,255,0.1); }
+        /* QUILL EDITOR - FUNDO BRANCO / DIDÁTICO / WORD-LIKE */
+        #editor-container { background-color: #FFFFFF !important; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.75rem; overflow: hidden; color: #000000; box-shadow: inset 0 2px 10px rgba(0,0,0,0.1); }
+        .ql-toolbar.ql-snow { background-color: #F3F4F6 !important; border: none !important; border-bottom: 1px solid #D1D5DB !important; padding: 8px 12px !important; }
+        .ql-container.ql-snow { border: none !important; font-family: 'Inter', sans-serif; font-size: 15px; }
+        .ql-editor { color: #000000 !important; min-height: 250px; padding: 1.5rem !important; line-height: 1.6; }
+        .ql-editor.ql-blank::before { color: #6B7280 !important; font-style: normal; }
+        .ql-snow .ql-stroke { stroke: #374151 !important; } .ql-snow .ql-fill { fill: #374151 !important; }
+        .ql-snow .ql-picker { color: #374151 !important; }
+        
+        /* RCC LOGO BACKGROUND SHADOW */
+        .rcc-bg-shadow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1.5); width: 100%; height: 100%; background-image: url('trelogo.png'); background-position: center; background-repeat: no-repeat; background-contain: contain; opacity: 0.03; filter: grayscale(100%); z-index: -1; pointer-events: none; }
     </style>
 </head>
-<body class="antialiased selection:bg-tre-brand selection:text-white flex flex-col" id="topo">
+<body class="antialiased selection:bg-tre-brand selection:text-white">
 
-    <header class="sticky top-0 z-50 w-full glass-navbar shadow-nav opacity-0" id="anim-header">
-        <div class="container mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
-            <div class="flex items-center gap-4 md:gap-10">
-                <a href="#topo" class="flex items-center group">
-                    <img src="trelogo.png" alt="Logo" class="h-10 md:h-14 object-contain transition-all duration-500 group-hover:scale-110 filter drop-shadow-[0_0_8px_rgba(211,21,34,0.3)] group-hover:drop-shadow-[0_0_15px_rgba(211,21,34,0.8)]" onerror="this.src='https://via.placeholder.com/150x50/D31522/FFFFFF?text=LOGO'">
-                </a>
-                <nav class="flex gap-4 md:gap-8 text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/70 items-center">
-                    <button onclick="switchTab('nova')" id="tab-btn-nova" class="nav-tab active pb-1 hover:text-white transition-colors cursor-pointer">Nova Proposta</button>
-                    <button onclick="switchTab('lista')" id="tab-btn-lista" class="nav-tab pb-1 hover:text-white transition-colors cursor-pointer">Projetos Enviados</button>
-                </nav>
+    <div id="auth-loader-public" class="fixed inset-0 bg-[#0A0102] flex flex-col items-center justify-center backdrop-blur-3xl transition-opacity duration-700 z-[99999]">
+        <img src="trelogo.png" alt="Logo TRE" class="h-16 mb-6 animate-pulse" onerror="this.src='https://via.placeholder.com/80x80/D31522/FFFFFF?text=TRE'">
+        <i class="fa-solid fa-lock text-4xl text-white/30 mb-4"></i>
+        <h2 class="text-white font-black tracking-widest uppercase text-sm">Carregando Portal</h2>
+    </div>
+
+    <header class="sticky top-0 left-0 w-full glass-nav z-[900]">
+        <div class="max-w-[1700px] mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <img src="trelogo.png" alt="TRE" class="h-10">
+                <div class="border-l border-white/10 h-6"></div>
+                <span class="text-white font-black text-xl tracking-tight flex items-center gap-2">
+                    <span class="point-badge badge-rejeitado">TRE</span> Ouvidoria
+                </span>
             </div>
-            <div class="flex items-center">
-                <button onclick="toggleModal('modal-login')" class="flex bg-black/40 border border-white/10 px-3 md:px-5 py-2 md:py-2.5 rounded-lg md:rounded-xl text-[10px] md:text-sm font-semibold hover:bg-white/10 hover:text-white transition-all text-white/80 items-center gap-2 cursor-pointer shadow-lg">
-                    <i class="fa-solid fa-lock text-[10px] md:text-xs"></i> Restrito
-                </button>
-            </div>
+            <nav class="flex items-center gap-8">
+                <a href="#home" class="text-sm font-semibold text-white/80 hover:text-white transition-colors">Início</a>
+                <a href="#enviar" class="text-sm font-semibold text-white/80 hover:text-white transition-colors">Enviar Projeto</a>
+                <a href="#protocolos" class="text-sm font-semibold text-white/80 hover:text-white transition-colors">Protocolos</a>
+                <a href="admin.html" class="point-badge badge-aprovado hover:shadow-vivid transition-shadow"><i class="fa-solid fa-shield-halved mr-1.5"></i> Admin</a>
+            </nav>
         </div>
     </header>
 
-    <main class="flex-grow container mx-auto px-4 md:px-6 max-w-6xl">
+    <main class="max-w-[1500px] mx-auto px-6 pb-24" id="home">
         
-        <section class="pt-10 md:pt-16 pb-6 text-center relative z-40 opacity-0" id="anim-title">
-            <h1 class="flex flex-col items-center text-4xl md:text-7xl font-black tracking-tight mb-4 uppercase drop-shadow-2xl">
-                <span class="text-white leading-none">[TRE]</span>
-                <span class="text-transparent bg-clip-text bg-gradient-to-b from-[#FA1C2A] to-[#800A12] leading-none mt-2 drop-shadow-md">OUVIDORIA</span>
-            </h1>
-            <p class="text-white/50 text-xs md:text-sm font-bold tracking-[0.2em] uppercase mt-2 max-w-2xl mx-auto">
-                Envie suas propostas, projetos, sugestões ou correções normativas para avaliação da Liderança.
-            </p>
+        <section class="py-32 relative text-center flex flex-col items-center overflow-hidden">
+            <div class="rcc-bg-shadow"></div>
+            <div class="max-w-4xl z-10">
+                <span class="point-badge badge-rejeitado mb-5 inline-flex items-center gap-2"><i class="fa-solid fa-gavel"></i> Tribunal de Revisão Estratégica</span>
+                <h1 class="text-6xl md:text-8xl font-black text-white leading-tight tracking-tighter mb-6 flex flex-wrap items-center justify-center gap-x-6">
+                    <img src="trelogo.png" alt="" class="h-20 inline-block"> <span class="bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-white/60" style="filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5))">Portal Ouvidoria</span>
+                </h1>
+                <p class="text-xl text-white/70 max-w-2xl mx-auto leading-relaxed">Envio oficial de projetos e sugestões para análise ministerial do Comando da RCC. Sua voz constrói o futuro.</p>
+            </div>
         </section>
 
-        <section id="view-nova" class="py-10 relative z-10 opacity-0 transition-all duration-500">
-            <div class="glass-panel-simple rounded-3xl p-6 md:p-10 shadow-3xl max-w-4xl mx-auto border-t-4 border-t-tre-brand">
-                <h2 class="text-2xl md:text-3xl font-black text-white uppercase mb-8 flex items-center gap-3 border-b border-white/10 pb-4">
-                    <i class="fa-solid fa-file-pen text-tre-brand"></i> Formulário de Envio
+        <section class="py-12 scroll-mt-24" id="enviar">
+            <div class="mb-10 pb-6 border-b border-white/5">
+                <h2 class="text-4xl font-black tracking-tight text-white uppercase mb-1 flex items-center gap-4">
+                    <i class="fa-solid fa-bolt text-tre-brand"></i> Submeter Nova Proposta
                 </h2>
+                <p class="text-white/40 text-sm">Preencha todos os campos abaixo. Utilize o editor para detalhar sua ideia.</p>
+            </div>
+
+            <form id="public-submission-form" class="space-y-6">
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Nick do Autor (Habbo)</label>
+                        <input type="text" id="autor-nick" required placeholder="Seu Nick Completo" class="w-full glass-input rounded-xl px-5 py-4 text-sm">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Categoria</label>
+                        <select id="projeto-tipo" required class="w-full glass-input rounded-xl px-5 py-4 text-sm appearance-none shadow-inner cursor-pointer"><option value="Projeto" class="text-black">Projeto (Mudança Estrutural)</option><option value="Sugestão" class="text-black">Sugestão (Pequena Melhoria)</option></select>
+                    </div>
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Tema / Assunto do Projeto</label>
+                    <input type="text" id="projeto-tema" required placeholder="Título claro e conciso da sua ideia..." class="w-full glass-input rounded-xl px-5 py-4 text-sm">
+                </div>
                 
-                <form id="form-ouvidoria" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-2 md:col-span-1">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-white/50 ml-1">Autor Principal (Nick)</label>
-                        <input type="text" id="form-nick" required placeholder="Seu nick no Habbo" class="w-full glass-input rounded-xl px-5 py-3.5 text-sm font-medium">
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Corpo da Proposta (Word-like)</label>
+                    <div id="editor-container">
+                        <div id="quill-editor"></div>
                     </div>
-                    
-                    <div class="space-y-3 md:col-span-1">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-white/50 ml-1">Tipo de Envio</label>
-                        <div class="flex gap-4">
-                            <label class="flex-1 glass-input rounded-xl px-4 py-3.5 text-sm font-bold flex items-center justify-center gap-3 cursor-pointer hover:bg-white/5 transition-all has-[:checked]:border-tre-brand has-[:checked]:bg-tre-brand/20 has-[:checked]:text-white text-white/60">
-                                <input type="radio" name="tipo_envio" value="Sugestão" class="hidden" required> 
-                                <i class="fa-solid fa-lightbulb text-tre-brand"></i> Sugestão
-                            </label>
-                            <label class="flex-1 glass-input rounded-xl px-4 py-3.5 text-sm font-bold flex items-center justify-center gap-3 cursor-pointer hover:bg-white/5 transition-all has-[:checked]:border-tre-brand has-[:checked]:bg-tre-brand/20 has-[:checked]:text-white text-white/60">
-                                <input type="radio" name="tipo_envio" value="Projeto" class="hidden" required> 
-                                <i class="fa-solid fa-folder-open text-tre-brand"></i> Projeto
-                            </label>
-                        </div>
-                    </div>
+                </div>
 
-                    <div class="space-y-2 md:col-span-2">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-white/50 ml-1">Tema / Título da Proposta</label>
-                        <input type="text" id="form-tema" required placeholder="Resuma o assunto em uma frase curta..." class="w-full glass-input rounded-xl px-5 py-3.5 text-sm font-medium">
-                    </div>
-
-                    <div class="space-y-2 md:col-span-2">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-white/50 ml-1">Corpo do Projeto</label>
-                        <div class="glass-input rounded-xl overflow-hidden shadow-inner">
-                            <div id="form-descricao-editor"></div>
-                        </div>
-                        <p class="text-[9px] text-white/30 ml-1 mt-1"><i class="fa-solid fa-circle-info text-tre-brand mr-1"></i> Você pode colar imagens (Ctrl+V) ou usar o botão de foto no menu acima.</p>
-                    </div>
-
-                    <div class="md:col-span-2 pt-4">
-                        <button type="submit" id="btn-enviar" class="w-full bg-tre-brand hover:bg-tre-brandHover text-white font-black uppercase tracking-widest py-4 rounded-xl shadow-vivid transition-all flex items-center justify-center gap-3">
-                            Enviar para o Ministério <i class="fa-solid fa-paper-plane"></i>
-                        </button>
-                        <div id="form-feedback" class="hidden mt-4 p-4 rounded-xl text-center text-sm font-bold border"></div>
-                    </div>
-                </form>
-            </div>
+                <div class="flex justify-end pt-4">
+                    <button type="submit" id="btn-submit-public" class="bg-tre-brand hover:bg-tre-brandHover text-white font-bold px-12 py-4 rounded-xl shadow-lg transition-all text-sm flex items-center gap-2 group"><i class="fa-solid fa-paper-plane mr-1.5 group-hover:translate-x-1 transition-transform">
+                        </i> Enviar Proposta Oficial
+                    </button>
+                </div>
+            </form>
         </section>
 
-        <section id="view-lista" class="py-10 relative z-10 hidden opacity-0 transition-all duration-500">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
-                <h2 class="text-2xl font-black text-white uppercase flex items-center gap-3">
-                    <i class="fa-solid fa-folder-tree text-white/40"></i> Arquivo de Protocolos
-                </h2>
-                <div class="relative w-full md:w-96">
-                    <i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-white/40"></i>
-                    <input type="text" id="search-projetos" onkeyup="filtrarProjetos()" placeholder="Pesquisar por Ordem, Nick ou Tema..." class="w-full glass-input rounded-xl pl-12 pr-4 py-3 text-sm font-medium shadow-lg">
+        <section class="py-12 scroll-mt-24 mt-16" id="protocolos">
+            <div class="mb-10 pb-6 border-b border-white/5 flex items-end justify-between gap-4">
+                <div>
+                    <h2 class="text-4xl font-black tracking-tight text-white uppercase mb-1 flex items-center gap-4">
+                        <i class="fa-solid fa-box-archive text-gray-400"></i> Protocolos Enviados
+                    </h2>
+                    <p class="text-white/40 text-sm">Histórico público de requerimentos ordenados por envio.</p>
+                </div>
+                <div class="relative z-[60]">
+                    <i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-white/30 text-sm"></i>
+                    <input type="text" id="search-public" onkeyup="filtrarProtocolosBusca()" placeholder="Buscar Nick ou Tema..." class="glass-input rounded-xl pl-11 pr-4 py-2.5 text-xs font-medium w-64">
                 </div>
             </div>
 
-            <div id="grid-projetos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="col-span-full text-center py-20 text-white/30 font-bold tracking-widest uppercase">
-                    <i class="fa-solid fa-spinner fa-spin text-3xl mb-4 block"></i> Carregando Protocolos...
-                </div>
-            </div>
-
-            <div id="empty-projetos" class="hidden flex-col items-center justify-center py-20 text-center glass-panel-simple rounded-3xl border-dashed border-2 border-white/5 mt-6">
-                <i class="fa-solid fa-inbox text-5xl text-white/10 mb-4"></i>
-                <h3 class="text-xl font-black text-white/40 uppercase tracking-widest">Nenhum projeto encontrado</h3>
-                <p class="text-sm text-white/20 mt-2">A ouvidoria está vazia ou a sua pesquisa não retornou resultados.</p>
+            <div id="public-projects-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            
+            <div id="empty-protocolos" class="hidden flex-col items-center justify-center py-24 text-center glass-card border-dashed border-2 border-white/5 rounded-2xl">
+                <i class="fa-solid fa-folder-open text-5xl text-white/10 mb-6"></i>
+                <h3 class="text-lg font-black uppercase text-white/70 tracking-widest">Nenhum Registro</h3>
+                <p class="text-sm text-white/30 mt-1 max-w-sm">Nenhuma proposta foi submetida ou liberada para visualização pública.</p>
             </div>
         </section>
+
     </main>
 
-    <footer class="w-full border-t border-white/5 bg-[#050101] mt-10 md:mt-16 pb-8 md:pb-10 relative overflow-hidden">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_center,rgba(211,21,34,0.1)_0%,transparent_70%)] opacity-50 pointer-events-none"></div>
-        <div class="container mx-auto px-6 pt-8 md:pt-10 flex flex-col items-center text-center relative z-10">
-            <img src="trelogo.png" alt="TRE" class="h-10 md:h-12 mb-4 opacity-50 hover:opacity-100 hover:scale-110 transition-all duration-500 filter drop-shadow-[0_0_15px_rgba(211,21,34,0.5)]">
-            <p class="text-lg sm:text-xl md:text-2xl font-black tracking-tighter uppercase mb-1 text-white/40 hover:text-white/80 transition-colors duration-500">Companhia dos Treinadores</p>
-            <p class="text-[8px] sm:text-[10px] md:text-xs font-medium uppercase tracking-[0.2em] sm:tracking-[0.3em] text-white/30">RCC • Todos os direitos reservados</p>
-            <div class="mt-6 pt-5 border-t border-white/5 inline-block w-48">
-                <p class="text-[9px] sm:text-[11px] md:text-xs font-semibold tracking-widest text-white/40 flex items-center justify-center gap-2 group cursor-default">
-                    <span class="font-mono text-tre-brand font-bold text-xs sm:text-sm group-hover:animate-pulse">&lt;/&gt;</span> por <span class="text-white/80 group-hover:text-white transition-colors duration-300">G4VET4</span>
-                </p>
-            </div>
-        </div>
+    <footer class="border-t border-white/5 bg-[#080101] py-10 px-6 text-center">
+        <img src="trelogo.png" alt="" class="h-10 mx-auto mb-4 opacity-50">
+        <p class="text-xs text-white/30 font-medium tracking-widest uppercase">Tribunal de Revisão Estratégica &copy; 2024</p>
+        <p class="text-[9px] text-white/10 mt-1 uppercase">Padrão Corporativo de Software Ministerial.</p>
     </footer>
 
-    <div id="modal-detalhes" class="fixed inset-0 z-[100] flex items-center justify-center p-4 opacity-0 invisible transition-all duration-300">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="toggleModal('modal-detalhes')"></div>
-        <div class="relative w-full max-w-3xl bg-gradient-to-b from-[#1A0305] to-[#0A0102] border border-white/10 rounded-3xl shadow-3xl p-6 md:p-8 transform scale-95 transition-all flex flex-col max-h-[90vh]">
-            <button onclick="toggleModal('modal-detalhes')" class="absolute top-6 right-6 text-white/40 hover:text-white z-10 bg-black/50 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md border border-white/10"><i class="fa-solid fa-xmark"></i></button>
-            
-            <div class="flex justify-between items-start border-b border-white/10 pb-5 mb-5 shrink-0 pr-8">
-                <div>
-                    <span id="det-ordem" class="text-tre-brand font-black text-xs md:text-sm tracking-widest uppercase mb-1 block">ORDEM #---</span>
-                    <h2 id="det-tema" class="text-xl md:text-3xl font-black text-white leading-tight">Carregando...</h2>
-                    <div class="flex items-center gap-3 mt-3 text-xs text-white/50 font-medium">
-                        <span><i class="fa-solid fa-user text-white/30 mr-1"></i> <span id="det-autor" class="text-white">...</span></span>
-                        <span>&bull;</span>
-                        <span id="det-tipo" class="bg-white/5 px-2 py-1 rounded border border-white/5 text-tre-brand font-bold">...</span>
-                        <span>&bull;</span>
-                        <span id="det-data"><i class="fa-regular fa-calendar mr-1"></i> ...</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="overflow-y-auto custom-scrollbar flex-grow pr-2">
-                <div class="mb-6">
-                    <h3 class="text-[10px] font-black uppercase tracking-widest text-white/30 mb-3">Corpo da Proposta</h3>
-                    <div id="det-descricao" class="text-sm md:text-base text-white/80 bg-white/5 p-5 rounded-xl border border-white/5 regras-html-format">
-                        ...
-                    </div>
-                </div>
-
-                <div id="area-veredito" class="hidden mt-6 pt-6 border-t border-white/5">
-                    <h3 class="text-[10px] font-black uppercase tracking-widest text-white/30 mb-3">Veredito Ministerial</h3>
-                    <div class="bg-black/40 border border-white/10 p-5 rounded-xl flex flex-col gap-3 relative overflow-hidden">
-                        <div class="flex items-center justify-between relative z-10">
-                            <span id="det-status-badge" class="point-badge text-xs px-3 py-1">...</span>
-                            <span class="text-[10px] font-bold text-white/40 uppercase"><i class="fa-solid fa-gavel mr-1"></i> Julgado por: <span id="det-juiz" class="text-white/80">...</span></span>
-                        </div>
-                        <p id="det-motivo" class="text-sm font-semibold text-white/90 italic border-l-2 border-white/20 pl-3 mt-2 relative z-10">...</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="shrink-0 pt-6 mt-4 border-t border-white/5">
-                <button onclick="toggleModal('modal-detalhes')" class="w-full bg-white/5 hover:bg-white/10 text-white font-bold py-3 rounded-xl transition-all border border-white/10 text-sm">Fechar Detalhes</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-login" class="fixed inset-0 z-[100] flex items-center justify-center p-4 opacity-0 invisible transition-all duration-300">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="toggleModal('modal-login')"></div>
-        <div class="relative w-full max-w-md bg-gradient-to-b from-[#1A0305] to-[#0A0102] border border-white/10 rounded-2xl md:rounded-3xl shadow-2xl p-6 md:p-8 transform scale-95 transition-all duration-300">
-            
-            <button onclick="toggleModal('modal-login')" class="absolute top-4 right-4 md:top-6 md:right-6 text-white/40 hover:text-tre-brand transition-colors z-10">
-                <i class="fa-solid fa-xmark text-xl"></i>
-            </button>
-
-            <div id="view-login" class="block transition-all duration-300">
-                <h2 class="text-xl md:text-2xl font-black tracking-tight text-white uppercase mb-4 flex items-center gap-3 border-b border-white/10 pb-4">
-                    <i class="fa-solid fa-lock text-tre-brand"></i> Acesso Restrito
-                </h2>
-                
-                <div class="bg-tre-brand/10 border border-tre-brand/20 text-tre-brand text-[9px] md:text-[10px] font-bold uppercase tracking-widest p-3 rounded-lg text-center mb-6">
-                    <i class="fa-solid fa-triangle-exclamation mr-1"></i> Área exclusiva do Ministério
-                </div>
-
-                <div id="login-feedback" class="hidden mb-4 p-2 rounded text-center text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30"></div>
-
-                <form id="form-login" class="space-y-4" onsubmit="realizarLogin(event)">
-                    <div class="space-y-1.5">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Nickname no Habbo</label>
-                        <input type="text" id="login-nick" required placeholder="Seu nick..." class="w-full glass-input rounded-xl px-4 py-3 text-sm font-medium">
-                    </div>
-                    <div class="space-y-1.5">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Senha de Acesso</label>
-                        <input type="password" id="login-senha" required placeholder="••••••••" class="w-full glass-input rounded-xl px-4 py-3 text-sm font-medium">
-                    </div>
-                    <button type="submit" id="btn-login-submit" class="w-full bg-tre-brand hover:bg-tre-brandHover text-white font-bold py-3.5 rounded-xl shadow-lg transition-all mt-4 cursor-pointer text-sm flex justify-center items-center">
-                        Entrar no Painel
-                    </button>
-                </form>
-
-                <div class="mt-6 text-center border-t border-white/5 pt-4">
-                    <p class="text-xs text-white/50">Ainda não tem acesso?</p>
-                    <button onclick="switchView('register')" class="text-tre-brand font-bold text-sm hover:text-white transition-colors mt-1 cursor-pointer">Solicitar Cadastro</button>
-                </div>
-            </div>
-
-            <div id="view-register" class="hidden opacity-0 translate-x-4 transition-all duration-300">
-                <h2 class="text-xl md:text-2xl font-black tracking-tight text-white uppercase mb-4 flex items-center gap-3 border-b border-white/10 pb-4">
-                    <i class="fa-solid fa-user-plus text-tre-brand"></i> Solicitar Acesso
-                </h2>
-                
-                <div id="reg-feedback" class="hidden mb-4 p-2 rounded text-center text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30"></div>
-
-                <form id="form-cadastro" class="space-y-4" onsubmit="enviarCadastro(event)">
-                    <div class="space-y-1.5">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Nickname no Habbo</label>
-                        <input type="text" id="reg-nick" required placeholder="Ex: G4VET4" class="w-full glass-input rounded-xl px-4 py-2.5 text-sm font-medium">
-                    </div>
-                    <div class="space-y-1.5">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Criar Senha</label>
-                        <input type="password" id="reg-senha" required placeholder="••••••••" class="w-full glass-input rounded-xl px-4 py-2.5 text-sm font-medium">
-                    </div>
-                    <button type="submit" id="btn-cadastro" class="w-full bg-white/10 hover:bg-white/20 border border-white/10 text-white font-bold py-3 rounded-xl shadow-lg transition-all mt-4 cursor-pointer text-sm flex justify-center items-center">
-                        Enviar Solicitação
-                    </button>
-                </form>
-
-                <div class="mt-4 text-center border-t border-white/5 pt-4">
-                    <button type="button" onclick="switchView('login')" class="text-white/50 text-xs hover:text-white transition-colors cursor-pointer flex items-center justify-center w-full">
-                        <i class="fa-solid fa-arrow-left mr-1.5"></i> Voltar para Login
-                    </button>
-                </div>
-            </div>
-
-            <div id="view-feedback" class="hidden opacity-0 translate-y-4 transition-all duration-300 flex-col items-center justify-center text-center pt-4">
-                <div class="w-20 h-20 bg-amber-500/10 border-2 border-amber-500/30 rounded-full flex items-center justify-center mb-6 mx-auto">
-                    <i class="fa-solid fa-clock-rotate-left text-3xl text-amber-500"></i>
-                </div>
-                <h2 class="text-xl font-black text-white uppercase mb-3">Solicitação Recebida</h2>
-                <p class="text-white/60 text-sm leading-relaxed mb-8">
-                    Aguarde enquanto o Ministério analisa sua solicitação de acesso à Ouvidoria.
-                </p>
-                <button onclick="toggleModal('modal-login')" class="w-full bg-white/10 hover:bg-white/20 border border-white/10 text-white font-bold py-3 rounded-xl transition-all cursor-pointer text-sm">
-                    Entendido
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
-    
-    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 
     <script>
         // ==========================================
-        // 1. INICIALIZAÇÃO FIREBASE (COM AS CHAVES REAIS)
+        // 1. CONFIGURAÇÃO FIREBASE 
         // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyD2vf35brFqXqO5WB2rdGwLT3Rg3lIFxEo",
@@ -387,282 +194,120 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        let projetosGlobais = [];
-        let quillNovaProposta; 
+        // Autenticação Anônima para Leitura Segura
+        auth.signInAnonymously().then(() => {
+            document.getElementById('auth-loader-public').style.display = 'none';
+            iniciarEscutaPublica();
+        }).catch(() => alert("Erro técnico no portal. Tente mais tarde."));
 
-        function formatarDataStr(fsTimestamp) {
-            if(!fsTimestamp) return 'Data Desconhecida';
-            const d = fsTimestamp.toDate();
-            return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
-        }
+        // ==========================================
+        // 2. INICIALIZAÇÃO QUILLJS FULL (DIDÁTICO)
+        // ==========================================
+        Quill.register('modules/imageResize', window.ImageResize.default); // Registra o redimensionador
+
+        const quill = new Quill('#quill-editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'color': [] }, { 'background': [] }], // CORES OK
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'align': [] }],
+                    ['link', 'image'], // IMAGEM OK
+                    ['clean'] // REMOVER FORMATO OK
+                ],
+                imageResize: { displaySize: true } // Módulo de redimensionar ativo
+            },
+            placeholder: 'Descreva detalhadamente sua proposta...',
+        });
+
+        // ==========================================
+        // 3. UI E FUNÇÕES AUXILIARES 
+        // ==========================================
         function sanitize(str) { const temp = document.createElement('div'); temp.textContent = str; return temp.innerHTML; }
+        function getAvatarUrl(nick) { return `https://www.habbo.com.br/habbo-imaging/avatarimage?user=${encodeURIComponent(nick)}&action=std&direction=2&head_direction=2&gesture=sml&size=l`; }
+        
+        function formatarDataHora(fsTimestamp) { if(!fsTimestamp) return '---'; const d = fsTimestamp.toDate(); return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth()+1).padStart(2, '0')} às ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; }
+
+        let projetosPublicosAll = [];
+        let debounceTimerBusca;
+        function filtrarProtocolosBusca() { clearTimeout(debounceTimerBusca); debounceTimerBusca = setTimeout(() => { const t = document.getElementById('search-public').value.toLowerCase(); document.querySelectorAll('#public-projects-container .filter-card').forEach(r => { r.style.display = r.innerText.toLowerCase().includes(t) ? '' : 'none'; }); }, 250); }
 
         // ==========================================
-        // 2. NAVEGAÇÃO SPA (Abas) E CONTROLE DE MODAL
+        // 4. MOTOR DE ENVIO PÚBLICO
         // ==========================================
-        function switchTab(tabId) {
-            document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
-            document.getElementById(`tab-btn-${tabId}`).classList.add('active');
-
-            const viewNova = document.getElementById('view-nova');
-            const viewLista = document.getElementById('view-lista');
-
-            if(tabId === 'nova') {
-                gsap.to(viewLista, { opacity: 0, duration: 0.3, onComplete: () => {
-                    viewLista.classList.add('hidden'); viewNova.classList.remove('hidden');
-                    gsap.fromTo(viewNova, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.5 });
-                }});
-            } else {
-                gsap.to(viewNova, { opacity: 0, duration: 0.3, onComplete: () => {
-                    viewNova.classList.add('hidden'); viewLista.classList.remove('hidden');
-                    gsap.fromTo(viewLista, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.5 });
-                }});
-            }
-        }
-
-        function toggleModal(id) { 
-            const m = document.getElementById(id), c = m.querySelector('div.relative.transform'); 
-            if(id === 'modal-login' && m.classList.contains('opacity-0')){ switchView('login'); }
-            if (m.classList.contains('opacity-0')) { m.classList.remove('opacity-0', 'invisible'); setTimeout(() => c.classList.replace('scale-95', 'scale-100'), 10); } 
-            else { c.classList.replace('scale-100', 'scale-95'); setTimeout(() => m.classList.add('opacity-0', 'invisible'), 200); } 
-        }
-
-        // ==========================================
-        // 3. INICIALIZAÇÃO DO EDITOR DE PROJETOS (QUILLJS)
-        // ==========================================
-        function initQuillProposta() {
-            quillNovaProposta = new Quill('#form-descricao-editor', {
-                theme: 'snow',
-                placeholder: 'Escreva e formate sua proposta aqui (você pode usar o botão de imagem para inserir fotos ou dar Ctrl+V)...',
-                modules: {
-                    toolbar: [
-                        [{ 'header': [1, 2, 3, false] }],
-                        ['bold', 'italic', 'underline', 'strike'],
-                        [{ 'color': [] }, { 'background': [] }],
-                        [{ 'align': [] }],
-                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                        ['link', 'image', 'clean'] 
-                    ]
-                }
-            });
-        }
-
-        // ==========================================
-        // 4. ENVIO DE FORMULÁRIO (NOVA PROPOSTA)
-        // ==========================================
-        document.getElementById('form-ouvidoria').addEventListener('submit', function(e) {
+        document.getElementById('public-submission-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            const btn = document.getElementById('btn-enviar');
-            const feedback = document.getElementById('form-feedback');
-            
-            const tipoSelecionado = document.querySelector('input[name="tipo_envio"]:checked');
-            if(!tipoSelecionado) {
-                alert("Por favor, selecione se é uma Sugestão ou um Projeto.");
-                return;
+            const btn = document.getElementById('btn-submit-public');
+            const editorContent = quill.root.innerHTML;
+            const textContent = quill.getText().trim();
+
+            if (!quill.getContents().ops.some(op => op.image) && textContent.length < 50) { alert("Sua proposta está muito curta. Detalhe mais sua ideia."); return; }
+            if(confirm("Confirmar envio oficial desta proposta para o Ministério TRE?")) {
+                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Enviando...';
+                const docData = { nick: document.getElementById('autor-nick').value.trim(), tipo: document.getElementById('projeto-tipo').value, tema: document.getElementById('projeto-tema').value.trim(), descricao: editorContent, status: 'Pendente', dataEnvio: firebase.firestore.FieldValue.serverTimestamp(), medalhaPostada: false };
+                db.collection("ouvidoria_tre").add(docData).then(() => { quill.setContents([]); document.getElementById('public-submission-form').reset(); alert("Proposta enviada com sucesso! Aguarde análise ministerial.");
+                }).catch(() => alert("Erro ao enviar no banco. Contate um Administrador.")).finally(() => { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1.5"></i> Enviar Proposta Oficial'; });
             }
-
-            const descricaoHTML = quillNovaProposta.root.innerHTML;
-            if(quillNovaProposta.getText().trim().length === 0 && !descricaoHTML.includes('<img')) {
-                alert("O corpo do projeto não pode estar vazio.");
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processando...';
-            feedback.classList.add('hidden');
-
-            const docData = {
-                nick: document.getElementById('form-nick').value.trim(),
-                tipo: tipoSelecionado.value,
-                tema: document.getElementById('form-tema').value.trim(),
-                descricao: descricaoHTML, 
-                status: "Pendente",
-                dataEnvio: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            db.collection("ouvidoria_tre").add(docData)
-            .then((docRef) => {
-                const numOrdem = docRef.id.slice(-5).toUpperCase();
-                return docRef.update({ ordem: numOrdem });
-            })
-            .then(() => {
-                feedback.innerHTML = '<i class="fa-solid fa-check-circle mr-2"></i>Enviado com sucesso! Acompanhe na aba "Projetos Enviados".';
-                feedback.className = "mt-4 p-4 rounded-xl text-center text-sm font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 block";
-                document.getElementById('form-ouvidoria').reset();
-                quillNovaProposta.root.innerHTML = ''; 
-                setTimeout(() => switchTab('lista'), 2500); 
-            })
-            .catch(err => {
-                feedback.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-2"></i>Erro ao conectar. A imagem colada pode ser muito grande.';
-                feedback.className = "mt-4 p-4 rounded-xl text-center text-sm font-bold bg-red-500/20 text-red-400 border border-red-500/30 block";
-                console.error(err);
-            })
-            .finally(() => {
-                btn.disabled = false;
-                btn.innerHTML = 'Enviar para o Ministério <i class="fa-solid fa-paper-plane"></i>';
-            });
         });
 
         // ==========================================
-        // 5. LISTAGEM DE PROJETOS E PESQUISA
+        // 5. MOTOR DE ESCUTA PÚBLICA (CARDS GRADE)
         // ==========================================
-        db.collection("ouvidoria_tre").orderBy("dataEnvio", "desc").onSnapshot((snap) => {
-            projetosGlobais = [];
-            snap.forEach(doc => {
-                let d = doc.data(); d.id = doc.id;
-                projetosGlobais.push(d);
-            });
-            renderizarListaProjetos();
-        });
+        let unsubPublic = null;
+        function iniciarEscutaPublica() {
+            if(unsubPublic) unsubPublic();
+            // PÚBLICO: Ordenado Descendente por DATA DE ENVIO (Mais novos no topo)
+            unsubPublic = db.collection("ouvidoria_tre").orderBy("dataEnvio", "desc").onSnapshot((snap) => {
+                const container = document.getElementById('public-projects-container');
+                const empty = document.getElementById('empty-protocolos');
+                container.innerHTML = ''; projetosPublicosAll = [];
 
-        function renderizarListaProjetos() {
-            const grid = document.getElementById('grid-projetos');
-            const empty = document.getElementById('empty-projetos');
-            const termo = document.getElementById('search-projetos').value.toLowerCase();
-            
-            grid.innerHTML = '';
-            let filtrados = projetosGlobais.filter(p => {
-                const searchStr = `${p.ordem||''} ${p.nick||''} ${p.tema||''}`.toLowerCase();
-                return searchStr.includes(termo);
-            });
-
-            if(filtrados.length === 0) {
-                grid.style.display = 'none'; empty.classList.remove('hidden'); empty.classList.add('flex');
-            } else {
-                grid.style.display = 'grid'; empty.classList.add('hidden'); empty.classList.remove('flex');
-                
-                filtrados.forEach(p => {
-                    let stClass = p.status === 'Aprovado' ? 'badge-aprovado' : p.status === 'Rejeitado' ? 'badge-rejeitado' : 'badge-pendente';
-                    let stIcon = p.status === 'Aprovado' ? 'check' : p.status === 'Rejeitado' ? 'xmark' : 'clock';
-                    let bgGlow = p.status === 'Aprovado' ? 'bg-emerald-500' : p.status === 'Rejeitado' ? 'bg-red-500' : 'bg-amber-500';
-                    
-                    grid.innerHTML += `
-                        <div class="tilt-card p-6 flex flex-col h-full border-t-2" style="border-top-color: ${p.status==='Aprovado'?'#10B981':p.status==='Rejeitado'?'#EF4444':'#F59E0B'};" data-tilt data-tilt-max="3" data-tilt-speed="400" data-tilt-perspective="1000">
-                            <div class="neon-glow ${bgGlow}"></div>
-                            
-                            <div class="flex justify-between items-start mb-4">
-                                <div>
-                                    <span class="text-xs font-black text-white/30 tracking-widest block uppercase mb-1">Ordem #${sanitize(p.ordem || '---')}</span>
-                                    <span class="point-badge ${stClass} inline-flex items-center gap-1.5"><i class="fa-solid fa-${stIcon}"></i> ${sanitize(p.status)}</span>
-                                </div>
-                                <div class="bg-[#0A0102] w-10 h-10 rounded-full border border-white/10 flex items-center justify-center shrink-0 shadow-md overflow-hidden">
-                                    <img src="https://www.habbo.com.br/habbo-imaging/avatarimage?user=${encodeURIComponent(p.nick)}&action=std&direction=2&head_direction=2&gesture=sml&size=s" class="scale-125 pt-2">
-                                </div>
-                            </div>
-                            
-                            <h3 class="text-lg font-black text-white leading-tight mb-2 line-clamp-2 group-hover:text-tre-brand transition-colors">${sanitize(p.tema)}</h3>
-                            <p class="text-[10px] font-bold text-tre-brand uppercase tracking-widest mb-6"><i class="fa-solid fa-layer-group mr-1"></i> ${sanitize(p.tipo)} <span class="text-white/40 ml-1"> &bull; Por ${sanitize(p.nick)}</span></p>
-                            
-                            <button onclick="abrirDetalhes('${p.id}')" class="mt-auto w-full bg-white/5 hover:bg-white/10 text-white text-xs font-bold py-3 rounded-xl border border-white/10 transition-all shadow-inner flex items-center justify-center gap-2">
-                                Ler Detalhes <i class="fa-solid fa-arrow-right"></i>
-                            </button>
-                        </div>
-                    `;
-                });
-                VanillaTilt.init(document.querySelectorAll(".tilt-card"));
-            }
-        }
-
-        let debounceTimer;
-        function filtrarProjetos() { clearTimeout(debounceTimer); debounceTimer = setTimeout(renderizarListaProjetos, 300); }
-
-        // ==========================================
-        // 6. VISUALIZAÇÃO DE DETALHES (Modal HTML)
-        // ==========================================
-        function abrirDetalhes(id) {
-            const p = projetosGlobais.find(x => x.id === id);
-            if(!p) return;
-
-            document.getElementById('det-ordem').innerText = `ORDEM #${sanitize(p.ordem || '---')}`;
-            document.getElementById('det-tema').innerText = sanitize(p.tema);
-            document.getElementById('det-autor').innerText = sanitize(p.nick);
-            document.getElementById('det-tipo').innerText = sanitize(p.tipo);
-            document.getElementById('det-data').innerText = formatarDataStr(p.dataEnvio);
-            
-            document.getElementById('det-descricao').innerHTML = p.descricao; 
-
-            const areaVeredito = document.getElementById('area-veredito');
-            if(p.status === 'Pendente') {
-                areaVeredito.classList.add('hidden');
-            } else {
-                areaVeredito.classList.remove('hidden');
-                document.getElementById('det-juiz').innerText = sanitize(p.julgadoPor || 'Sistema');
-                
-                let stClass = p.status === 'Aprovado' ? 'badge-aprovado' : 'badge-rejeitado';
-                let stIcon = p.status === 'Aprovado' ? 'check' : 'xmark';
-                let stBadge = document.getElementById('det-status-badge');
-                stBadge.className = `point-badge text-xs px-3 py-1 ${stClass}`;
-                stBadge.innerHTML = `<i class="fa-solid fa-${stIcon}"></i> ${sanitize(p.status)}`;
-                
-                document.getElementById('det-motivo').innerText = p.motivoRejeicao ? `"${sanitize(p.motivoRejeicao)}"` : (p.status === 'Aprovado' ? '"Proposta deferida e encaminhada para implementação estrutural."' : 'Sem comentários adicionais.');
-            }
-
-            toggleModal('modal-detalhes');
-        }
-
-        // ==========================================
-        // 7. MOTOR DE ACESSO (Login / Cadastro)
-        // ==========================================
-        function switchView(view) {
-            const viewLogin = document.getElementById('view-login'); const viewRegister = document.getElementById('view-register'); const viewFeedback = document.getElementById('view-feedback');
-            viewLogin.classList.add('opacity-0'); viewRegister.classList.add('opacity-0'); viewFeedback.classList.add('opacity-0');
-            setTimeout(() => {
-                viewLogin.classList.add('hidden'); viewLogin.classList.remove('block');
-                viewRegister.classList.add('hidden'); viewRegister.classList.remove('block'); viewRegister.classList.add('translate-x-4');
-                viewFeedback.classList.add('hidden'); viewFeedback.classList.remove('flex'); viewFeedback.classList.add('translate-y-4');
-                
-                if(view === 'login') { viewLogin.classList.remove('hidden'); viewLogin.classList.add('block'); setTimeout(() => viewLogin.classList.remove('opacity-0'), 50); } 
-                else if(view === 'register') { viewRegister.classList.remove('hidden'); viewRegister.classList.add('block'); setTimeout(() => viewRegister.classList.remove('opacity-0', 'translate-x-4'), 50); } 
-                else if(view === 'feedback') { viewFeedback.classList.remove('hidden'); viewFeedback.classList.add('flex'); setTimeout(() => viewFeedback.classList.remove('opacity-0', 'translate-y-4'), 50); }
-            }, 200);
-        }
-
-        function realizarLogin(e) {
-            e.preventDefault(); const btn = document.getElementById('btn-login-submit'); const feedback = document.getElementById('login-feedback');
-            const nick = document.getElementById('login-nick').value.trim(); const senha = document.getElementById('login-senha').value;
-            const emailFake = `${nick.toLowerCase()}@treinadores.rcc`;
-            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Autenticando...'; feedback.classList.add('hidden');
-
-            auth.signInWithEmailAndPassword(emailFake, senha).then(() => { window.location.href = 'admin.html'; }).catch(() => {
-                btn.disabled = false; btn.innerHTML = 'Entrar no Painel'; feedback.innerText = "Nick ou senha incorretos ou sem permissão."; feedback.classList.remove('hidden'); feedback.classList.add('block');
-            });
-        }
-
-        function enviarCadastro(e) {
-            e.preventDefault(); const btn = document.getElementById('btn-cadastro'); const feedback = document.getElementById('reg-feedback');
-            const nick = document.getElementById('reg-nick').value.trim(); const senha = document.getElementById('reg-senha').value; const emailFake = `${nick.toLowerCase()}@treinadores.rcc`;
-            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processando...'; feedback.classList.add('hidden');
-
-            db.collection("solicitacoes_acesso").where("nick", "==", nick).get().then(snap => {
-                if (!snap.empty) {
-                    const status = snap.docs[0].data().status;
-                    if (status === "Aprovado") { feedback.innerText = "Usuário já possui acesso."; feedback.className = "mt-4 p-2 rounded text-center text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30 block"; btn.disabled = false; btn.innerHTML = 'Enviar Solicitação'; } 
-                    else if (status === "Pendente") { feedback.innerText = "Nick já possui solicitação em análise."; feedback.className = "mt-4 p-2 rounded text-center text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30 block"; btn.disabled = false; btn.innerHTML = 'Enviar Solicitação'; } 
-                    else {
-                        auth.signInWithEmailAndPassword(emailFake, senha).then((userCred) => {
-                            db.collection("solicitacoes_acesso").doc(userCred.user.uid).update({ status: "Pendente", dataSolicitacao: firebase.firestore.FieldValue.serverTimestamp() }).then(() => { auth.signOut(); document.getElementById('form-cadastro').reset(); btn.disabled = false; btn.innerHTML = 'Enviar Solicitação'; switchView('feedback'); });
-                        }).catch(err => { feedback.innerText = "Nick registrado. Use a MESMA SENHA para solicitar novamente."; feedback.className = "mt-4 p-2 rounded text-center text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30 block"; btn.disabled = false; btn.innerHTML = 'Enviar Solicitação'; });
-                    }
-                } else {
-                    auth.createUserWithEmailAndPassword(emailFake, senha).then(res => {
-                        return db.collection("solicitacoes_acesso").doc(res.user.uid).set({ nick: nick, status: "Pendente", role: "Convidado", dataSolicitacao: firebase.firestore.FieldValue.serverTimestamp() });
-                    }).then(() => { auth.signOut(); document.getElementById('form-cadastro').reset(); btn.disabled = false; btn.innerHTML = 'Enviar Solicitação'; switchView('feedback'); })
-                    .catch(err => { feedback.innerText = err.code === 'auth/weak-password' ? "Mínimo de 6 caracteres na senha." : "Erro: " + err.message; feedback.className = "mt-4 p-2 rounded text-center text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30 block"; btn.disabled = false; btn.innerHTML = 'Enviar Solicitação'; });
+                if (snap.empty) { empty.classList.replace('hidden', 'flex'); } 
+                else {
+                    empty.classList.replace('flex', 'hidden');
+                    snap.forEach((doc) => {
+                        const d = doc.data(); d.id = doc.id;
+                        projetosPublicosAll.push(d);
+                        renderizarProjetoCard(d);
+                    });
                 }
-            }).catch(err => { feedback.innerText = "Erro de conexão com o servidor."; feedback.className = "mt-4 p-2 rounded text-center text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30 block"; btn.disabled = false; btn.innerHTML = 'Enviar Solicitação'; });
+            });
         }
 
-        // ==========================================
-        // 8. INICIALIZAÇÃO VISUAL
-        // ==========================================
-        window.addEventListener('DOMContentLoaded', () => {
-            initQuillProposta(); 
+        function renderizarProjetoCard(d) {
+            const container = document.getElementById('public-projects-container');
+            let icBtnClass = d.status === "Aprovado" ? "badge-aprovado" : d.status === "Rejeitado" ? "badge-rejeitado" : d.status === "Aprovado com ressalvas" ? "badge-ressalvas" : "badge-pendente";
+            let icon = d.status === "Aprovado" ? "check" : d.status === "Rejeitado" ? "xmark" : d.status === "Aprovado com ressalvas" ? "clipboard-list" : "clock";
             
-            const tl = gsap.timeline();
-            tl.to("#anim-header", { y: 0, opacity: 1, duration: 0.8, ease: "expo.out" })
-              .to("#anim-title", { y: 0, opacity: 1, duration: 0.8, ease: "expo.out" }, "-=0.5")
-              .to("#view-nova", { opacity: 1, duration: 0.8 }, "-=0.3");
-        });
+            // Área do Veredito (Profissionalismo/Transparência)
+            let areaVeredito = "";
+            if(d.status !== "Pendente" && d.motivoRejeicao) {
+                let txtVer = d.status.includes("Aprovado") ? "Julgamento Ministerial" : "Justificativa Indeferimento";
+                areaVeredito = `<div class="mt-5 pt-5 border-t border-white/5 space-y-2"><label class="text-[9px] font-bold uppercase tracking-widest text-white/30 ml-1 block">${txtVer}</label><p class="text-sm text-white/60 bg-white/5 p-4 rounded-lg leading-relaxed shadow-inner font-medium">${sanitize(d.motivoRejeicao)}</p></div>`;
+            }
+
+            container.innerHTML += `<div class="glass-card rounded-2xl p-6 flex flex-col justify-between filter-card relative overflow-hidden">
+                <div class="flex items-center gap-4 mb-5 pb-5 border-b border-white/5 group relative">
+                    <div class="avatar-red-glass w-12"><img src="${getAvatarUrl(d.nick)}"></div>
+                    <div class="w-full">
+                        <div class="flex items-center gap-3 mb-1"><span class="text-tre-brand font-bold text-xs">#${d.numOrdemVisual || '--'}</span> <span class="text-white/40 text-[9px] uppercase font-bold tracking-widest">${sanitize(d.tipo)}</span></div>
+                        <span class="font-black text-white text-lg group-hover:text-tre-brand truncate w-full">${sanitize(d.nick)}</span>
+                    </div>
+                    <i class="fa-solid fa-file-invoice absolute -bottom-3 -right-3 text-7xl text-white/5 opacity-40 rotate-12"></i>
+                </div>
+                
+                <h3 class="font-bold text-white leading-tight mb-4 text-xl line-clamp-2" title="${sanitize(d.tema)}">${sanitize(d.tema)}</h3>
+                
+                <p class="text-[10px] text-white/40 uppercase font-bold tracking-widest leading-relaxed whitespace-nowrap mb-5"><i class="fa-solid fa-paper-plane mr-1 text-white/30"></i> Envio: ${formatarDataHora(d.dataEnvio)}</p>
+                
+                <div class="mt-auto flex justify-center py-2.5 bg-white/5 rounded-lg border border-white/5"><span class="point-badge ${icBtnClass}"><i class="fa-solid fa-${icon} mr-1.5"></i> ${sanitize(d.status)}</span></div>
+                
+                ${areaVeredito}
+            </div>`;
+        }
+
     </script>
 </body>
 </html>
