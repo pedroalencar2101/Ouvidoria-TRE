@@ -43,18 +43,20 @@
         .vivid-perfil:hover img.avatar-img { transform: translateX(-50%) scale(1.15) !important; }
         
         .glass-input { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); color: white; transition: all 0.3s ease; }
-        .glass-input:focus { background: rgba(255, 255, 255, 0.07); border-color: theme('colors.tre.brand'); outline: none; box-shadow: 0 0 15px rgba(211, 21, 34, 0.2); }
+        .glass-input:focus, .glass-input:focus-within { background: rgba(255, 255, 255, 0.07); border-color: theme('colors.tre.brand'); outline: none; box-shadow: 0 0 15px rgba(211, 21, 34, 0.2); }
         
         .point-badge { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 11px; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.05em; text-transform: uppercase; }
         .badge-pendente { background: rgba(245, 158, 11, 0.15); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.3); }
         .badge-aprovado { background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-ressalvas { background: rgba(59, 130, 246, 0.15); color: #60A5FA; border: 1px solid rgba(59, 130, 246, 0.3); }
         .badge-rejeitado { background: rgba(239, 68, 68, 0.15); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.3); }
         
         ::-webkit-scrollbar { width: 6px; height: 6px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; } ::-webkit-scrollbar-thumb:hover { background: #D31522; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; } .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+        
         #auth-loader { z-index: 9999; }
         body.role-convidado .only-admin { display: none !important; }
 
-        /* Estilo para formatar o HTML do QuillJS na leitura */
         .ql-editor { padding: 0 !important; color: white !important; font-family: 'Inter', sans-serif; }
         .ql-editor img { max-width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px; margin-bottom: 10px; }
         .ql-editor p { margin-bottom: 0.8em; }
@@ -220,7 +222,7 @@
                                 <tr>
                                     <th class="p-4 px-6 text-center w-16">Pos</th>
                                     <th class="p-4">Policial (Nick)</th>
-                                    <th class="p-4 text-center">Projetos Aprovados</th>
+                                    <th class="p-4 text-center">Projetos Deferidos</th>
                                 </tr>
                             </thead>
                             <tbody id="table-ranking-ouvidoria"></tbody>
@@ -312,13 +314,17 @@
                     <h2 class="text-3xl md:text-5xl font-black tracking-tight text-white uppercase mb-1 flex items-center gap-4">
                         <i class="fa-solid fa-users text-tre-brand"></i> Membros com Acesso
                     </h2>
+                    <p class="text-white/40 text-xs md:text-sm">Lista de usuários cadastrados divididos por poder administrativo.</p>
                 </div>
-                <h3 class="text-xl font-black text-white uppercase tracking-widest mb-5 flex items-center gap-3"><i class="fa-solid fa-star text-amber-500"></i> Administração (Ministério)</h3>
+                <h3 class="text-xl md:text-2xl font-black text-white uppercase tracking-widest mb-5 mt-2 flex items-center gap-3">
+                    <i class="fa-solid fa-star text-amber-500"></i> Administração (Ministério)
+                </h3>
                 <div id="grid-admin-list-admins" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-16"></div>
-                <h3 class="text-xl font-black text-white uppercase tracking-widest mb-5 flex items-center gap-3 border-t border-white/5 pt-10"><i class="fa-solid fa-user text-white/50"></i> Convidados (Leitura)</h3>
+                <h3 class="text-xl md:text-2xl font-black text-white uppercase tracking-widest mb-5 flex items-center gap-3 border-t border-white/5 pt-10">
+                    <i class="fa-solid fa-user text-white/50"></i> Convidados (Leitura)
+                </h3>
                 <div id="grid-admin-list-convidados" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-10"></div>
             </div>
-
         </div>
     </main>
 
@@ -348,9 +354,10 @@
                 <div id="ler-descricao" class="text-sm md:text-base text-white/80 bg-white/5 p-6 rounded-xl border border-white/5 ql-editor" style="min-height: auto;">...</div>
             </div>
             
-            <div class="shrink-0 pt-4 border-t border-white/5 flex gap-3 only-admin" id="container-botoes-julgar">
-                <button onclick="prepararVeredito('Rejeitado')" class="flex-1 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/30 font-bold py-3.5 rounded-xl transition-all text-sm"><i class="fa-solid fa-xmark mr-1"></i> Indeferir Proposta</button>
-                <button onclick="prepararVeredito('Aprovado')" class="flex-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold py-3.5 rounded-xl transition-all text-sm"><i class="fa-solid fa-check mr-1"></i> Deferir Proposta</button>
+            <div class="shrink-0 pt-4 border-t border-white/5 flex flex-wrap md:flex-nowrap gap-3 only-admin" id="container-botoes-julgar">
+                <button onclick="prepararVeredito('Rejeitado')" class="flex-1 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/30 font-bold py-3.5 rounded-xl transition-all text-sm"><i class="fa-solid fa-xmark mr-1"></i> Negar</button>
+                <button onclick="prepararVeredito('Aprovado com ressalvas')" class="flex-1 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 font-bold py-3.5 rounded-xl transition-all text-sm"><i class="fa-solid fa-clipboard-list mr-1"></i> Ressalvas</button>
+                <button onclick="prepararVeredito('Aprovado')" class="flex-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold py-3.5 rounded-xl transition-all text-sm"><i class="fa-solid fa-check mr-1"></i> Aprovar</button>
             </div>
             <div class="shrink-0 pt-4 border-t border-white/5 hidden" id="container-botoes-fechar">
                  <button onclick="toggleModal('modal-ler-proposta')" class="w-full bg-white/10 hover:bg-white/20 text-white font-bold py-3.5 rounded-xl transition-all text-sm">Fechar</button>
@@ -363,12 +370,12 @@
         <div class="relative w-full max-w-md bg-gradient-to-b from-[#1A0305] to-[#0A0102] border border-white/10 rounded-3xl shadow-2xl p-8 transform scale-95 transition-all text-center">
             <div id="icone-veredito" class="w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto"></div>
             <h2 id="titulo-veredito" class="text-xl font-black text-white uppercase mb-2">Veredito</h2>
-            <p class="text-white/50 text-sm mb-6">Deixe um comentário ou justificativa técnica que será exibida publicamente ao autor no Portal.</p>
+            <p class="text-white/50 text-sm mb-6">Deixe a justificativa técnica que será exibida no Histórico e Portal.</p>
             
             <input type="hidden" id="form-ver-docId">
             <input type="hidden" id="form-ver-status">
             
-            <textarea id="texto-veredito" rows="3" placeholder="Justificativa do Ministério..." class="w-full glass-input rounded-xl px-4 py-3 text-sm mb-6 resize-none custom-scrollbar"></textarea>
+            <textarea id="texto-veredito" rows="4" placeholder="Justificativa do Ministério..." class="w-full glass-input rounded-xl px-4 py-3 text-sm mb-6 resize-none custom-scrollbar"></textarea>
             
             <div class="flex gap-2">
                 <button onclick="toggleModal('modal-veredito')" class="flex-1 bg-white/5 py-3 rounded-lg text-white font-bold text-xs transition-colors hover:bg-white/10">Cancelar</button>
@@ -381,12 +388,29 @@
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="toggleModal('modal-perfil')"></div>
         <div class="relative w-full max-w-lg bg-gradient-to-b from-[#1A0305] to-[#0A0102] border border-white/10 rounded-3xl shadow-2xl p-8 transform scale-95 transition-all overflow-hidden flex flex-col items-center">
             <button onclick="toggleModal('modal-perfil')" class="absolute top-6 right-6 text-white/40 hover:text-tre-brand z-10"><i class="fa-solid fa-xmark text-xl"></i></button>
+            
+            <div id="modal-perfil-title-container" class="w-full hidden">
+                <h2 class="text-xl font-black tracking-tight text-white uppercase mb-6 flex items-center gap-3 border-b border-white/10 pb-4 w-full">Ficha do Membro</h2>
+            </div>
+
             <div class="w-32 h-32 md:w-40 md:h-40 bg-[#0A0102] rounded-full overflow-hidden border-4 border-tre-brand relative mb-4 shadow-vivid flex-shrink-0">
-                <img id="modal-avatar" src="" class="absolute -top-1 left-1/2 -translate-x-1/2 scale-110">
+                <img id="modal-avatar" src="" class="w-full h-full object-cover object-top scale-125 pt-2">
             </div>
             <h3 class="text-3xl font-black text-white mb-1" id="modal-perfil-nick">Nick</h3>
             <span id="modal-perfil-cargo-badge" class="bg-amber-500/20 text-amber-500 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded mb-6">Cargo</span>
+            
+            <div class="w-full space-y-2 mb-6 text-left p-4 rounded-xl bg-white/5 border border-white/10">
+                <p class="text-sm text-white/70"><i class="fa-solid fa-calendar-check text-tre-brand mr-2"></i>Acesso desde: <span class="font-bold text-white" id="modal-perfil-dataRegistro">Carregando...</span></p>
+            </div>
+            
+            <div class="w-full space-y-1.5 mb-6 text-left">
+                <label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Biografia Profissional</label>
+                <textarea id="perfil-descricao" rows="3" placeholder="Sem biografia." class="w-full glass-input rounded-xl px-4 py-3 text-sm font-medium custom-scrollbar"></textarea>
+                <button id="btn-save-perfil" onclick="salvarDescricaoPerfil(event)" class="w-full bg-white/10 hover:bg-white/20 text-white font-bold py-2.5 rounded-xl mt-2 text-xs transition-colors">Salvar Biografia</button>
+            </div>
+
             <div id="panel-admin-gerenciar" class="w-full border-t border-white/10 pt-6 mt-2 hidden only-admin">
+                <h4 class="text-[10px] font-black uppercase tracking-widest text-red-500 mb-3"><i class="fa-solid fa-shield-halved"></i> Controles da Administração</h4>
                 <div class="flex gap-2">
                     <div class="relative flex-1">
                         <button type="button" onclick="toggleCargoDropdown()" class="w-full glass-input rounded-xl px-4 py-2.5 text-xs font-bold flex items-center justify-between cursor-pointer focus:outline-none hover:bg-white/5 transition-colors">
@@ -407,22 +431,65 @@
         </div>
     </div>
 
+    <div id="modal-edit-historico" class="fixed inset-0 z-[100] flex items-center justify-center p-4 opacity-0 invisible transition-all duration-300">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="toggleModal('modal-edit-historico')"></div>
+        <div class="relative w-full max-w-lg bg-[#0A0102] border border-white/10 rounded-3xl p-8 transform scale-95 transition-all">
+            <button onclick="toggleModal('modal-edit-historico')" class="absolute top-6 right-6 text-white/40 hover:text-tre-brand"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h2 class="text-xl font-black text-white uppercase mb-6 flex items-center gap-2 border-b border-white/10 pb-4"><i class="fa-solid fa-pen-to-square text-amber-500"></i> Editar Registro Ministerial</h2>
+            
+            <form id="form-edit-historico" onsubmit="salvarEdicaoHistorico(event)" class="space-y-4">
+                <input type="hidden" id="edith-id">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1.5"><label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Nick do Autor</label><input type="text" id="edith-nick" required class="w-full glass-input rounded-xl px-4 py-2.5 text-sm font-medium"></div>
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Tipo de Proposta</label>
+                        <select id="edith-tipo" required class="w-full glass-input rounded-xl px-4 py-2.5 text-sm font-medium appearance-none"><option value="Projeto" class="text-black">Projeto</option><option value="Sugestão" class="text-black">Sugestão</option></select>
+                    </div>
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Tema</label>
+                    <input type="text" id="edith-tema" required class="w-full glass-input rounded-xl px-4 py-2.5 text-sm font-medium">
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Status Oficial</label>
+                    <select id="edith-status" required class="w-full glass-input rounded-xl px-4 py-2.5 text-sm font-bold appearance-none">
+                        <option value="Aprovado" class="text-black">Deferido (Aprovado)</option>
+                        <option value="Aprovado com ressalvas" class="text-black">Aprovado c/ Ressalvas</option>
+                        <option value="Rejeitado" class="text-black">Indeferido (Rejeitado)</option>
+                        <option value="Pendente" class="text-black">Pendente (Voltar para Auditoria)</option>
+                    </select>
+                </div>
+                <div class="space-y-1.5 border-t border-white/5 pt-4 mt-2">
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Veredito / Justificativa Atual</label>
+                    <textarea id="edith-motivo" rows="2" class="w-full glass-input rounded-xl px-4 py-2.5 text-sm font-medium custom-scrollbar"></textarea>
+                    <p class="text-[9px] text-white/30 ml-1">Toda alteração registrará seu nick e a hora no Histórico do banco de dados.</p>
+                </div>
+                
+                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all mt-4 text-sm">Atualizar Registro Oficial</button>
+            </form>
+        </div>
+    </div>
+
     <div id="modal-admin-post" class="fixed inset-0 z-[100] flex items-center justify-center p-4 opacity-0 invisible transition-all duration-300">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="toggleModal('modal-admin-post')"></div>
         <div class="relative w-full max-w-lg bg-[#0A0102] border border-white/10 rounded-3xl p-8 transform scale-95 transition-all">
             <button onclick="toggleModal('modal-admin-post')" class="absolute top-6 right-6 text-white/40 hover:text-tre-brand"><i class="fa-solid fa-xmark text-xl"></i></button>
-            <h2 class="text-xl font-black text-white uppercase mb-6 flex items-center gap-2 border-b border-white/10 pb-4"><i class="fa-solid fa-bolt text-emerald-500"></i> Protocolo Manual</h2>
+            <h2 class="text-xl font-black text-white uppercase mb-6 flex items-center gap-2 border-b border-white/10 pb-4"><i class="fa-solid fa-bolt text-emerald-500"></i> Inserir Protocolo</h2>
             <form id="form-admin-post" onsubmit="salvarLancamentoManual(event)" class="space-y-4">
-                <input type="hidden" id="man-id">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-1.5"><label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Nick do Autor</label><input type="text" id="man-nick" required class="w-full glass-input rounded-xl px-4 py-2.5 text-sm font-medium"></div>
                     <div class="space-y-1.5"><label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Tipo</label><select id="man-tipo" required class="w-full glass-input rounded-xl px-4 py-2.5 text-sm font-medium appearance-none"><option value="Projeto" class="text-black">Projeto</option><option value="Sugestão" class="text-black">Sugestão</option></select></div>
                 </div>
                 <div class="space-y-1.5"><label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Tema / Assunto</label><input type="text" id="man-tema" required class="w-full glass-input rounded-xl px-4 py-2.5 text-sm font-medium"></div>
-                <div class="space-y-1.5"><label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Status Oficial</label>
-                    <select id="man-status" required class="w-full glass-input rounded-xl px-4 py-2.5 text-sm font-bold appearance-none"><option value="Pendente" class="text-black">Pendente</option><option value="Aprovado" class="text-black">Aprovado</option><option value="Rejeitado" class="text-black">Rejeitado</option></select>
+                <div class="space-y-1.5"><label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Status Final</label>
+                    <select id="man-status" class="w-full glass-input rounded-xl px-4 py-2.5 text-sm font-bold text-emerald-400 bg-emerald-500/10 appearance-none">
+                        <option value="Aprovado" class="text-black">Deferido (Aprovado)</option>
+                        <option value="Aprovado com ressalvas" class="text-black">Aprovado c/ Ressalvas</option>
+                        <option value="Pendente" class="text-black">Pendente (Ir p/ Auditoria)</option>
+                        <option value="Rejeitado" class="text-black">Indeferido (Rejeitado)</option>
+                    </select>
                 </div>
-                <button type="submit" id="btn-save-man" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all mt-4 text-sm">Salvar Registro</button>
+                <button type="submit" id="btn-save-man" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all mt-4 text-sm">Lançar no Sistema</button>
             </form>
         </div>
     </div>
@@ -434,7 +501,7 @@
 
     <script>
         // ==========================================
-        // 1. INICIALIZAÇÃO FIREBASE (COM AS CHAVES REAIS)
+        // 1. INICIALIZAÇÃO FIREBASE 
         // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyD2vf35brFqXqO5WB2rdGwLT3Rg3lIFxEo",
@@ -453,8 +520,13 @@
         let projetosGlobaisAll = []; 
         let projetosPendentesAll = [];
 
-        function getAvatarUrl(nick, size = 'l') { return `https://www.habbo.com.br/habbo-imaging/avatarimage?user=${encodeURIComponent(nick)}&action=std&direction=2&head_direction=2&gesture=sml&size=${size}`; }
+        function getAvatarUrl(nick, size = 'm') { return `https://www.habbo.com.br/habbo-imaging/avatarimage?user=${encodeURIComponent(nick)}&action=std&direction=2&head_direction=2&gesture=sml&size=${size}`; }
         function sanitize(str) { const temp = document.createElement('div'); temp.textContent = str; return temp.innerHTML; }
+        
+        // Helper para renderizar Avatar Premium (Peito pra cima)
+        function getSmallAvatarHtml(nick) {
+            return `<div class="w-8 h-8 rounded-full bg-[#0A0102] border border-white/10 overflow-hidden relative flex-shrink-0 shadow-md group-hover:border-tre-brand transition-colors"><img src="${getAvatarUrl(nick, 'm')}" class="w-full h-full object-cover object-top scale-150 mt-1 transition-transform duration-500 group-hover:scale-[1.7]"></div>`;
+        }
 
         // ==========================================
         // 2. MOTOR DE AUTENTICAÇÃO E HIERARQUIA 
@@ -542,27 +614,23 @@
         // ==========================================
         // 4. O GRANDE CÉREBRO: ESCUTA GLOBAL ÚNICA
         // ==========================================
-        // Usamos UMA SÓ CHAMADA ao banco para alimentar TODO o sistema de forma sincronizada e com Ordem correta (01, 02...).
         let unsubOuvidoria = null;
         function iniciarEscutasGlobais() {
             if(unsubOuvidoria) unsubOuvidoria();
+            // A numeração é baseada na data de envio (ascendente: os mais velhos são 1, 2, 3...)
             unsubOuvidoria = db.collection("ouvidoria_tre").orderBy("dataEnvio", "asc").onSnapshot((snap) => {
                 projetosGlobaisAll = [];
                 let contadorOrdem = 1;
                 
                 snap.forEach((doc) => { 
-                    const d = doc.data(); 
-                    d.id = doc.id; 
-                    // Se não tiver Ordem gerada pelo Index, criamos visualmente agora:
+                    const d = doc.data(); d.id = doc.id; 
                     d.numOrdemVisual = String(contadorOrdem).padStart(2, '0');
                     projetosGlobaisAll.push(d);
                     contadorOrdem++;
                 });
 
-                // A lista pendente são todos os PENDENTES (independente do mês)
                 projetosPendentesAll = projetosGlobaisAll.filter(p => p.status === 'Pendente');
-                // Reverte para mostrar o mais novo no topo
-                projetosGlobaisAll.reverse();
+                projetosGlobaisAll.reverse(); // Mais novos no topo das listas
                 projetosPendentesAll.reverse();
 
                 dispararRenderizadores();
@@ -576,25 +644,20 @@
                 const gridAdmins = document.getElementById('grid-admin-list-admins'); gridAdmins.innerHTML = '';
                 const gridConvidados = document.getElementById('grid-admin-list-convidados'); gridConvidados.innerHTML = '';
                 
-                let countPendente = 0;
-                let hist = []; 
+                let countPendente = 0; let hist = []; 
                 
                 snap.forEach((doc) => { 
                     const d = doc.data(); d.id = doc.id; hist.push(d);
-                    
-                    // Renderiza Membros (Aprovados)
                     if(d.status === "Aprovado") {
                         let stLogo = d.role === "Admin" ? '<i class="fa-solid fa-star text-amber-500 absolute -top-2 -right-2 text-sm bg-[#0A0102] rounded-full p-1 border border-amber-500/50 shadow-vivid z-10"></i>' : '';
                         let cardHtml = `<button onclick="abrirPerfil('${doc.id}')" class="vivid-perfil h-32 glass-card p-4 flex flex-col items-center justify-center text-center gap-3 border border-white/5 group">
-                            <div class="relative w-16 h-16 flex-shrink-0"><div class="w-full h-full rounded-full bg-[#0A0102] border border-white/10 group-hover:border-tre-brand overflow-hidden relative z-0"><img src="${getAvatarUrl(d.nick,'m')}" class="avatar-img absolute -top-1 left-1/2 -translate-x-1/2 transition-transform duration-500 w-14"></div>${stLogo}</div>
+                            <div class="relative w-16 h-16 flex-shrink-0"><div class="w-full h-full rounded-full bg-[#0A0102] border border-white/10 overflow-hidden relative z-0"><img src="${getAvatarUrl(d.nick,'m')}" class="w-full h-full object-cover object-top scale-125 pt-2 transition-transform duration-500 group-hover:scale-150"></div>${stLogo}</div>
                             <div class="w-full"><p class="text-sm font-black text-white group-hover:text-tre-brand truncate w-full">${sanitize(d.nick)}</p><p class="text-[9px] text-white/40 uppercase tracking-widest mt-0.5">${d.role === "Admin" ? 'Ministério' : 'Convidado'}</p></div></button>`;
                         if(d.role === "Admin") gridAdmins.innerHTML += cardHtml; else gridConvidados.innerHTML += cardHtml;
                     }
-                    
-                    // Renderiza Pendentes
                     if(d.status === "Pendente") {
                         countPendente++;
-                        gridAc.innerHTML += `<div class="glass-card p-5 flex flex-col h-full"><div class="flex items-center gap-3 mb-4 pb-4 border-b border-white/5"><div class="w-10 h-10 rounded-full bg-[#0A0102] border border-white/10 overflow-hidden relative flex-shrink-0"><img src="${getAvatarUrl(d.nick,'m')}" class="absolute -top-2 left-1/2 -translate-x-1/2"></div><h4 class="font-bold text-white tracking-wide">${sanitize(d.nick)}</h4></div>
+                        gridAc.innerHTML += `<div class="glass-card p-5 flex flex-col h-full"><div class="flex items-center gap-3 mb-4 pb-4 border-b border-white/5">${getSmallAvatarHtml(d.nick)}<h4 class="font-bold text-white tracking-wide">${sanitize(d.nick)}</h4></div>
                         <p class="text-sm text-white/70 mb-5 flex-grow">Solicitou acesso.</p>
                         <div class="flex gap-2 mt-auto only-admin"><button onclick="julgarAcesso('${doc.id}', 'Aprovado')" class="flex-1 bg-emerald-500/20 text-emerald-400 py-2.5 rounded-lg text-xs font-bold hover:bg-emerald-500/40">Liberar</button><button onclick="julgarAcesso('${doc.id}', 'Rejeitado')" class="flex-1 bg-red-500/20 text-red-400 py-2.5 rounded-lg text-xs font-bold hover:bg-red-500/40">Negar</button></div></div>`;
                     }
@@ -604,108 +667,74 @@
 
                 hist.sort((a,b) => b.dataSolicitacao?.toDate() - a.dataSolicitacao?.toDate()).forEach(d => {
                     let st = d.status === 'Aprovado' ? 'emerald' : d.status === 'Rejeitado' || d.status === 'Revogado' ? 'red' : 'amber';
-                    tbHist.innerHTML += `<tr class="border-b border-white/5 hover:bg-white/5 text-white/80"><td class="p-4 px-6 font-bold flex items-center gap-3"><img src="${getAvatarUrl(d.nick,'s')}" class="w-6 h-6 rounded-full">${sanitize(d.nick)}</td><td class="p-4 text-center"><span class="point-badge point-${st}">${sanitize(d.status)}</span></td><td class="p-4 text-xs font-semibold">${d.role==="Admin"?"Ministério":"Convidado"}</td><td class="p-4 text-[10px] font-mono opacity-50">${formatarDataHora(d.dataSolicitacao)}</td></tr>`;
+                    tbHist.innerHTML += `<tr class="border-b border-white/5 hover:bg-white/5 text-white/80 group"><td class="p-4 px-6 font-bold flex items-center gap-3">${getSmallAvatarHtml(d.nick)}${sanitize(d.nick)}</td><td class="p-4 text-center"><span class="point-badge point-${st}">${sanitize(d.status)}</span></td><td class="p-4 text-xs font-semibold">${d.role==="Admin"?"Ministério":"Convidado"}</td><td class="p-4 text-[10px] font-mono opacity-50">${formatarDataHora(d.dataSolicitacao)}</td></tr>`;
                 });
             });
         }
 
         function dispararRenderizadores() {
-            renderizarDashboard();
-            renderizarAuditoriaProfissional();
-            renderizarHistoricoGeral();
-            renderizarRankingOuvidoria();
-            renderizarControleMedalhas();
+            renderizarDashboard(); renderizarAuditoriaProfissional(); renderizarHistoricoGeral(); renderizarRankingOuvidoria(); renderizarControleMedalhas();
         }
 
         // ==========================================
-        // 5. RENDERIZADORES (DASHBOARD, AUDITORIA, HISTÓRICO, RANKING, MEDALHAS)
+        // 5. RENDERIZADORES
         // ==========================================
-        
-        // DASHBOARD
         function renderizarDashboard() {
-            let filtradosMes = projetosGlobaisAll.filter(p => {
-                let dbData = p.dataEnvio || p.dataJulgamento;
-                return dbData && formatarMesAno(dbData.toDate()) === mesAtualStr;
-            });
-
-            const aprovados = filtradosMes.filter(p => p.status === 'Aprovado');
+            let filtradosMes = projetosGlobaisAll.filter(p => { let dbData = p.dataEnvio || p.dataJulgamento; return dbData && formatarMesAno(dbData.toDate()) === mesAtualStr; });
+            const aprovados = filtradosMes.filter(p => p.status.includes('Aprovado')); // Inclui 'Aprovado' e 'Aprovado com ressalvas'
             const taxa = filtradosMes.length > 0 ? Math.round((aprovados.length / filtradosMes.length) * 100) : 0;
             
-            let mapaAutores = {};
-            aprovados.forEach(p => { mapaAutores[p.nick] = (mapaAutores[p.nick] || 0) + 1; });
+            let mapaAutores = {}; aprovados.forEach(p => { mapaAutores[p.nick] = (mapaAutores[p.nick] || 0) + 1; });
             let topNick = "Nenhum"; let topCount = -1;
             Object.keys(mapaAutores).forEach(nick => { if(mapaAutores[nick] > topCount) { topCount = mapaAutores[nick]; topNick = nick; } });
 
             document.getElementById('dash-total').innerText = filtradosMes.length;
             document.getElementById('dash-taxa').innerText = taxa + '%';
-            document.getElementById('dash-pendentes').innerText = projetosPendentesAll.length; // Pendentes independem de mês
+            document.getElementById('dash-pendentes').innerText = projetosPendentesAll.length; 
             document.getElementById('dash-top1').innerText = sanitize(topNick);
         }
 
-        // AUDITORIA PROFISSIONAL (Lista Horizontal)
         function renderizarAuditoriaProfissional() {
-            const container = document.getElementById('list-auditoria-container');
-            const empty = document.getElementById('empty-atividades');
+            const container = document.getElementById('list-auditoria-container'); const empty = document.getElementById('empty-atividades');
             document.getElementById('count-atividades').innerText = `${projetosPendentesAll.length} Pendentes`;
-            
             container.innerHTML = '';
-            if (projetosPendentesAll.length === 0) {
-                container.style.display = 'none'; empty.classList.replace('hidden', 'flex');
-            } else {
+            if (projetosPendentesAll.length === 0) { container.style.display = 'none'; empty.classList.replace('hidden', 'flex'); } 
+            else {
                 container.style.display = 'flex'; empty.classList.replace('flex', 'hidden');
-                
                 projetosPendentesAll.forEach(d => {
-                    container.innerHTML += `
-                        <div class="glass-panel-simple p-5 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-6 border-l-4 border-amber-500 hover:border-amber-400 transition-all hover:translate-x-1" id="card-${d.id}">
-                            <div class="flex items-start gap-5">
-                                <div class="w-14 h-14 rounded-full bg-[#0A0102] border border-white/10 overflow-hidden relative flex-shrink-0 shadow-lg">
-                                    <img src="${getAvatarUrl(d.nick,'m')}" class="absolute -top-2 left-1/2 -translate-x-1/2 scale-110">
-                                </div>
-                                <div>
-                                    <div class="flex items-center gap-3 mb-1">
-                                        <span class="text-amber-500 font-black text-[10px] tracking-widest uppercase">Ordem #${d.numOrdemVisual}</span>
-                                        <span class="bg-white/5 border border-white/10 rounded px-2 py-0.5 text-[9px] font-bold text-white/50 uppercase">${sanitize(d.tipo)}</span>
-                                    </div>
-                                    <h3 class="text-white font-black text-lg md:text-xl leading-tight mb-1 truncate max-w-lg">${sanitize(d.tema)}</h3>
-                                    <p class="text-white/40 text-xs font-semibold"><i class="fa-solid fa-user mr-1 text-white/20"></i> ${sanitize(d.nick)} &bull; <i class="fa-solid fa-clock ml-2 mr-1 text-white/20"></i> ${formatarDataHora(d.dataEnvio)}</p>
-                                </div>
-                            </div>
-                            <div class="flex shrink-0">
-                                <button onclick="abrirLeituraProposta('${d.id}')" class="w-full md:w-auto bg-blue-500/20 hover:bg-blue-500/40 text-blue-400 border border-blue-500/30 px-6 py-3 rounded-xl font-bold text-xs transition-all shadow-lg flex items-center justify-center gap-2">
-                                    <i class="fa-solid fa-book-open"></i> Avaliar Proposta
-                                </button>
+                    container.innerHTML += `<div class="glass-panel-simple p-5 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-6 border-l-4 border-amber-500 hover:border-amber-400 transition-all hover:translate-x-1 group" id="card-${d.id}">
+                        <div class="flex items-start gap-5">
+                            ${getSmallAvatarHtml(d.nick)}
+                            <div>
+                                <div class="flex items-center gap-3 mb-1"><span class="text-amber-500 font-black text-[10px] tracking-widest uppercase">Ordem #${d.numOrdemVisual}</span><span class="bg-white/5 border border-white/10 rounded px-2 py-0.5 text-[9px] font-bold text-white/50 uppercase">${sanitize(d.tipo)}</span></div>
+                                <h3 class="text-white font-black text-lg md:text-xl leading-tight mb-1 truncate max-w-lg">${sanitize(d.tema)}</h3>
+                                <p class="text-white/40 text-xs font-semibold"><i class="fa-solid fa-user mr-1 text-white/20"></i> ${sanitize(d.nick)} &bull; <i class="fa-solid fa-clock ml-2 mr-1 text-white/20"></i> ${formatarDataHora(d.dataEnvio)}</p>
                             </div>
                         </div>
-                    `;
+                        <div class="flex shrink-0"><button onclick="abrirLeituraProposta('${d.id}')" class="w-full md:w-auto bg-blue-500/20 hover:bg-blue-500/40 text-blue-400 border border-blue-500/30 px-6 py-3 rounded-xl font-bold text-xs transition-all shadow-lg flex items-center justify-center gap-2"><i class="fa-solid fa-book-open"></i> Avaliar Proposta</button></div>
+                    </div>`;
                 });
             }
         }
 
-        // HISTÓRICO GERAL (Com Número Visual)
         let debounceTimerHist;
-        function filtrarHistoricoBusca() { 
-            clearTimeout(debounceTimerHist);
-            debounceTimerHist = setTimeout(() => {
-                const t = document.getElementById('search-historico').value.toLowerCase(); 
-                document.querySelectorAll('#table-historico-list tr').forEach(r => { r.style.display = r.innerText.toLowerCase().includes(t) ? '' : 'none'; }); 
-            }, 250);
-        }
+        function filtrarHistoricoBusca() { clearTimeout(debounceTimerHist); debounceTimerHist = setTimeout(() => { const t = document.getElementById('search-historico').value.toLowerCase(); document.querySelectorAll('#table-historico-list tr').forEach(r => { r.style.display = r.innerText.toLowerCase().includes(t) ? '' : 'none'; }); }, 250); }
 
         function renderizarHistoricoGeral() {
             const list = document.getElementById('table-historico-list');
             let filtrados = projetosGlobaisAll.filter(p => { let dataBase = p.dataEnvio || p.dataJulgamento; return dataBase && formatarMesAno(dataBase.toDate()) === mesAtualStr; });
-            
             list.innerHTML = '';
             if(filtrados.length === 0) { list.innerHTML = '<tr><td colspan="5" class="p-10 text-center opacity-40">Mês sem registros.</td></tr>'; return; }
             
             filtrados.forEach(d => {
-                let stCl = d.status === "Aprovado" ? "emerald" : d.status === "Rejeitado" ? "red" : "amber"; let ic = d.status === "Aprovado" ? "check" : d.status === "Rejeitado" ? "xmark" : "clock";
-                let icBtnClass = d.status === "Aprovado" ? "badge-aprovado" : d.status === "Rejeitado" ? "badge-rejeitado" : "badge-pendente";
+                let stCl = d.status === "Aprovado" ? "emerald" : d.status === "Rejeitado" ? "red" : d.status === "Aprovado com ressalvas" ? "blue" : "amber"; 
+                let ic = d.status === "Aprovado" ? "check" : d.status === "Rejeitado" ? "xmark" : d.status === "Aprovado com ressalvas" ? "check-double" : "clock";
+                let icBtnClass = d.status === "Aprovado" ? "badge-aprovado" : d.status === "Rejeitado" ? "badge-rejeitado" : d.status === "Aprovado com ressalvas" ? "badge-ressalvas" : "badge-pendente";
 
-                let btns = `<button onclick="abrirLeituraProposta('${d.id}')" class="bg-white/5 hover:bg-white/20 text-white w-8 h-8 rounded-lg transition-colors mr-1" title="Ler Inteiro"><i class="fa-solid fa-eye"></i></button><button onclick="iniciarEdicaoHistorico('${d.id}')" class="bg-white/5 hover:bg-white/20 text-amber-500 w-8 h-8 rounded-lg transition-colors mr-1"><i class="fa-solid fa-pen"></i></button><button onclick="apagarHistorico('${d.id}')" class="bg-red-500/10 hover:bg-red-500/30 text-red-500 w-8 h-8 rounded-lg transition-colors"><i class="fa-solid fa-trash"></i></button>`;
+                let btns = `<button onclick="abrirLeituraProposta('${d.id}')" class="bg-white/5 hover:bg-white/20 text-white w-8 h-8 rounded-lg transition-colors mr-1" title="Ler Inteiro"><i class="fa-solid fa-eye"></i></button><button onclick="iniciarEdicaoHistorico('${d.id}')" class="bg-white/5 hover:bg-white/20 text-amber-500 w-8 h-8 rounded-lg transition-colors mr-1" title="Editar Veredito"><i class="fa-solid fa-pen"></i></button><button onclick="apagarHistorico('${d.id}')" class="bg-red-500/10 hover:bg-red-500/30 text-red-500 w-8 h-8 rounded-lg transition-colors"><i class="fa-solid fa-trash"></i></button>`;
 
-                list.innerHTML += `<tr class="border-b border-white/5 hover:bg-white/5 text-white/80 filter-row">
-                    <td class="p-4 px-6"><span class="text-[10px] font-black text-tre-brand block mb-1">#${d.numOrdemVisual}</span><div class="font-bold flex items-center gap-2"><img src="${getAvatarUrl(d.nick,'s')}" class="w-6 h-6 rounded-full bg-black/40"> ${sanitize(d.nick)}</div></td>
+                list.innerHTML += `<tr class="border-b border-white/5 hover:bg-white/5 text-white/80 filter-row group">
+                    <td class="p-4 px-6"><span class="text-[10px] font-black text-tre-brand block mb-1">#${d.numOrdemVisual}</span><div class="font-bold flex items-center gap-2">${getSmallAvatarHtml(d.nick)} ${sanitize(d.nick)}</div></td>
                     <td class="p-4 font-semibold text-white leading-tight max-w-[200px] truncate" title="${sanitize(d.tema)}">${sanitize(d.tema)}<br><span class="text-[9px] text-white/40 uppercase tracking-widest">${sanitize(d.tipo)}</span></td>
                     <td class="p-4 text-center"><span class="point-badge ${icBtnClass}"><i class="fa-solid fa-${ic}"></i> ${sanitize(d.status)}</span></td>
                     <td class="p-4 text-right only-admin">${btns}</td>
@@ -714,34 +743,26 @@
             filtrarHistoricoBusca(); aplicarPermissoesUI();
         }
 
-        // RANKING DE OUVIDORIA (OS MAIORES APROVADOS)
         function renderizarRankingOuvidoria() {
             const list = document.getElementById('table-ranking-ouvidoria');
-            let aprovadosMes = projetosGlobaisAll.filter(p => p.status === 'Aprovado' && p.dataJulgamento && formatarMesAno(p.dataJulgamento.toDate()) === mesAtualStr);
-            
-            let mapa = {};
-            aprovadosMes.forEach(p => { mapa[p.nick] = (mapa[p.nick] || 0) + 1; });
+            let aprovadosMes = projetosGlobaisAll.filter(p => p.status.includes('Aprovado') && p.dataJulgamento && formatarMesAno(p.dataJulgamento.toDate()) === mesAtualStr);
+            let mapa = {}; aprovadosMes.forEach(p => { mapa[p.nick] = (mapa[p.nick] || 0) + 1; });
             let ranking = Object.keys(mapa).map(nick => ({ nick: nick, count: mapa[nick] })).sort((a, b) => b.count - a.count);
-            
             list.innerHTML = '';
             if(ranking.length === 0) { list.innerHTML = '<tr><td colspan="3" class="p-10 text-center opacity-40">Nenhum projeto aprovado neste mês.</td></tr>'; return; }
-            
             ranking.forEach((r, index) => {
-                let pos = index + 1;
-                let posClass = pos === 1 ? 'text-amber-500 text-2xl' : pos === 2 ? 'text-gray-300 text-xl' : pos === 3 ? 'text-orange-400 text-lg' : 'text-white/30 text-sm';
-                list.innerHTML += `<tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                let pos = index + 1; let posClass = pos === 1 ? 'text-amber-500 text-2xl' : pos === 2 ? 'text-gray-300 text-xl' : pos === 3 ? 'text-orange-400 text-lg' : 'text-white/30 text-sm';
+                list.innerHTML += `<tr class="border-b border-white/5 hover:bg-white/5 transition-colors group">
                     <td class="p-4 px-6 text-center font-black ${posClass}">${pos}º</td>
-                    <td class="p-4 font-bold flex items-center gap-3 text-lg"><img src="${getAvatarUrl(r.nick,'m','wlk','std')}" class="w-10 h-10 rounded-full border border-white/10 bg-black/50">${sanitize(r.nick)}</td>
-                    <td class="p-4 text-center"><span class="bg-emerald-500/20 text-emerald-400 font-black px-4 py-2 rounded-xl text-xl">${r.count}</span></td>
+                    <td class="p-4 font-bold flex items-center gap-3 text-lg">${getSmallAvatarHtml(r.nick)}${sanitize(r.nick)}</td>
+                    <td class="p-4 text-center"><span class="bg-emerald-500/20 text-emerald-400 font-black px-4 py-2 rounded-xl text-xl shadow-inner border border-emerald-500/20">${r.count}</span></td>
                 </tr>`;
             });
         }
 
-        // CONTROLE DE MEDALHAS RCC SYSTEM
         function renderizarControleMedalhas() {
             const list = document.getElementById('table-medalhas-list');
-            let aprovadosMes = projetosGlobaisAll.filter(p => p.status === 'Aprovado' && p.dataJulgamento && formatarMesAno(p.dataJulgamento.toDate()) === mesAtualStr);
-            
+            let aprovadosMes = projetosGlobaisAll.filter(p => p.status.includes('Aprovado') && p.dataJulgamento && formatarMesAno(p.dataJulgamento.toDate()) === mesAtualStr);
             list.innerHTML = '';
             if(aprovadosMes.length === 0) { list.innerHTML = '<tr><td colspan="4" class="p-10 text-center opacity-40">Nenhum projeto aguardando medalha neste mês.</td></tr>'; return; }
             
@@ -752,13 +773,12 @@
                     btnHtml = `<button disabled class="bg-white/5 text-white/20 px-4 py-2 rounded-lg text-xs font-bold cursor-not-allowed">Já Postado</button>`;
                 } else {
                     statusHtml = `<span class="bg-amber-500/10 text-amber-500 border border-amber-500/30 text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded flex flex-col items-center"><i class="fa-solid fa-clock mb-1"></i> Pendente</span>`;
-                    btnHtml = `<button onclick="confirmarMedalhaRCC('${p.id}')" class="bg-blue-500 hover:bg-blue-600 text-white shadow-lg px-4 py-2 rounded-lg text-xs font-bold transition-all"><i class="fa-solid fa-award mr-1"></i> Marcar +20 RCC</button>`;
+                    btnHtml = `<button onclick="confirmarMedalhaRCC('${p.id}')" class="bg-blue-500 hover:bg-blue-600 text-white shadow-lg px-4 py-2 rounded-lg text-xs font-bold transition-all hover:scale-105"><i class="fa-solid fa-award mr-1"></i> Marcar +20 RCC</button>`;
                 }
-
-                list.innerHTML += `<tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                list.innerHTML += `<tr class="border-b border-white/5 hover:bg-white/5 transition-colors group">
                     <td class="p-4 px-6">
-                        <div class="font-bold flex items-center gap-3 mb-1"><img src="${getAvatarUrl(p.nick,'s')}" class="w-6 h-6 rounded-full bg-black/40"> ${sanitize(p.nick)}</div>
-                        <span class="text-xs text-white/50 truncate max-w-[200px] block">${sanitize(p.tema)}</span>
+                        <div class="font-bold flex items-center gap-3 mb-1">${getSmallAvatarHtml(p.nick)} ${sanitize(p.nick)}</div>
+                        <span class="text-xs text-white/50 truncate max-w-[200px] block font-medium">${sanitize(p.tema)}</span>
                     </td>
                     <td class="p-4 text-[10px] text-white/40 uppercase font-bold tracking-widest leading-relaxed">Envio: ${formatarDataHora(p.dataEnvio)}<br><span class="text-emerald-400">Aprov: ${formatarDataHora(p.dataJulgamento)}</span></td>
                     <td class="p-4 text-center">${statusHtml}</td>
@@ -770,9 +790,7 @@
 
         function confirmarMedalhaRCC(id) {
             if(confirm("Confirma que você já postou as +20 Medalhas Temporárias no perfil deste Policial no RCC System?")) {
-                db.collection("ouvidoria_tre").doc(id).update({
-                    medalhaPostada: true, medalhaPostadaPor: currentUserNick, dataMedalhaPostada: firebase.firestore.FieldValue.serverTimestamp()
-                }).catch(()=>alert("Erro ao salvar no banco."));
+                db.collection("ouvidoria_tre").doc(id).update({ medalhaPostada: true, medalhaPostadaPor: currentUserNick, dataMedalhaPostada: firebase.firestore.FieldValue.serverTimestamp() }).catch(()=>alert("Erro ao salvar no banco."));
             }
         }
 
@@ -780,25 +798,22 @@
         // 6. AÇÕES E MOTOR DE JULGAMENTO (READ/WRITE)
         // ==========================================
         function abrirLeituraProposta(id) {
-            const p = projetosGlobaisAll.find(x => x.id === id);
-            if(!p) return;
+            const p = projetosGlobaisAll.find(x => x.id === id); if(!p) return;
             document.getElementById('ler-ordem').innerText = `ORDEM #${sanitize(p.numOrdemVisual)}`;
             document.getElementById('ler-tema').innerText = sanitize(p.tema);
             document.getElementById('ler-autor').innerText = sanitize(p.nick);
             document.getElementById('ler-tipo').innerText = sanitize(p.tipo);
             document.getElementById('ler-data').innerHTML = `<i class="fa-regular fa-clock mr-1"></i> ${formatarDataHora(p.dataEnvio)}`;
-            
-            // O Segredo para exibir o HTML do QuillJS perfeitamente
             document.getElementById('ler-descricao').innerHTML = p.descricao; 
             
             const divBotoesJulgar = document.getElementById('container-botoes-julgar');
             const divBotoesFechar = document.getElementById('container-botoes-fechar');
-
             if(p.status === 'Pendente') {
                 divBotoesFechar.classList.add('hidden'); divBotoesJulgar.classList.remove('hidden');
                 divBotoesJulgar.innerHTML = `
-                    <button onclick="prepararVeredito('${id}', 'Rejeitado')" class="flex-1 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/30 font-bold py-3.5 rounded-xl transition-all text-sm"><i class="fa-solid fa-xmark mr-1"></i> Indeferir Proposta</button>
-                    <button onclick="prepararVeredito('${id}', 'Aprovado')" class="flex-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold py-3.5 rounded-xl transition-all text-sm"><i class="fa-solid fa-check mr-1"></i> Deferir Proposta</button>
+                    <button onclick="prepararVeredito('${id}', 'Rejeitado')" class="flex-1 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/30 font-bold py-3.5 rounded-xl transition-all text-sm"><i class="fa-solid fa-xmark mr-1"></i> Negar</button>
+                    <button onclick="prepararVeredito('${id}', 'Aprovado com ressalvas')" class="flex-1 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 font-bold py-3.5 rounded-xl transition-all text-sm"><i class="fa-solid fa-clipboard-list mr-1"></i> Ressalvas</button>
+                    <button onclick="prepararVeredito('${id}', 'Aprovado')" class="flex-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold py-3.5 rounded-xl transition-all text-sm"><i class="fa-solid fa-check mr-1"></i> Aprovar</button>
                 `;
             } else {
                 divBotoesJulgar.classList.add('hidden'); divBotoesFechar.classList.remove('hidden');
@@ -811,16 +826,17 @@
             document.getElementById('form-ver-docId').value = id; document.getElementById('form-ver-status').value = statusFinal;
             const icone = document.getElementById('icone-veredito'); const titulo = document.getElementById('titulo-veredito'); const btn = document.getElementById('btn-confirma-ver'); document.getElementById('texto-veredito').value = "";
 
-            if(statusFinal === 'Aprovado') { icone.className = "w-16 h-16 bg-emerald-500/10 border border-emerald-500/30 rounded-full flex items-center justify-center mb-6 mx-auto"; icone.innerHTML = '<i class="fa-solid fa-check text-2xl text-emerald-400"></i>'; titulo.innerText = "Deferir Proposta"; btn.className = "flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-lg transition-all text-xs"; } 
-            else { icone.className = "w-16 h-16 bg-red-500/10 border border-red-500/30 rounded-full flex items-center justify-center mb-6 mx-auto"; icone.innerHTML = '<i class="fa-solid fa-xmark text-2xl text-red-500"></i>'; titulo.innerText = "Indeferir Proposta"; btn.className = "flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-lg transition-all text-xs"; }
+            if(statusFinal === 'Aprovado') { icone.className = "w-16 h-16 bg-emerald-500/10 border border-emerald-500/30 rounded-full flex items-center justify-center mb-6 mx-auto"; icone.innerHTML = '<i class="fa-solid fa-check text-2xl text-emerald-400"></i>'; titulo.innerText = "Aprovar Proposta"; btn.className = "flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-lg transition-all text-xs"; } 
+            else if (statusFinal === 'Aprovado com ressalvas') { icone.className = "w-16 h-16 bg-blue-500/10 border border-blue-500/30 rounded-full flex items-center justify-center mb-6 mx-auto"; icone.innerHTML = '<i class="fa-solid fa-clipboard-list text-2xl text-blue-400"></i>'; titulo.innerText = "Aprovar com Ressalvas"; btn.className = "flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-lg transition-all text-xs"; }
+            else { icone.className = "w-16 h-16 bg-red-500/10 border border-red-500/30 rounded-full flex items-center justify-center mb-6 mx-auto"; icone.innerHTML = '<i class="fa-solid fa-xmark text-2xl text-red-500"></i>'; titulo.innerText = "Negar Proposta"; btn.className = "flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-lg transition-all text-xs"; }
             setTimeout(()=> { toggleModal('modal-veredito'); }, 300);
         }
 
         function confirmarVeredito(e) {
             e.preventDefault(); const id = document.getElementById('form-ver-docId').value; const st = document.getElementById('form-ver-status').value; const motivo = document.getElementById('texto-veredito').value.trim(); const btn = document.getElementById('btn-confirma-ver');
-            if(st === 'Rejeitado' && !motivo) { alert("Para indeferir, é obrigatório deixar uma justificativa."); return; }
+            if(st === 'Rejeitado' && !motivo) { alert("Para negar, é obrigatório deixar uma justificativa."); return; }
             btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-            db.collection("ouvidoria_tre").doc(id).update({ status: st, motivoRejeicao: motivo || "Deferido. Encaminhado para implementação estrutural.", dataJulgamento: firebase.firestore.FieldValue.serverTimestamp(), julgadoPor: currentUserNick })
+            db.collection("ouvidoria_tre").doc(id).update({ status: st, motivoRejeicao: motivo || "Deferido. Encaminhado para implementação.", dataJulgamento: firebase.firestore.FieldValue.serverTimestamp(), julgadoPor: currentUserNick })
             .then(() => { toggleModal('modal-veredito'); })
             .catch(() => alert("Erro ao processar."))
             .finally(() => { btn.disabled = false; btn.innerText = "Confirmar"; });
@@ -831,25 +847,23 @@
         function abrirModalLancamentoManual() { document.getElementById('form-admin-post').reset(); toggleModal('modal-admin-post'); }
         function salvarLancamentoManual(e) {
             e.preventDefault(); const btn = document.getElementById('btn-save-man'); btn.disabled = true; btn.innerHTML = 'Processando...';
-            const docData = { nick: document.getElementById('man-nick').value.trim(), tipo: document.getElementById('man-tipo').value, tema: document.getElementById('man-tema').value.trim(), descricao: document.getElementById('man-descricao').value.trim(), status: document.getElementById('man-status').value, dataEnvio: firebase.firestore.FieldValue.serverTimestamp() };
-            if(docData.status === "Aprovado" || docData.status === "Rejeitado") { docData.dataJulgamento = firebase.firestore.FieldValue.serverTimestamp(); docData.julgadoPor = currentUserNick + " (Manual)"; docData.motivoRejeicao = "Lançado diretamente via painel administrativo."; }
-            db.collection("ouvidoria_tre").add(docData).then(()=> { toggleModal('modal-admin-post'); alert("Lançamento efetuado!"); }).finally(()=> { btn.disabled = false; btn.innerHTML = 'Salvar Registro'; });
+            const docData = { nick: document.getElementById('man-nick').value.trim(), tipo: document.getElementById('man-tipo').value, tema: document.getElementById('man-tema').value.trim(), descricao: "", status: document.getElementById('man-status').value, dataEnvio: firebase.firestore.FieldValue.serverTimestamp() };
+            if(docData.status !== "Pendente") { docData.dataJulgamento = firebase.firestore.FieldValue.serverTimestamp(); docData.julgadoPor = currentUserNick + " (Manual)"; docData.motivoRejeicao = "Lançado diretamente via painel administrativo."; }
+            db.collection("ouvidoria_tre").add(docData).then(()=> { toggleModal('modal-admin-post'); alert("Lançamento efetuado!"); }).finally(()=> { btn.disabled = false; btn.innerHTML = 'Lançar no Sistema'; });
         }
 
         function apagarHistorico(id) { if(confirm("ALERTA: Confirmar exclusão permanente deste protocolo?")) db.collection("ouvidoria_tre").doc(id).delete(); }
         function iniciarEdicaoHistorico(id) {
             const p = projetosGlobaisAll.find(x => x.id === id); if(!p) return;
             document.getElementById('edith-id').value = id; document.getElementById('edith-nick').value = p.nick; document.getElementById('edith-tipo').value = p.tipo || "Projeto"; document.getElementById('edith-tema').value = p.tema; 
-            // Para edição simples manual, removemos as tags html e deixamos so o textContent no textarea.
-            const temp = document.createElement('div'); temp.innerHTML = p.descricao;
-            document.getElementById('edith-descricao').value = temp.textContent; 
             document.getElementById('edith-status').value = p.status; 
+            document.getElementById('edith-motivo').value = p.motivoRejeicao || ""; // Puxa o Veredito atual para edição
             toggleModal('modal-edit-historico');
         }
         function salvarEdicaoHistorico(e) {
             e.preventDefault(); const id = document.getElementById('edith-id').value; 
-            const update = { nick: document.getElementById('edith-nick').value.trim(), tipo: document.getElementById('edith-tipo').value, tema: document.getElementById('edith-tema').value.trim(), descricao: document.getElementById('edith-descricao').value.trim(), status: document.getElementById('edith-status').value, editadoPor: currentUserNick, dataEdicao: firebase.firestore.FieldValue.serverTimestamp() };
-            db.collection("ouvidoria_tre").doc(id).update(update).then(()=> { toggleModal('modal-edit-historico'); alert("Registro Atualizado."); });
+            const update = { nick: document.getElementById('edith-nick').value.trim(), tipo: document.getElementById('edith-tipo').value, tema: document.getElementById('edith-tema').value.trim(), status: document.getElementById('edith-status').value, motivoRejeicao: document.getElementById('edith-motivo').value.trim(), editadoPor: currentUserNick, dataEdicao: firebase.firestore.FieldValue.serverTimestamp() };
+            db.collection("ouvidoria_tre").doc(id).update(update).then(()=> { toggleModal('modal-edit-historico'); alert("Registro e Veredito Atualizados."); });
         }
 
         // ==========================================
