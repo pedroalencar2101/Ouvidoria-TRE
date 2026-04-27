@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ouvidoria | Companhia dos Treinadores</title>
+    <title>Portal Ouvidoria | Companhia dos Treinadores (TRE)</title>
     
     <link rel="icon" type="image/png" href="trelogo.png">
     <link rel="apple-touch-icon" href="trelogo.png">
-
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -56,6 +56,22 @@
         .nav-tab:hover:not(.active) { color: rgba(255,255,255,0.9); }
 
         .tab-content { transition: opacity 0.4s ease, transform 0.4s ease; }
+
+        /* ==========================================
+           TÍTULO ANIMADO: DEGRADÊ E EFEITO VIDRO
+           ========================================== */
+        .text-tre-neon {
+            background: linear-gradient(135deg, #FF4D5A 0%, #D31522 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 0px 15px rgba(211, 21, 34, 0.6));
+        }
+        .text-glass-premium {
+            background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.3) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 10px 20px rgba(0,0,0,0.5));
+        }
 
         /* AVATARES IMPECCABLE (HD CROP) */
         .avatar-red-glass { background: radial-gradient(circle at center, rgba(211, 21, 34, 0.4) 0%, rgba(10, 1, 2, 0.8) 100%); border: 1px solid rgba(211, 21, 34, 0.4); box-shadow: inset 0 0 10px rgba(211, 21, 34, 0.2); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 50%; aspect-ratio: 1 / 1; flex-shrink: 0; }
@@ -126,9 +142,11 @@
                 <div class="inline-flex items-center justify-center bg-tre-brand/10 border border-tre-brand/20 px-5 py-2 rounded-full mb-6 shadow-vivid backdrop-blur-sm relative z-10">
                     <span class="text-[10px] font-black tracking-[0.2em] uppercase text-tre-brand"><i class="fa-solid fa-scale-balanced mr-2"></i>Companhia dos Treinadores</span>
                 </div>
-                <h1 class="text-5xl md:text-7xl font-black leading-tight tracking-tighter mb-4 text-white relative z-10">
-                    [TRE] OUVIDORIA
+                
+                <h1 class="text-5xl md:text-7xl font-black leading-tight tracking-tighter mb-4 relative z-10 flex flex-wrap items-center justify-center gap-x-4">
+                    <span class="text-tre-neon">[TRE]</span> <span class="text-glass-premium">OUVIDORIA</span>
                 </h1>
+                
                 <p class="text-lg text-white/60 max-w-2xl mx-auto font-medium relative z-10">Portal oficial para envio de projetos e sugestões. Sua voz constrói o futuro da Companhia.</p>
             </section>
 
@@ -297,7 +315,7 @@
 
     <script>
         // ==========================================
-        // 1. CONFIGURAÇÃO FIREBASE 
+        // 1. CONFIGURAÇÃO FIREBASE E VARIÁVEIS GLOBAIS
         // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyD2vf35brFqXqO5WB2rdGwLT3Rg3lIFxEo",
@@ -311,13 +329,17 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // Autenticação Anônima para Leitura
+        let projetosPublicosAll = [];
+
+        // Remoção do Loader
         function removerLoader() { const l = document.getElementById('auth-loader'); if(l) gsap.to(l, { opacity: 0, duration: 0.5, onComplete: () => l.style.display = 'none' }); }
-        setTimeout(removerLoader, 3000); 
+        setTimeout(removerLoader, 4000); 
+
+        // Autenticação Anônima para Leitura
         auth.signInAnonymously().then(() => { removerLoader(); iniciarEscutaPublica(); }).catch(() => { removerLoader(); iniciarEscutaPublica(); });
 
         // ==========================================
-        // 2. INICIALIZAÇÃO QUILLJS FULL (DIDÁTICO)
+        // 2. INICIALIZAÇÃO QUILLJS FULL
         // ==========================================
         Quill.register('modules/imageResize', window.ImageResize.default);
         const quill = new Quill('#quill-editor', {
@@ -330,7 +352,7 @@
                     [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                     [{ 'align': [] }],
                     ['link', 'image'],
-                    ['clean'] // Botão de limpar fundo/formato (borracha)
+                    ['clean']
                 ],
                 imageResize: { displaySize: true }
             },
@@ -341,10 +363,11 @@
         // 3. UI E FUNÇÕES AUXILIARES 
         // ==========================================
         function sanitize(str) { const temp = document.createElement('div'); temp.textContent = str; return temp.innerHTML; }
+        // Avatares HD (size=l)
         function getAvatarUrl(nick) { return `https://www.habbo.com.br/habbo-imaging/avatarimage?user=${encodeURIComponent(nick)}&action=std&direction=2&head_direction=2&gesture=sml&size=l`; }
         function formatarDataHora(fsTimestamp) { if(!fsTimestamp) return '---'; const d = fsTimestamp.toDate(); return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth()+1).padStart(2, '0')} às ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; }
 
-        // SISTEMA DE ABAS (SPA) - Janela Separada de Protocolos
+        // SISTEMA DE ABAS (SPA)
         function switchTab(tabId) {
             document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
             document.getElementById(`tab-btn-${tabId}`).classList.add('active');
@@ -369,7 +392,6 @@
         function fecharModalAuth(id) { const m = document.getElementById(id), c = m.querySelector('div.relative.transform'); c.classList.replace('scale-100', 'scale-95'); setTimeout(() => m.classList.add('opacity-0', 'invisible'), 200); }
         function switchViewAuth(v) { document.getElementById('view-login').classList.add('hidden'); document.getElementById('view-register').classList.add('hidden'); document.getElementById('view-feedback').classList.add('hidden'); document.getElementById('view-'+v).classList.replace('hidden', 'flex'); if(v==='login'||v==='register') document.getElementById('view-'+v).classList.replace('flex', 'block'); }
 
-        let projetosPublicosAll = [];
         let debounceTimerBusca;
         function filtrarProtocolosBusca() { clearTimeout(debounceTimerBusca); debounceTimerBusca = setTimeout(() => { const t = document.getElementById('search-public').value.toLowerCase(); document.querySelectorAll('#public-projects-container .filter-card').forEach(r => { r.style.display = r.innerText.toLowerCase().includes(t) ? '' : 'none'; }); }, 250); }
 
@@ -381,40 +403,67 @@
             const btn = document.getElementById('btn-submit-public');
             const editorContent = quill.root.innerHTML;
             const textContent = quill.getText().trim();
-            const tipo = document.querySelector('input[name="tipo_envio"]:checked');
+            const tipoSelecionado = document.querySelector('input[name="tipo_envio"]:checked');
 
-            if(!tipo) { alert("Escolha o tipo de envio."); return; }
-            if (!quill.getContents().ops.some(op => op.image) && textContent.length < 20) { alert("Sua proposta está muito curta. Detalhe mais."); return; }
+            if(!tipoSelecionado) { alert("Selecione o Tipo de Envio (Sugestão ou Projeto)."); return; }
+            if (!quill.getContents().ops.some(op => op.image) && textContent.length < 20) { alert("A descrição está muito curta."); return; }
             
             if(confirm("Confirmar envio oficial desta proposta para o Ministério TRE?")) {
-                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Enviando...';
-                const docData = { nick: document.getElementById('autor-nick').value.trim(), tipo: tipo.value, tema: document.getElementById('projeto-tema').value.trim(), descricao: editorContent, status: 'Pendente', dataEnvio: firebase.firestore.FieldValue.serverTimestamp(), medalhaPostada: false };
-                db.collection("ouvidoria_tre").add(docData).then((ref) => { 
-                    ref.update({ ordem: ref.id.slice(-4).toUpperCase() }); 
-                    quill.setContents([]); document.getElementById('public-submission-form').reset(); alert("Proposta enviada com sucesso! Acompanhe o veredito em Protocolos."); switchTab('lista');
-                }).catch(() => alert("Erro ao enviar no banco. Contate um Administrador.")).finally(() => { btn.disabled = false; btn.innerHTML = 'Enviar Proposta <i class="fa-solid fa-arrow-right"></i>'; });
+                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Processando...';
+                
+                // Salvamos o documento no banco de dados. O número de ordem será gerado e exibido
+                // pelo Listener, que lê todos os documentos em ordem crescente de data.
+                const docData = { 
+                    nick: document.getElementById('autor-nick').value.trim(), 
+                    tipo: tipoSelecionado.value, 
+                    tema: document.getElementById('projeto-tema').value.trim(), 
+                    descricao: editorContent, 
+                    status: 'Pendente', 
+                    dataEnvio: firebase.firestore.FieldValue.serverTimestamp(), 
+                    medalhaPostada: false 
+                };
+                
+                db.collection("ouvidoria_tre").add(docData).then(() => { 
+                    quill.setContents([]); document.getElementById('public-submission-form').reset(); 
+                    alert("Proposta enviada com sucesso! Acompanhe o veredito em Protocolos."); 
+                    switchTab('lista');
+                }).catch(() => alert("Erro ao enviar no banco. Contate um Administrador."))
+                  .finally(() => { btn.disabled = false; btn.innerHTML = 'Enviar Proposta <i class="fa-solid fa-paper-plane"></i>'; });
             }
         });
 
         // ==========================================
-        // 5. MOTOR DE ESCUTA PÚBLICA E CARDS
+        // 5. MOTOR DE ESCUTA PÚBLICA (SISTEMA DE ORDEM IDÊNTICO AO ADMIN)
         // ==========================================
         let unsubPublic = null;
         function iniciarEscutaPublica() {
             if(unsubPublic) unsubPublic();
-            // A listagem lê a numeração criada no Admin e exibe DESCENDENTE (Mais novos primeiro)
-            unsubPublic = db.collection("ouvidoria_tre").orderBy("dataEnvio", "desc").onSnapshot((snap) => {
+            // Para garantir a mesma numeração (01, 02, 03...), lemos ASCENDENTE primeiro
+            unsubPublic = db.collection("ouvidoria_tre").orderBy("dataEnvio", "asc").onSnapshot((snap) => {
                 const container = document.getElementById('public-projects-container');
                 const empty = document.getElementById('empty-protocolos');
-                container.innerHTML = ''; projetosPublicosAll = [];
+                
+                let tempArray = [];
+                let contadorOrdem = 1;
+                
+                snap.forEach((doc) => {
+                    const d = doc.data(); d.id = doc.id;
+                    // Gera o número de Ordem visual em tempo real (igualzinho no Admin)
+                    d.numOrdemVisual = String(contadorOrdem).padStart(2, '0');
+                    tempArray.push(d);
+                    contadorOrdem++;
+                });
+                
+                // Inverte para exibir o mais recente no topo da tela
+                projetosPublicosAll = tempArray.reverse();
+                
+                container.innerHTML = '';
 
-                if (snap.empty) { empty.classList.replace('hidden', 'flex'); } 
-                else {
+                if (projetosPublicosAll.length === 0) { 
+                    empty.classList.replace('hidden', 'flex'); 
+                } else {
                     empty.classList.replace('flex', 'hidden');
-                    snap.forEach((doc) => {
-                        const d = doc.data(); d.id = doc.id;
-                        projetosPublicosAll.push(d);
-                        
+                    projetosPublicosAll.forEach((d) => {
                         let stCl = d.status === "Aprovado" ? "badge-aprovado" : d.status === "Rejeitado" ? "badge-rejeitado" : d.status === "Aprovado com ressalvas" ? "badge-ressalvas" : "badge-pendente";
                         let icon = d.status === "Aprovado" ? "check" : d.status === "Rejeitado" ? "xmark" : d.status === "Aprovado com ressalvas" ? "clipboard-list" : "clock";
                         
@@ -429,7 +478,7 @@
                                 <div class="avatar-red-glass w-12 group-hover:border-tre-brand transition-colors"><img src="${getAvatarUrl(d.nick)}"></div>
                                 <div class="w-full">
                                     <div class="flex justify-between items-center mb-1">
-                                        <span class="text-tre-brand font-black text-xs uppercase tracking-widest">#${d.numOrdemVisual || d.ordem || '--'}</span>
+                                        <span class="text-tre-brand font-black text-xs uppercase tracking-widest">ORDEM #${d.numOrdemVisual}</span>
                                         <span class="text-[9px] font-bold bg-white/5 border border-white/10 px-2 py-0.5 rounded text-white/50 uppercase">${sanitize(d.tipo)}</span>
                                     </div>
                                     <span class="font-black text-white text-lg group-hover:text-tre-brand transition-colors truncate block w-full">${sanitize(d.nick)}</span>
@@ -455,7 +504,7 @@
         // ==========================================
         function lerPropostaPublica(id) {
             const p = projetosPublicosAll.find(x => x.id === id); if(!p) return;
-            document.getElementById('det-ordem').innerText = `ORDEM #${sanitize(p.numOrdemVisual || p.ordem || '--')}`;
+            document.getElementById('det-ordem').innerText = `ORDEM #${sanitize(p.numOrdemVisual)}`;
             document.getElementById('det-tema').innerText = sanitize(p.tema); document.getElementById('det-autor').innerText = sanitize(p.nick);
             document.getElementById('det-tipo').innerText = sanitize(p.tipo); document.getElementById('det-data').innerHTML = `<i class="fa-regular fa-clock mr-1"></i> ${formatarDataHora(p.dataEnvio)}`;
             document.getElementById('det-descricao').innerHTML = p.descricao; 
@@ -463,7 +512,7 @@
         }
 
         // ==========================================
-        // 7. LOGIN/CADASTRO 
+        // 7. LOGIN E CADASTRO 
         // ==========================================
         function realizarLogin(e) { e.preventDefault(); const btn = document.getElementById('btn-login-submit'); btn.disabled=true; btn.innerHTML='Processando...'; const n = document.getElementById('login-nick').value.trim(); const s = document.getElementById('login-senha').value; auth.signInWithEmailAndPassword(n.toLowerCase()+"@treinadores.rcc", s).then(() => window.location.href="admin.html").catch(() => { document.getElementById('login-feedback').innerText="Nick ou Senha incorretos."; document.getElementById('login-feedback').classList.remove('hidden'); btn.disabled=false; btn.innerHTML='Autenticar'; }); }
         function enviarCadastro(e) { e.preventDefault(); const btn = document.getElementById('btn-cadastro'); btn.disabled=true; btn.innerHTML='Processando...'; const n = document.getElementById('reg-nick').value.trim(); const s = document.getElementById('reg-senha').value; auth.createUserWithEmailAndPassword(n.toLowerCase()+"@treinadores.rcc", s).then(res => { db.collection("solicitacoes_acesso").doc(res.user.uid).set({ nick: n, status: "Pendente", role: "Convidado", dataSolicitacao: firebase.firestore.FieldValue.serverTimestamp() }).then(() => switchViewAuth('feedback')); }).catch(err => { document.getElementById('reg-feedback').innerText=err.message; document.getElementById('reg-feedback').classList.remove('hidden'); btn.disabled=false; btn.innerHTML='Enviar Pedido'; }); }
