@@ -3,620 +3,555 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ouvidoria | Companhia dos Treinadores</title>
+    <title>Ouvidoria | Companhia dos Treinadores (TRE)</title>
+    
     <link rel="icon" type="image/png" href="trelogo.png">
     <link rel="apple-touch-icon" href="trelogo.png">
-
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { tre: { brand: '#D31522', brandHover: '#FA1C2A', bgPanel: 'rgba(20, 4, 5, 0.5)', glassNav: 'rgba(25, 3, 4, 0.85)' } },
+                    boxShadow: { 'vivid': '0 0 20px -5px rgba(211, 21, 34, 0.4)', 'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)' }
+                }
+            }
+        }
+    </script>
 
     <style>
-        /* ──────────────────────────────────────────
-           TOKENS & RESET (Brilhos Suavizados)
-        ────────────────────────────────────────── */
-        :root {
-            --brand:      #D31522;
-            --brand-glow: rgba(211, 21, 34, 0.15); /* Glow reduzido e profissional */
-            --brand-dim:  rgba(211, 21, 34, 0.08); /* Fundo avermelhado suave */
-            --bg:         #0A0102;
-            --surface:    rgba(255,255,255,0.03);
-            --border:     rgba(255,255,255,0.06);
-            --border-hot: rgba(211,21,34,0.25);
-            --text:       #F0ECE8;
-            --text-muted: rgba(240,236,232,0.6);
-            --text-faint: rgba(240,236,232,0.3);
-            --radius-lg:  1.5rem;
-            --radius-xl:  2rem;
-            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        /* ==========================================
+           ESTILOS GERAIS E BACKGROUND VIVO (PADRÃO TRE)
+           ========================================== */
+        body { 
+            background: #0A0102; 
+            background-image: radial-gradient(circle at 50% 0%, #2B0508 0%, #0A0102 70%); 
+            color: #FFFFFF; 
+            min-height: 100vh; 
+            font-size: 15px; 
+            scroll-behavior: smooth; 
         }
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-
-        /* Fundo Radial Escuro Oficial TRE */
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            background-image: radial-gradient(circle at 50% 0%, #200407 0%, #0A0102 70%);
-            color: var(--text);
-            min-height: 100vh;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
+        /* NAVEGAÇÃO PREMIUM APPLE-GLASS */
+        .glass-nav-premium { 
+            background: rgba(0, 0, 0, 0.4); 
+            backdrop-filter: blur(24px); 
+            -webkit-backdrop-filter: blur(24px); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+            box-shadow: theme('boxShadow.glass'); 
         }
-
-        /* ──────────────────────────────────────────
-           SCROLLBAR
-        ────────────────────────────────────────── */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(211,21,34,0.4); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--brand); }
-
-        /* ──────────────────────────────────────────
-           LOADER
-        ────────────────────────────────────────── */
-        #loader {
-            position: fixed; inset: 0; z-index: 99998;
-            background: var(--bg);
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center; gap: 1.5rem;
-            transition: opacity 0.8s var(--ease-out-expo), visibility 0.8s;
-        }
-        #loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .loader-ring {
-            width: 48px; height: 48px;
-            border: 2px solid var(--border);
-            border-top-color: var(--brand);
-            border-radius: 50%;
-            animation: spin 0.9s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* ──────────────────────────────────────────
-           NAV - EFEITO RED GLASS PROFISSIONAL
-        ────────────────────────────────────────── */
-        nav#main-nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 900;
-            height: 72px; display: flex; align-items: center;
-            background: rgba(30, 4, 6, 0.6); /* Red Glass Base */
-            backdrop-filter: blur(24px) saturate(150%);
-            -webkit-backdrop-filter: blur(24px) saturate(150%);
-            border-bottom: 1px solid rgba(211, 21, 34, 0.15);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
-            transition: all 0.4s var(--ease-out-expo);
-        }
-        .nav-inner {
-            max-width: 1320px; margin: 0 auto; padding: 0 2rem;
-            width: 100%; display: flex; align-items: center; justify-content: space-between;
-        }
-        .nav-logo { display: flex; align-items: center; gap: 0.875rem; text-decoration: none; transition: transform 0.3s; }
-        .nav-logo:hover { transform: scale(1.05); }
-        .nav-logo img { height: 36px; object-fit: contain; }
-        .nav-logo-text { font-weight: 800; font-size: 1rem; letter-spacing: -0.02em; color: var(--text); }
-        .nav-logo-text span { color: var(--text-muted); font-weight: 600; }
         
-        .nav-links { display: flex; align-items: center; gap: 2.5rem; }
-        .nav-link-btn {
-            background: none; border: none;
-            font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 700;
-            letter-spacing: 0.1em; text-transform: uppercase;
-            color: var(--text-muted); cursor: pointer;
-            transition: color 0.2s; padding-bottom: 4px;
-            border-bottom: 2px solid transparent;
+        .nav-tab { transition: all 0.3s; color: rgba(255,255,255,0.6); position: relative; padding-bottom: 0.5rem; }
+        .nav-tab::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: theme('colors.tre.brand'); transform: scaleX(0); transition: transform 0.3s ease; }
+        .nav-tab.active { color: #FFFFFF; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+        .nav-tab.active::after { transform: scaleX(1); }
+        .nav-tab:hover { color: #FFFFFF; }
+
+        .tab-content { transition: opacity 0.4s ease, transform 0.4s ease; }
+
+        /* CARDS E INPUTS DE VIDRO */
+        .glass-card { background: linear-gradient(145deg, rgba(35, 6, 8, 0.4) 0%, rgba(10, 1, 2, 0.6) 100%); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1.5rem; transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); backdrop-filter: blur(16px); }
+        .glass-card:hover { border-color: rgba(211, 21, 34, 0.3); transform: translateY(-4px); box-shadow: 0 10px 40px -10px rgba(211, 21, 34, 0.4); }
+        
+        .glass-input { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); color: white; transition: all 0.3s ease; }
+        .glass-input:focus, .glass-input:focus-within { background: rgba(255, 255, 255, 0.07); border-color: theme('colors.tre.brand'); outline: none; box-shadow: 0 0 15px rgba(211, 21, 34, 0.2); }
+
+        /* TÍTULO ANIMADO (NEON/GLASS EFFECT) */
+        .animate-text-gradient {
+            background: linear-gradient(to right, #FFFFFF, #D31522, #FA1C2A, #FFFFFF);
+            background-size: 300% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: textGradient 4s linear infinite;
+            filter: drop-shadow(0 2px 10px rgba(211, 21, 34, 0.4));
         }
-        .nav-link-btn:hover { color: var(--text); }
-        .nav-link-btn.active { color: #fff; border-bottom: 2px solid var(--brand); }
+        @keyframes textGradient { to { background-position: 300% center; } }
 
-        .btn-nav-access {
-            display: flex; align-items: center; gap: 0.5rem;
-            padding: 0.6rem 1.25rem;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border);
-            border-radius: 100px; font-family: 'Inter', sans-serif;
-            font-size: 0.72rem; font-weight: 700;
-            letter-spacing: 0.08em; text-transform: uppercase;
-            color: var(--text); cursor: pointer; transition: all 0.25s;
-        }
-        .btn-nav-access:hover { background: rgba(211,21,34,0.15); border-color: rgba(211,21,34,0.3); }
+        /* AVATARES HD (PADRÃO ADMIN) */
+        .avatar-red-glass { background: radial-gradient(circle at center, rgba(211, 21, 34, 0.4) 0%, rgba(10, 1, 2, 0.8) 100%); border: 1px solid rgba(211, 21, 34, 0.4); box-shadow: inset 0 0 10px rgba(211, 21, 34, 0.2); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 50%; aspect-ratio: 1 / 1; flex-shrink: 0; }
+        .avatar-red-glass img { max-width: none; width: 140%; height: auto; object-fit: contain; transform: translateY(12%); }
 
-        /* ──────────────────────────────────────────
-           HERO & ORBS (Brilhos Suavizados)
-        ────────────────────────────────────────── */
-        .tab-view { display: none; opacity: 0; transition: opacity 0.4s var(--ease-out-expo); padding-top: 72px; }
-        .tab-view.active { display: block; opacity: 1; }
+        /* BADGES */
+        .point-badge { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 10px; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; }
+        .badge-pendente { background: rgba(245, 158, 11, 0.15); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .badge-aprovado { background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-ressalvas { background: rgba(37, 99, 235, 0.15); color: #60A5FA; border: 1px solid rgba(37, 99, 235, 0.3); }
+        .badge-rejeitado { background: rgba(239, 68, 68, 0.15); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.3); }
 
-        #hero { min-height: 80svh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 4rem 2rem 2rem; position: relative; overflow: hidden; }
-        .orb { position: absolute; border-radius: 50%; filter: blur(90px); pointer-events: none; }
-        .orb-1 { width: 600px; height: 600px; background: radial-gradient(circle, rgba(211,21,34,0.06) 0%, transparent 60%); top: -10%; left: 50%; transform: translateX(-50%); }
-        .orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(211,21,34,0.04) 0%, transparent 60%); bottom: 10%; right: -5%; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; } ::-webkit-scrollbar-thumb:hover { background: theme('colors.tre.brand'); }
 
-        .hero-eyebrow { display: inline-flex; align-items: center; gap: 0.625rem; padding: 0.4rem 1rem; background: var(--brand-dim); border: 1px solid var(--border-hot); border-radius: 100px; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: var(--brand); margin-bottom: 2rem; }
-        .hero-title { font-weight: 900; font-size: clamp(3rem, 8vw, 6.5rem); line-height: 0.95; letter-spacing: -0.04em; color: var(--text); margin-bottom: 1.5rem; text-shadow: 0 4px 20px rgba(0,0,0,0.4); }
-        .hero-title .accent { background: linear-gradient(135deg, #FF4D5A, #D31522); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 2px 10px rgba(211, 21, 34, 0.2); }
-        .hero-sub { max-width: 560px; font-size: 1.05rem; font-weight: 500; line-height: 1.6; color: var(--text-muted); margin-bottom: 3rem; }
+        #auth-loader { z-index: 99999; }
 
-        /* ──────────────────────────────────────────
-           LAYOUT SECTIONS
-        ────────────────────────────────────────── */
-        .section { max-width: 1100px; margin: 0 auto; padding: 2rem 2rem 6rem; }
-        .section-header { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding-bottom: 2rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--border); }
-        .section-header-left { display: flex; align-items: center; gap: 1.25rem; }
-        .section-icon { width: 48px; height: 48px; border-radius: 14px; background: var(--brand-dim); border: 1px solid var(--border-hot); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.2rem; color: var(--brand); }
-        .section-title { font-weight: 800; font-size: clamp(1.5rem, 2.5vw, 2rem); letter-spacing: -0.02em; color: var(--text); }
-        .section-sub { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem; font-weight: 500; }
-
-        /* ──────────────────────────────────────────
-           FORMULÁRIO E INPUTS GLASS
-        ────────────────────────────────────────── */
-        .form-card { background: rgba(20, 5, 8, 0.4); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 3rem; backdrop-filter: blur(16px); }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
-        .form-group.full { grid-column: 1 / -1; }
-
-        .form-label { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-faint); }
-        .form-label .req { color: var(--brand); margin-left: 2px; }
-
-        .form-input { width: 100%; padding: 0.9rem 1.1rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 500; color: var(--text); transition: all 0.3s; }
-        .form-input::placeholder { color: rgba(255,255,255,0.2); }
-        .form-input:focus { outline: none; border-color: var(--brand); background: rgba(211,21,34,0.03); box-shadow: 0 0 0 3px rgba(211,21,34,0.1); }
-
-        /* Radio tipo */
-        .tipo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-        .tipo-option { position: relative; }
-        .tipo-option input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
-        .tipo-label { display: flex; align-items: center; justify-content: center; gap: 0.625rem; padding: 0.85rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; font-size: 0.82rem; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: all 0.3s; }
-        .tipo-label:hover { border-color: rgba(255,255,255,0.15); color: var(--text); }
-        .tipo-option input:checked + .tipo-label { border-color: var(--brand); background: var(--brand-dim); color: var(--text); box-shadow: 0 0 10px rgba(211,21,34,0.1); }
-
-        /* Quill override - Fundo Branco Preservado */
-        .quill-wrapper { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: border-color 0.25s; }
-        .quill-wrapper:focus-within { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(211,21,34,0.1); }
-        .ql-toolbar.ql-snow { background: #F3F4F6 !important; border: none !important; border-bottom: 1px solid #E5E7EB !important; padding: 10px 14px !important; }
-        .ql-container.ql-snow { border: none !important; font-family: 'Inter', sans-serif; font-size: 14px; }
-        .ql-editor { background: #FFFFFF; color: #000000; min-height: 220px; padding: 1.25rem !important; line-height: 1.65; font-weight: 500; }
+        /* QUILL EDITOR - FUNDO BRANCO, TEXTO PRETO, SUPER PROFISSIONAL */
+        #editor-container { background-color: #FFFFFF !important; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.75rem; overflow: hidden; color: #000000; box-shadow: inset 0 2px 10px rgba(0,0,0,0.1); }
+        .ql-toolbar.ql-snow { background-color: #F9FAFB !important; border: none !important; border-bottom: 1px solid #E5E7EB !important; padding: 12px 16px !important; }
+        .ql-container.ql-snow { border: none !important; font-family: 'Inter', sans-serif; font-size: 15px; }
+        .ql-editor { color: #000000 !important; min-height: 250px; padding: 1.5rem !important; line-height: 1.6; }
         .ql-editor.ql-blank::before { color: #9CA3AF !important; font-style: normal; }
+        .ql-snow .ql-stroke { stroke: #1F2937 !important; } .ql-snow .ql-fill { fill: #1F2937 !important; }
+        .ql-snow .ql-picker { color: #1F2937 !important; font-weight: 600; }
 
-        .btn-submit { display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; padding: 1rem 2.5rem; background: var(--text); border: none; border-radius: 100px; font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--bg); cursor: pointer; transition: all 0.3s; margin-top: 1.5rem; width: 100%; }
-        .btn-submit:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,255,255,0.15); }
-        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-        /* ──────────────────────────────────────────
-           PROTOCOLOS CARDS (Refinados)
-        ────────────────────────────────────────── */
-        .search-input { width: 100%; padding: 0.8rem 1.1rem 0.8rem 2.75rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 100px; font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 500; color: var(--text); transition: all 0.3s; }
-        .search-input:focus { outline: none; border-color: var(--brand); background: rgba(211,21,34,0.03); }
-
-        .protocol-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
-        .protocol-card { background: linear-gradient(160deg, rgba(18,4,8,0.5) 0%, rgba(6,0,13,0.7) 100%); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem; display: flex; flex-direction: column; transition: all 0.3s; backdrop-filter: blur(12px); position: relative; overflow: hidden; }
-        .protocol-card:hover { border-color: rgba(211,21,34,0.25); transform: translateY(-3px); box-shadow: 0 10px 30px -10px rgba(211,21,34,0.15); }
-
-        .card-header { display: flex; align-items: center; gap: 0.875rem; margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border); }
-        .card-avatar { width: 44px; height: 44px; border-radius: 50%; background: radial-gradient(circle, rgba(211,21,34,0.3) 0%, rgba(6,0,13,0.8) 100%); border: 1px solid var(--border-hot); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
-        .card-avatar img { width: 130%; height: auto; object-fit: contain; transform: translateY(10%); }
-        .card-meta-top { flex: 1; min-width: 0; }
-        .card-protocol-num { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: var(--brand); }
-        .card-nick { font-weight: 800; font-size: 1.05rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .card-tipo { font-size: 0.6rem; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.25rem 0.625rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 100px; color: var(--text-faint); align-self: flex-start; }
-
-        .card-tema { font-weight: 700; font-size: 1.05rem; line-height: 1.4; color: var(--text); margin-bottom: 0.75rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .card-date { font-size: 0.72rem; font-weight: 500; color: var(--text-muted); display: flex; align-items: center; gap: 0.4rem; margin-bottom: 1.25rem; }
-        .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
-
-        /* Badges */
-        .badge { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.75rem; border-radius: 100px; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
-        .badge-pendente  { background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25); color: #FBBF24; }
-        .badge-aprovado  { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25); color: #34D399; }
-        .badge-ressalvas { background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.25); color: #60A5FA; }
-        .badge-rejeitado { background: rgba(239,68,68,0.12);  border: 1px solid rgba(239,68,68,0.25);  color: #F87171; }
-
-        .card-verdict { margin-top: 1.25rem; padding: 1rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 12px; }
-        .card-verdict-label { font-size: 0.6rem; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 0.5rem; }
-        .card-verdict-text { font-size: 0.82rem; font-weight: 500; color: var(--text-muted); line-height: 1.55; font-style: italic; }
-
-        .card-expand-btn { background: none; border: none; cursor: pointer; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); display: flex; align-items: center; gap: 0.35rem; transition: color 0.2s; }
-        .card-expand-btn:hover { color: #fff; }
-
-        .empty-state { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 5rem 2rem; text-align: center; border: 1px dashed var(--border); border-radius: var(--radius-xl); background: rgba(255,255,255,0.01); }
-        .empty-state.visible { display: flex; }
-
-        /* ──────────────────────────────────────────
-           FOOTER
-        ────────────────────────────────────────── */
-        footer { border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: center; position: relative; }
-        .footer-logo { height: 32px; margin: 0 auto 1.25rem; opacity: 0.4; transition: opacity 0.3s; }
-        .footer-logo:hover { opacity: 0.8; }
-        .footer-org { font-weight: 800; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.4rem; }
-        .footer-copy { font-size: 0.68rem; font-weight: 500; color: var(--text-faint); letter-spacing: 0.1em; }
-
-        /* ──────────────────────────────────────────
-           MODAIS (GLASS)
-        ────────────────────────────────────────── */
-        .modal-overlay { position: fixed; inset: 0; z-index: 9000; display: flex; align-items: center; justify-content: center; padding: 1.5rem; background: rgba(6,0,13,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
-        .modal-overlay.open { opacity: 1; visibility: visible; }
-        .modal-box { position: relative; width: 100%; max-width: 420px; background: linear-gradient(160deg, rgba(20,5,8,0.9) 0%, rgba(6,0,13,0.95) 100%); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 2.5rem; transform: translateY(20px) scale(0.97); transition: transform 0.35s var(--ease-out-expo); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .modal-overlay.open .modal-box { transform: translateY(0) scale(1); }
-        .modal-close { position: absolute; top: 1.25rem; right: 1.25rem; background: none; border: none; cursor: pointer; color: var(--text-faint); font-size: 1.2rem; transition: color 0.2s; }
-        .modal-close:hover { color: var(--text); }
+        /* LEITURA BRANCA LIMPA (MODAL LER) */
+        .white-reading-pane { background-color: #FFFFFF !important; color: #000000 !important; border-radius: 0.75rem; padding: 1.5rem; }
+        .white-reading-pane .ql-editor { color: #000000 !important; padding: 0 !important; }
+        .ql-editor img { max-width: 100%; border-radius: 8px; margin-top: 10px; margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.1); cursor: pointer; }
+        .ql-editor p { margin-bottom: 0.8em; }
+        .ql-editor strong { font-weight: 800; color: inherit; }
         
-        .modal-title { font-weight: 900; font-size: 1.4rem; letter-spacing: -0.03em; color: var(--text); margin-bottom: 0.3rem; }
-        .modal-sub { font-size: 0.8rem; font-weight: 500; color: var(--text-muted); margin-bottom: 2rem; }
-        .modal-field { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
-        .modal-field label { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-faint); }
-        
-        .btn-modal-primary { width: 100%; padding: 1rem; background: var(--text); border: none; border-radius: 100px; font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bg); cursor: pointer; transition: all 0.2s; margin-top: 0.75rem; }
-        .btn-modal-primary:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 5px 20px rgba(255,255,255,0.2); }
-        
-        /* Modal Feedback */
-        .modal-feedback-box { padding: 0.75rem 1rem; border-radius: 10px; margin-bottom: 1rem; font-size: 0.78rem; font-weight: 600; display: none; }
-        .modal-feedback-box.error { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.2); color: #F87171; display: block; }
+        /* SOMBRA RCC NO FUNDO */
+        .rcc-bg-shadow { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) scale(1.4); width: 100%; height: 100%; background-image: url('trelogo.png'); background-position: center; background-repeat: no-repeat; background-size: contain; opacity: 0.03; filter: blur(2px) grayscale(100%); z-index: -1; pointer-events: none; }
     </style>
 </head>
-<body>
+<body class="antialiased selection:bg-tre-brand selection:text-white flex flex-col">
 
-<div id="loader">
-    <div class="loader-ring"></div>
-</div>
-
-<nav id="main-nav">
-    <div class="nav-inner">
-        <a href="#home" class="nav-logo" onclick="switchViewTab('home')">
-            <img src="trelogo.png" alt="TRE" onerror="this.style.display='none'">
-            <span class="nav-logo-text">[TRE] <span>Ouvidoria</span></span>
-        </a>
-        <div class="nav-links">
-            <button class="nav-link-btn active" id="tab-home" onclick="switchViewTab('home')">Submeter</button>
-            <button class="nav-link-btn" id="tab-protocolos" onclick="switchViewTab('protocolos')">Arquivo</button>
-            <button class="btn-nav-access" onclick="openModal('modal-login')">
-                <i class="fa-solid fa-lock" style="color:var(--brand)"></i> Restrito
-            </button>
-        </div>
+    <div id="auth-loader" class="fixed inset-0 bg-[#0A0102] flex flex-col items-center justify-center backdrop-blur-3xl transition-opacity duration-700 z-[99999]">
+        <img src="trelogo.png" alt="Logo TRE" class="h-16 mb-6 animate-pulse" onerror="this.src='https://via.placeholder.com/80x80/D31522/FFFFFF?text=TRE'">
+        <i class="fa-solid fa-shield-halved text-4xl text-tre-brand mb-4"></i>
+        <h2 class="text-white font-black tracking-widest uppercase text-sm">Carregando Ouvidoria</h2>
     </div>
-</nav>
 
-<main style="padding-top: 72px;">
+    <header class="fixed top-0 left-0 w-full glass-nav-premium z-[900]">
+        <div class="max-w-[1600px] mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-4 group cursor-pointer" onclick="switchTab('nova')">
+                <img src="trelogo.png" alt="TRE" class="h-10 transition-transform duration-500 group-hover:scale-110 drop-shadow-[0_0_10px_rgba(211,21,34,0.5)]">
+                <div class="border-l border-white/10 h-6 hidden md:block"></div>
+                <span class="animate-text-gradient font-black text-2xl tracking-tight hidden md:block">
+                    [TRE] <span class="text-white/80 font-semibold">OUVIDORIA</span>
+                </span>
+            </div>
+            <nav class="flex items-center gap-8">
+                <button onclick="switchTab('nova')" id="tab-btn-nova" class="nav-tab active text-xs md:text-sm font-bold uppercase tracking-widest">Nova Proposta</button>
+                <button onclick="switchTab('lista')" id="tab-btn-lista" class="nav-tab text-xs md:text-sm font-bold uppercase tracking-widest">Arquivo de Protocolos</button>
+                <button onclick="abrirModalAuth()" class="bg-white/10 border border-white/10 hover:bg-white/20 hover:border-white/30 text-white font-bold px-5 py-2.5 rounded-full transition-all flex items-center gap-2 shadow-lg text-[11px] md:text-xs uppercase tracking-widest">
+                    <i class="fa-solid fa-lock text-tre-brand"></i> <span class="hidden md:inline">Restrito</span>
+                </button>
+            </nav>
+        </div>
+    </header>
 
-    <div id="view-home" class="tab-view active">
-        <section id="hero">
-            <div class="orb orb-1"></div>
-            <div class="orb orb-2"></div>
-            <div class="hero-eyebrow"><i class="fa-solid fa-scale-balanced"></i> Companhia dos Treinadores</div>
-            <h1 class="hero-title">Portal<br><span class="accent">Ouvidoria</span></h1>
-            <p class="hero-sub">Canal oficial para envio de projetos, sugestões e melhorias estruturais ao Ministério da Companhia.</p>
-        </section>
+    <main class="flex-grow max-w-[1400px] mx-auto px-6 pt-32 pb-24 w-full">
+        
+        <div id="tab-nova" class="tab-content block opacity-100">
+            <section class="text-center mb-16 relative">
+                <div class="rcc-bg-shadow"></div>
+                <div class="inline-flex items-center justify-center bg-tre-brand/10 border border-tre-brand/20 px-5 py-2 rounded-full mb-6 shadow-vivid backdrop-blur-sm relative z-10">
+                    <span class="text-[10px] font-black tracking-[0.2em] uppercase text-tre-brand"><i class="fa-solid fa-scale-balanced mr-2"></i>Companhia dos Treinadores</span>
+                </div>
+                
+                <h1 class="text-5xl md:text-7xl font-black leading-tight tracking-tighter mb-4 relative z-10 flex items-center justify-center gap-3 flex-wrap">
+                    <span class="animate-text-gradient">[TRE] OUVIDORIA</span>
+                </h1>
+                
+                <p class="text-lg text-white/60 max-w-2xl mx-auto font-medium relative z-10">Portal oficial para envio de projetos e sugestões. Sua voz constrói o futuro da Companhia.</p>
+            </section>
 
-        <section class="section">
-            <div class="section-header">
-                <div class="section-header-left">
-                    <div class="section-icon"><i class="fa-solid fa-file-signature"></i></div>
+            <section class="max-w-4xl mx-auto glass-card p-8 md:p-10 relative z-20">
+                <div class="mb-8 pb-6 border-b border-white/5 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-tre-brand/20 flex items-center justify-center border border-tre-brand/30 shadow-vivid">
+                        <i class="fa-solid fa-file-signature text-2xl text-tre-brand"></i>
+                    </div>
                     <div>
-                        <h2 class="section-title">Submeter Proposta</h2>
-                        <p class="section-sub">Todos os campos são obrigatórios para garantir a análise ministerial.</p>
+                        <h2 class="text-2xl font-black tracking-tight text-white uppercase">Submeter Proposta</h2>
+                        <p class="text-white/40 text-xs font-medium mt-1">Preencha os dados e utilize o editor profissional abaixo.</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="form-card">
-                <form id="form-public" novalidate>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label class="form-label">Nick do Autor <span class="req">*</span></label>
-                            <input type="text" id="f-nick" class="form-input" placeholder="Ex: G4VET4" required>
+                <form id="public-submission-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-1.5">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-white/50 ml-1">Nick do Autor</label>
+                            <input type="text" id="autor-nick" required placeholder="Ex: G4VET4" class="w-full glass-input rounded-xl px-5 py-4 text-sm font-medium">
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Tipo de Envio <span class="req">*</span></label>
-                            <div class="tipo-grid">
-                                <div class="tipo-option">
-                                    <input type="radio" name="tipo_envio" id="tipo-sugestao" value="Sugestão" required>
-                                    <label class="tipo-label" for="tipo-sugestao"><i class="fa-solid fa-lightbulb" style="color:var(--brand)"></i> Sugestão</label>
-                                </div>
-                                <div class="tipo-option">
-                                    <input type="radio" name="tipo_envio" id="tipo-projeto" value="Projeto">
-                                    <label class="tipo-label" for="tipo-projeto"><i class="fa-solid fa-folder-open" style="color:var(--brand)"></i> Projeto</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group full">
-                            <label class="form-label">Tema / Assunto <span class="req">*</span></label>
-                            <input type="text" id="f-tema" class="form-input" placeholder="Título claro e objetivo..." required>
-                        </div>
-                        <div class="form-group full">
-                            <label class="form-label">Corpo da Proposta <span class="req">*</span></label>
-                            <div class="quill-wrapper" id="quill-wrap">
-                                <div id="quill-editor"></div>
+                        <div class="space-y-1.5">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-white/50 ml-1">Tipo de Envio</label>
+                            <div class="flex gap-4">
+                                <label class="flex-1 glass-input rounded-xl px-4 py-4 text-sm font-bold flex items-center justify-center gap-3 cursor-pointer hover:bg-white/5 transition-all has-[:checked]:border-tre-brand has-[:checked]:bg-tre-brand/20 has-[:checked]:text-white text-white/60 shadow-inner">
+                                    <input type="radio" name="tipo_envio" value="Sugestão" class="hidden" required> <i class="fa-solid fa-lightbulb text-tre-brand"></i> Sugestão
+                                </label>
+                                <label class="flex-1 glass-input rounded-xl px-4 py-4 text-sm font-bold flex items-center justify-center gap-3 cursor-pointer hover:bg-white/5 transition-all has-[:checked]:border-tre-brand has-[:checked]:bg-tre-brand/20 has-[:checked]:text-white text-white/60 shadow-inner">
+                                    <input type="radio" name="tipo_envio" value="Projeto" class="hidden" required> <i class="fa-solid fa-folder-open text-tre-brand"></i> Projeto
+                                </label>
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn-submit" id="btn-submit"><i class="fa-solid fa-paper-plane"></i> Enviar Proposta Oficial</button>
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-white/50 ml-1">Tema / Título da Proposta</label>
+                        <input type="text" id="projeto-tema" required placeholder="Título claro e conciso..." class="w-full glass-input rounded-xl px-5 py-4 text-sm font-medium">
+                    </div>
+                    
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-white/50 ml-1 flex justify-between">
+                            <span>Corpo do Projeto</span>
+                            <span class="text-tre-brand"><i class="fa-solid fa-image mr-1"></i> Suporta imagens e formatação completa</span>
+                        </label>
+                        <div id="editor-container">
+                            <div id="quill-editor"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end pt-4">
+                        <button type="submit" id="btn-submit-public" class="bg-white hover:bg-gray-200 text-[#0A0102] font-black px-10 py-4 rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-all text-sm uppercase tracking-widest flex items-center gap-2 hover:scale-105">
+                            Enviar Proposta <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
                 </form>
-            </div>
-        </section>
-    </div>
-
-    <div id="view-protocolos" class="tab-view">
-        <section class="section pt-10">
-            <div class="section-header" style="align-items: flex-end;">
-                <div class="section-header-left">
-                    <div class="section-icon" style="background:rgba(255,255,255,0.04);border-color:var(--border)"><i class="fa-solid fa-box-archive" style="color:var(--text-muted)"></i></div>
-                    <div>
-                        <h2 class="section-title">Arquivo de Protocolos</h2>
-                        <p class="section-sub">Histórico público de propostas e avaliações ministeriais.</p>
-                    </div>
-                </div>
-                <div class="search-bar-wrap" style="width:280px;flex-shrink:0">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" class="search-input" id="search-public" placeholder="Buscar nick ou tema..." onkeyup="filtrarBusca()">
-                </div>
-            </div>
-
-            <div class="protocol-grid" id="protocol-grid"></div>
-            <div class="empty-state" id="empty-state">
-                <div class="empty-icon"><i class="fa-solid fa-inbox"></i></div>
-                <p class="empty-title">Nenhum Protocolo</p>
-                <p class="empty-sub">A ouvidoria ainda não possui registros publicados.</p>
-            </div>
-        </section>
-    </div>
-
-</main>
-
-<footer>
-    <img src="trelogo.png" alt="TRE" class="footer-logo">
-    <p class="footer-org">Companhia dos Treinadores</p>
-    <p class="footer-copy">RCC &copy; Todos os direitos reservados</p>
-</footer>
-
-<div class="modal-overlay" id="modal-login">
-    <div class="modal-box">
-        <button class="modal-close" onclick="closeModal('modal-login')"><i class="fa-solid fa-xmark"></i></button>
-
-        <div id="view-login-box">
-            <p class="modal-title">Acesso Restrito</p>
-            <p class="modal-sub">Painel ministerial — credenciais obrigatórias.</p>
-            <div class="modal-feedback-box" id="login-feedback"></div>
-            <form onsubmit="realizarLogin(event)">
-                <div class="modal-field"><label>Nick (Habbo)</label><input type="text" id="login-nick" class="modal-input" placeholder="Seu nick" required></div>
-                <div class="modal-field"><label>Senha</label><input type="password" id="login-senha" class="modal-input" placeholder="••••••••" required></div>
-                <button type="submit" class="btn-modal-primary" id="btn-login">Autenticar</button>
-            </form>
-            <div style="margin-top:1.5rem;text-align:center;border-top:1px solid var(--border);padding-top:1.5rem">
-                <button onclick="switchAuthView('register')" style="background:none;border:none;color:var(--text-faint);font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer">Solicitar Acesso →</button>
-            </div>
+            </section>
         </div>
 
-        <div id="view-register-box" style="display:none">
-            <p class="modal-title">Novo Acesso</p>
-            <p class="modal-sub">Seu pedido será avaliado pelo Ministério.</p>
-            <div class="modal-feedback-box" id="reg-feedback"></div>
-            <form onsubmit="enviarCadastro(event)">
-                <div class="modal-field"><label>Nick (Habbo)</label><input type="text" id="reg-nick" class="modal-input" placeholder="Seu nick" required></div>
-                <div class="modal-field"><label>Criar Senha</label><input type="password" id="reg-senha" class="modal-input" placeholder="Min. 6 caracteres" required minlength="6"></div>
-                <button type="submit" class="btn-modal-primary" id="btn-cadastro">Enviar Pedido</button>
-                <button type="button" onclick="switchAuthView('login')" style="width:100%;margin-top:0.75rem;background:transparent;border:1px solid var(--border);border-radius:100px;padding:0.8rem;color:var(--text-muted);font-weight:700;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;cursor:pointer">← Voltar</button>
-            </form>
-        </div>
-
-        <div id="view-feedback-box" style="display:none;text-align:center;padding:1rem 0">
-            <div style="width:64px;height:64px;border-radius:50%;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:#FBBF24;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 1rem"><i class="fa-solid fa-clock"></i></div>
-            <p class="modal-title" style="font-size:1.2rem">Em Análise</p>
-            <p class="modal-sub" style="margin-bottom:1.5rem">Aguarde a liberação do Ministério.</p>
-            <button class="btn-modal-primary" onclick="closeModal('modal-login')">Entendido</button>
-        </div>
-    </div>
-</div>
-
-<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
-
-<script>
-// ==========================================
-// 1. FIREBASE INIT
-// ==========================================
-const firebaseConfig = {
-    apiKey: "AIzaSyD2vf35brFqXqO5WB2rdGwLT3Rg3lIFxEo",
-    authDomain: "tre-ouvidoria.firebaseapp.com",
-    projectId: "tre-ouvidoria",
-    storageBucket: "tre-ouvidoria.firebasestorage.app",
-    messagingSenderId: "772876635425",
-    appId: "1:772876635425:web:079c1b3f3b0f7dcb91c260"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const auth = firebase.auth();
-
-function hideLoader() { const l = document.getElementById('loader'); if (l) l.classList.add('hidden'); }
-setTimeout(hideLoader, 3000);
-auth.signInAnonymously().then(() => { hideLoader(); iniciarEscutaPublica(); }).catch(() => { hideLoader(); iniciarEscutaPublica(); });
-
-// ==========================================
-// 2. SPA LOGIC (ABAS)
-// ==========================================
-function switchViewTab(tab) {
-    document.querySelectorAll('.nav-link-btn').forEach(el => el.classList.remove('active'));
-    document.getElementById('tab-' + tab).classList.add('active');
-    document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
-    document.getElementById('view-' + tab).classList.add('active');
-    window.scrollTo(0,0);
-}
-
-// ==========================================
-// 3. QUILLJS EDITOR (Fundo Branco Preservado)
-// ==========================================
-Quill.register('modules/imageResize', window.ImageResize.default);
-const quill = new Quill('#quill-editor', {
-    theme: 'snow',
-    placeholder: 'Descreva a proposta com detalhes. Insira imagens ou formatações...',
-    modules: {
-        toolbar: [
-            [{ header: [1, 2, 3, false] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ color: [] }, { background: [] }],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            [{ align: [] }],
-            ['link', 'image'],
-            ['clean']
-        ],
-        imageResize: { displaySize: true }
-    }
-});
-
-// ==========================================
-// 4. UTILIDADES & SANITIZAÇÃO
-// ==========================================
-function sanitize(str) { const div = document.createElement('div'); div.appendChild(document.createTextNode(String(str ?? ''))); return div.innerHTML; }
-function getAvatarUrl(nick) { return `https://www.habbo.com.br/habbo-imaging/avatarimage?user=${encodeURIComponent(nick)}&action=std&direction=2&head_direction=2&gesture=sml&size=l`; }
-function formatDate(ts) { if (!ts || typeof ts.toDate !== 'function') return '---'; const d = ts.toDate(); return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`; }
-function gerarEmailSeguro(nick) { return nick.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '') + "@tre.rcc"; }
-
-// ==========================================
-// 5. MODAL SYSTEM
-// ==========================================
-function openModal(id) { const m = document.getElementById(id); m.classList.add('open'); if(id==='modal-login') switchAuthView('login'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-function switchAuthView(v) { ['login','register','feedback'].forEach(n => document.getElementById('view-'+n+'-box').style.display = 'none'); document.getElementById('view-'+v+'-box').style.display = 'block'; }
-
-// ==========================================
-// 6. ENVIO DE PROPOSTA
-// ==========================================
-document.getElementById('form-public').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const nick = document.getElementById('f-nick').value.trim();
-    const tema = document.getElementById('f-tema').value.trim();
-    const tipoEl = document.querySelector('input[name="tipo_envio"]:checked');
-    const descHTML = quill.root.innerHTML;
-
-    if (!tipoEl) { alert("Selecione Sugestão ou Projeto."); return; }
-    if (!quill.getContents().ops.some(op => op.image) && quill.getText().trim().length < 20) { alert("Sua proposta está muito curta."); return; }
-
-    const btn = document.getElementById('btn-submit');
-    btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
-
-    const payload = { nick, tipo: tipoEl.value, tema, descricao: descHTML, status: 'Pendente', dataEnvio: firebase.firestore.FieldValue.serverTimestamp(), medalhaPostada: false };
-
-    try {
-        const ref = await db.collection("ouvidoria_tre").add(payload);
-        await ref.update({ ordem: ref.id.slice(-4).toUpperCase() });
-        quill.setContents([]); document.getElementById('form-public').reset();
-        alert("Proposta enviada com sucesso!"); switchViewTab('protocolos');
-    } catch { alert("Erro de conexão."); } 
-    finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar Proposta Oficial'; }
-});
-
-// ==========================================
-// 7. ESCUTA GLOBAL - ORDEM ASCENDENTE/DESCENDENTE (01, 02...)
-// ==========================================
-let allDocs = [];
-let unsubPublic = null;
-function iniciarEscutaPublica() {
-    if (unsubPublic) unsubPublic();
-    // Lemos ASCENDENTE primeiro para garantir o mesmo Número de Ordem do Admin
-    unsubPublic = db.collection("ouvidoria_tre").orderBy("dataEnvio", "asc").onSnapshot(snap => {
-        let tempArr = []; let contador = 1;
-        snap.forEach(doc => { const d = doc.data(); d.id = doc.id; d.numOrdemVisual = String(contador).padStart(2, '0'); tempArr.push(d); contador++; });
-        allDocs = tempArr.reverse(); // Inverte para exibir o mais recente no topo
-        renderProtocolos(allDocs);
-    });
-}
-
-const STATUS_MAP = {
-    'Aprovado':              { cls: 'badge-aprovado',  icon: 'check' },
-    'Aprovado com ressalvas':{ cls: 'badge-ressalvas', icon: 'clipboard-list' },
-    'Rejeitado':             { cls: 'badge-rejeitado', icon: 'xmark' },
-    'Pendente':              { cls: 'badge-pendente',  icon: 'clock' }
-};
-
-function renderProtocolos(docs) {
-    const grid = document.getElementById('protocol-grid'); const empty = document.getElementById('empty-state'); grid.innerHTML = '';
-    if (!docs.length) { empty.classList.add('visible'); return; } empty.classList.remove('visible');
-
-    docs.forEach(d => {
-        const s = STATUS_MAP[d.status] || STATUS_MAP['Pendente'];
-        const verdict = (d.status !== 'Pendente' && d.motivoRejeicao) ? `<div class="card-verdict"><p class="card-verdict-label">${d.status.includes('Aprovado') ? 'Veredito Ministerial' : 'Justificativa'}</p><p class="card-verdict-text">${sanitize(d.motivoRejeicao)}</p></div>` : '';
-
-        grid.innerHTML += `
-            <div class="protocol-card filter-card">
-                <div class="card-header">
-                    <div class="card-avatar"><img src="${getAvatarUrl(d.nick)}" loading="lazy"></div>
-                    <div class="card-meta-top">
-                        <div class="card-protocol-num">ORDEM #${d.numOrdemVisual}</div>
-                        <div class="card-nick">${sanitize(d.nick)}</div>
-                    </div>
-                    <span class="card-tipo">${sanitize(d.tipo)}</span>
-                </div>
-                <h3 class="card-tema" title="${sanitize(d.tema)}">${sanitize(d.tema)}</h3>
-                <p class="card-date"><i class="fa-regular fa-clock"></i> Envio: ${formatDate(d.dataEnvio)}</p>
-                <div class="card-footer">
-                    <span class="badge ${s.cls}"><i class="fa-solid fa-${s.icon}"></i> ${sanitize(d.status)}</span>
-                    <button class="card-expand-btn" onclick="verProposta('${d.id}')"><i class="fa-solid fa-eye"></i> Ler Detalhes</button>
-                </div>
-                ${verdict}
-            </div>
-        `;
-    });
-}
-
-// Filtro
-let debounceTimer;
-function filtrarBusca() { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => { const t = document.getElementById('search-public').value.toLowerCase().trim(); const filtered = !t ? allDocs : allDocs.filter(d => (d.nick || '').toLowerCase().includes(t) || (d.tema || '').toLowerCase().includes(t)); renderProtocolos(filtered); }, 250); }
-
-// ==========================================
-// 8. LER PROPOSTA COMPLETA (MODAL BRANCO)
-// ==========================================
-function verProposta(id) {
-    const d = allDocs.find(x => x.id === id); if (!d) return;
-    const existing = document.getElementById('modal-proposta'); if (existing) existing.remove();
-
-    const m = document.createElement('div');
-    m.id = 'modal-proposta'; m.className = 'modal-overlay'; m.style.cssText = 'align-items:flex-start;overflow-y:auto;padding:5rem 1.5rem 3rem';
-    m.innerHTML = `
-        <div class="modal-box" style="max-width:850px;width:100%;background:linear-gradient(160deg, rgba(20,5,8,0.98) 0%, rgba(6,0,13,1) 100%);">
-            <button class="modal-close" onclick="closeModal('modal-proposta')"><i class="fa-solid fa-xmark"></i></button>
-            <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)">
-                <div class="card-avatar" style="width:52px;height:52px;flex-shrink:0"><img src="${getAvatarUrl(d.nick)}" loading="lazy"></div>
+        <div id="tab-lista" class="tab-content hidden opacity-0">
+            <div class="mb-10 pb-6 border-b border-white/5 flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <p style="font-weight:800;font-size:1.3rem;color:var(--text)">${sanitize(d.nick)}</p>
-                    <p style="font-size:0.75rem;color:var(--text-faint);letter-spacing:0.15em;text-transform:uppercase;font-weight:700">ORDEM #${d.numOrdemVisual} · ${sanitize(d.tipo)}</p>
+                    <h2 class="text-3xl md:text-5xl font-black tracking-tight text-white uppercase mb-1 flex items-center gap-4">
+                        <i class="fa-solid fa-folder-tree text-white/40"></i> Arquivo de Protocolos
+                    </h2>
+                    <p class="text-white/40 text-xs md:text-sm">Histórico público de requerimentos e vereditos ministeriais.</p>
+                </div>
+                <div class="relative w-full md:w-80 z-20">
+                    <i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-white/30 text-sm"></i>
+                    <input type="text" id="search-public" onkeyup="filtrarProtocolosBusca()" placeholder="Buscar Nick ou Tema..." class="w-full glass-input rounded-xl pl-11 pr-4 py-3.5 text-sm font-medium shadow-inner">
                 </div>
             </div>
-            <h2 style="font-weight:800;font-size:1.6rem;color:var(--text);margin-bottom:2rem;line-height:1.3">${sanitize(d.tema)}</h2>
+
+            <div id="public-projects-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             
-            <div class="ql-editor white-reading-pane" style="background:#fff;border-radius:12px;padding:2rem;color:#000;font-size:1rem;line-height:1.7;min-height:auto">
-                ${d.descricao || '<em style="color:#9CA3AF">Sem conteúdo.</em>'}
+            <div id="empty-protocolos" class="hidden flex-col items-center justify-center py-32 text-center glass-card rounded-3xl border-dashed border-2 border-white/5">
+                <i class="fa-solid fa-inbox text-6xl text-white/10 mb-6"></i>
+                <h3 class="text-xl font-black uppercase text-white/50 tracking-widest">Nenhum Registro</h3>
+                <p class="text-sm text-white/30 mt-2 font-medium">A ouvidoria da Companhia dos Treinadores está vazia.</p>
             </div>
         </div>
-    `;
-    m.addEventListener('click', e => { if (e.target === m) closeModal('modal-proposta'); });
-    document.body.appendChild(m); requestAnimationFrame(() => openModal('modal-proposta'));
-}
+    </main>
 
-// ==========================================
-// 9. AUTH: LOGIN & CADASTRO (Email Blindado)
-// ==========================================
-async function realizarLogin(e) {
-    e.preventDefault(); const btn = document.getElementById('btn-login'); const fb = document.getElementById('login-feedback');
-    const nick = document.getElementById('login-nick').value.trim(); const pass = document.getElementById('login-senha').value;
-    fb.className = 'modal-feedback-box'; btn.disabled = true; btn.textContent = 'Autenticando...';
-    try { await auth.signInWithEmailAndPassword(gerarEmailSeguro(nick), pass); window.location.href = 'admin.html'; } 
-    catch { fb.className = 'modal-feedback-box error'; fb.textContent = 'Nick ou senha incorretos.'; btn.disabled = false; btn.textContent = 'Autenticar'; }
-}
+    <footer class="border-t border-white/5 bg-[#050101] py-12 px-6 text-center relative overflow-hidden mt-auto">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_center,rgba(211,21,34,0.1)_0%,transparent_60%)] opacity-50 pointer-events-none"></div>
+        <img src="trelogo.png" alt="TRE" class="h-10 mx-auto mb-4 opacity-40 hover:opacity-100 transition-opacity duration-500 filter drop-shadow-[0_0_10px_rgba(211,21,34,0.5)] relative z-10">
+        <p class="text-sm text-white/50 font-bold tracking-[0.2em] uppercase mb-1 relative z-10">Companhia dos Treinadores</p>
+        <p class="text-[10px] text-white/20 font-medium tracking-widest uppercase relative z-10">RCC &copy; Todos os direitos reservados</p>
+        <div class="mt-8 pt-5 border-t border-white/5 inline-block relative z-10">
+            <p class="text-xs text-white/40 flex items-center justify-center gap-2 font-medium uppercase tracking-widest group cursor-default">
+                <span class="font-mono text-tre-brand font-black group-hover:animate-pulse">&lt;/&gt;</span> por <b class="text-white/80 group-hover:text-white transition-colors">G4VET4</b>
+            </p>
+        </div>
+    </footer>
 
-async function enviarCadastro(e) {
-    e.preventDefault(); const btn = document.getElementById('btn-cadastro'); const fb = document.getElementById('reg-feedback');
-    const nick = document.getElementById('reg-nick').value.trim(); const pass = document.getElementById('reg-senha').value;
-    fb.className = 'modal-feedback-box'; btn.disabled = true; btn.textContent = 'Processando...';
-    try {
-        const cred = await auth.createUserWithEmailAndPassword(gerarEmailSeguro(nick), pass);
-        await db.collection("solicitacoes_acesso").doc(cred.user.uid).set({ nick, status: 'Pendente', role: 'Convidado', dataSolicitacao: firebase.firestore.FieldValue.serverTimestamp() });
-        switchAuthView('feedback');
-    } catch (err) {
-        fb.className = 'modal-feedback-box error';
-        fb.textContent = err.code === 'auth/email-already-in-use' ? 'Este nick já possui acesso cadastrado. Tente fazer login.' : (err.code === 'auth/weak-password' ? 'A senha deve ter no mínimo 6 caracteres.' : err.message);
-        btn.disabled = false; btn.textContent = 'Enviar Pedido';
-    }
-}
-</script>
+    <div id="modal-ler-proposta" class="fixed inset-0 z-[1000] flex items-center justify-center p-4 opacity-0 invisible transition-all duration-300">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="fecharModalAuth('modal-ler-proposta')"></div>
+        <div class="relative w-full max-w-4xl bg-gradient-to-b from-[#1A0305] to-[#0A0102] border border-white/10 rounded-3xl shadow-3xl p-6 md:p-8 transform scale-95 transition-all flex flex-col max-h-[90vh]">
+            <button onclick="fecharModalAuth('modal-ler-proposta')" class="absolute top-6 right-6 text-white/40 hover:text-white z-10 bg-black/50 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md border border-white/10"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="flex justify-between items-start border-b border-white/10 pb-5 mb-5 shrink-0 pr-8">
+                <div>
+                    <span id="det-ordem" class="text-tre-brand font-black text-xs md:text-sm tracking-widest uppercase mb-1 block">ORDEM #---</span>
+                    <h2 id="det-tema" class="text-xl md:text-3xl font-black text-white leading-tight">...</h2>
+                    <div class="flex items-center gap-3 mt-3 text-xs text-white/50 font-medium flex-wrap">
+                        <span><i class="fa-solid fa-user text-white/30 mr-1"></i> <span id="det-autor" class="text-white">...</span></span>
+                        <span>&bull;</span>
+                        <span id="det-tipo" class="bg-white/5 px-2 py-1 rounded border border-white/5 text-tre-brand font-bold">...</span>
+                        <span>&bull;</span>
+                        <span id="det-data"><i class="fa-regular fa-clock mr-1"></i> ...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="overflow-y-auto custom-scrollbar flex-grow pr-2 mb-6 white-reading-pane shadow-inner">
+                <div id="det-descricao" class="ql-editor" style="min-height: auto;">...</div>
+            </div>
+            
+            <div class="shrink-0 pt-4 border-t border-white/5">
+                 <button onclick="fecharModalAuth('modal-ler-proposta')" class="w-full bg-white/10 hover:bg-white/20 text-white font-bold py-3.5 rounded-xl transition-all text-sm uppercase tracking-widest">Fechar Detalhes</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-login" class="fixed inset-0 z-[1000] flex items-center justify-center p-4 opacity-0 invisible transition-all duration-300">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="fecharModalAuth('modal-login')"></div>
+        <div class="relative w-full max-w-md bg-[#0A0102] border border-white/10 rounded-3xl p-8 transform scale-95 transition-all shadow-2xl">
+            <button onclick="fecharModalAuth('modal-login')" class="absolute top-6 right-6 text-white/40 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
+
+            <div id="view-login" class="block">
+                <h2 class="text-2xl font-black text-white uppercase mb-6 flex items-center gap-3 border-b border-white/10 pb-5"><i class="fa-solid fa-shield-halved text-tre-brand"></i> Acesso Restrito</h2>
+                <div id="login-feedback" class="hidden mb-5 p-3 rounded-xl text-center text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30"></div>
+                <form onsubmit="realizarLogin(event)" class="space-y-4">
+                    <div class="space-y-1.5"><label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Nick</label><input type="text" id="login-nick" required class="w-full glass-input rounded-xl px-5 py-3.5 text-sm"></div>
+                    <div class="space-y-1.5"><label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Senha</label><input type="password" id="login-senha" required class="w-full glass-input rounded-xl px-5 py-3.5 text-sm"></div>
+                    <button type="submit" id="btn-login-submit" class="w-full bg-white hover:bg-gray-200 text-[#0A0102] font-black uppercase tracking-widest py-4 rounded-xl shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all text-xs mt-2">Autenticar</button>
+                </form>
+                <div class="mt-6 pt-5 border-t border-white/5 text-center">
+                    <button onclick="switchViewAuth('register')" class="text-white/50 text-xs font-bold hover:text-white transition-colors uppercase tracking-widest">Solicitar Acesso Ministerial</button>
+                </div>
+            </div>
+
+            <div id="view-register" class="hidden">
+                <h2 class="text-2xl font-black text-white uppercase mb-6 flex items-center gap-3 border-b border-white/10 pb-5"><i class="fa-solid fa-user-plus text-tre-brand"></i> Novo Acesso</h2>
+                <div id="reg-feedback" class="hidden mb-5 p-3 rounded-xl text-center text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30"></div>
+                <form onsubmit="enviarCadastro(event)" class="space-y-4">
+                    <div class="space-y-1.5"><label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Nick (Habbo)</label><input type="text" id="reg-nick" required class="w-full glass-input rounded-xl px-5 py-3.5 text-sm" placeholder="Seu nick com espaços (se houver)"></div>
+                    <div class="space-y-1.5"><label class="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Criar Senha</label><input type="password" id="reg-senha" required class="w-full glass-input rounded-xl px-5 py-3.5 text-sm" placeholder="Mínimo 6 caracteres"></div>
+                    <button type="submit" id="btn-cadastro" class="w-full bg-white/10 hover:bg-white/20 text-white font-black uppercase tracking-widest py-4 rounded-xl border border-white/10 transition-all text-xs mt-2">Enviar Pedido</button>
+                </form>
+                <div class="mt-6 pt-5 border-t border-white/5 text-center">
+                    <button onclick="switchViewAuth('login')" class="text-white/50 text-xs font-bold hover:text-white transition-colors uppercase tracking-widest"><i class="fa-solid fa-arrow-left mr-1"></i> Voltar ao Login</button>
+                </div>
+            </div>
+
+            <div id="view-feedback" class="hidden flex-col items-center text-center py-6">
+                <div class="w-20 h-20 bg-amber-500/10 border-2 border-amber-500/30 rounded-full flex items-center justify-center mb-6 shadow-vivid"><i class="fa-solid fa-clock text-3xl text-amber-500"></i></div>
+                <h2 class="text-white font-black text-xl uppercase mb-3 tracking-widest">Pedido em Análise</h2>
+                <p class="text-white/50 text-sm mb-8 font-medium">Aguarde a liberação por parte do Ministério.</p>
+                <button onclick="fecharModalAuth('modal-login')" class="w-full bg-white/10 py-3.5 rounded-xl text-white font-bold text-xs uppercase tracking-widest">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+
+    <script>
+        // ==========================================
+        // 1. CONFIGURAÇÃO FIREBASE 
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyD2vf35brFqXqO5WB2rdGwLT3Rg3lIFxEo",
+            authDomain: "tre-ouvidoria.firebaseapp.com",
+            projectId: "tre-ouvidoria",
+            storageBucket: "tre-ouvidoria.firebasestorage.app",
+            messagingSenderId: "772876635425",
+            appId: "1:772876635425:web:079c1b3f3b0f7dcb91c260"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // Autenticação Anônima para Leitura
+        function removerLoader() { const l = document.getElementById('auth-loader'); if(l) gsap.to(l, { opacity: 0, duration: 0.5, onComplete: () => l.style.display = 'none' }); }
+        setTimeout(removerLoader, 3000); 
+        auth.signInAnonymously().then(() => { removerLoader(); iniciarEscutaPublica(); }).catch(() => { removerLoader(); iniciarEscutaPublica(); });
+
+        // ==========================================
+        // 2. INICIALIZAÇÃO QUILLJS FULL (WORD-LIKE)
+        // ==========================================
+        Quill.register('modules/imageResize', window.ImageResize.default);
+        const quill = new Quill('#quill-editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'align': [] }],
+                    ['link', 'image'],
+                    ['clean'] // Botão de limpar fundo/formato (borracha)
+                ],
+                imageResize: { displaySize: true }
+            },
+            placeholder: 'Descreva detalhadamente sua proposta...',
+        });
+
+        // ==========================================
+        // 3. UI E FUNÇÕES AUXILIARES 
+        // ==========================================
+        function sanitize(str) { const temp = document.createElement('div'); temp.textContent = str; return temp.innerHTML; }
+        function getAvatarUrl(nick) { return `https://www.habbo.com.br/habbo-imaging/avatarimage?user=${encodeURIComponent(nick)}&action=std&direction=2&head_direction=2&gesture=sml&size=l`; }
+        function formatarDataHora(fsTimestamp) { if(!fsTimestamp) return '---'; const d = fsTimestamp.toDate(); return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth()+1).padStart(2, '0')} às ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; }
+
+        // SISTEMA DE ABAS (SPA) - Janela Separada de Protocolos
+        function switchTab(tabId) {
+            document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+            document.getElementById(`tab-btn-${tabId}`).classList.add('active');
+
+            const viewNova = document.getElementById('tab-nova');
+            const viewLista = document.getElementById('tab-lista');
+
+            if(tabId === 'nova') {
+                gsap.to(viewLista, { opacity: 0, y: 15, duration: 0.3, onComplete: () => {
+                    viewLista.classList.replace('block', 'hidden'); viewNova.classList.replace('hidden', 'block');
+                    gsap.fromTo(viewNova, { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.4 });
+                }});
+            } else {
+                gsap.to(viewNova, { opacity: 0, y: -15, duration: 0.3, onComplete: () => {
+                    viewNova.classList.replace('block', 'hidden'); viewLista.classList.replace('hidden', 'block');
+                    gsap.fromTo(viewLista, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.4 });
+                }});
+            }
+        }
+
+        function abrirModalAuth() { const m = document.getElementById('modal-login'), c = m.querySelector('div.relative.transform'); m.classList.remove('opacity-0', 'invisible'); setTimeout(() => c.classList.replace('scale-95', 'scale-100'), 10); switchViewAuth('login'); }
+        function fecharModalAuth(id) { const m = document.getElementById(id), c = m.querySelector('div.relative.transform'); c.classList.replace('scale-100', 'scale-95'); setTimeout(() => m.classList.add('opacity-0', 'invisible'), 200); }
+        function switchViewAuth(v) { document.getElementById('view-login').classList.add('hidden'); document.getElementById('view-register').classList.add('hidden'); document.getElementById('view-feedback').classList.add('hidden'); document.getElementById('view-'+v).classList.replace('hidden', 'flex'); if(v==='login'||v==='register') document.getElementById('view-'+v).classList.replace('flex', 'block'); }
+
+        let projetosPublicosAll = [];
+        let debounceTimerBusca;
+        function filtrarProtocolosBusca() { clearTimeout(debounceTimerBusca); debounceTimerBusca = setTimeout(() => { const t = document.getElementById('search-public').value.toLowerCase(); document.querySelectorAll('#public-projects-container .filter-card').forEach(r => { r.style.display = r.innerText.toLowerCase().includes(t) ? '' : 'none'; }); }, 250); }
+
+        // ==========================================
+        // 4. MOTOR DE ENVIO PÚBLICO
+        // ==========================================
+        document.getElementById('public-submission-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit-public');
+            const editorContent = quill.root.innerHTML;
+            const textContent = quill.getText().trim();
+            const tipoSelecionado = document.querySelector('input[name="tipo_envio"]:checked');
+
+            if(!tipoSelecionado) { alert("Escolha o tipo de envio."); return; }
+            if (!quill.getContents().ops.some(op => op.image) && textContent.length < 20) { alert("A descrição está muito curta. Detalhe mais."); return; }
+            
+            if(confirm("Confirmar envio oficial desta proposta para o Ministério TRE?")) {
+                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Enviando...';
+                
+                const docData = { 
+                    nick: document.getElementById('autor-nick').value.trim(), 
+                    tipo: tipoSelecionado.value, 
+                    tema: document.getElementById('projeto-tema').value.trim(), 
+                    descricao: editorContent, 
+                    status: 'Pendente', 
+                    dataEnvio: firebase.firestore.FieldValue.serverTimestamp(), 
+                    medalhaPostada: false 
+                };
+                
+                db.collection("ouvidoria_tre").add(docData).then(() => { 
+                    quill.setContents([]); document.getElementById('public-submission-form').reset(); 
+                    alert("Proposta enviada com sucesso! Acompanhe o veredito em Protocolos."); 
+                    switchTab('lista');
+                }).catch(() => alert("Erro ao enviar no banco. Contate um Administrador."))
+                  .finally(() => { btn.disabled = false; btn.innerHTML = 'Enviar Proposta <i class="fa-solid fa-paper-plane"></i>'; });
+            }
+        });
+
+        // ==========================================
+        // 5. MOTOR DE ESCUTA PÚBLICA (ORDEM 01, 02... SINCRONIZADA)
+        // ==========================================
+        let unsubPublic = null;
+        function iniciarEscutaPublica() {
+            if(unsubPublic) unsubPublic();
+            // Lemos ASCENDENTE primeiro para gerar a Ordem igual do Admin
+            unsubPublic = db.collection("ouvidoria_tre").orderBy("dataEnvio", "asc").onSnapshot((snap) => {
+                const container = document.getElementById('public-projects-container');
+                const empty = document.getElementById('empty-protocolos');
+                
+                let tempArray = [];
+                let contadorOrdem = 1;
+                
+                snap.forEach((doc) => {
+                    const d = doc.data(); d.id = doc.id;
+                    d.numOrdemVisual = String(contadorOrdem).padStart(2, '0');
+                    tempArray.push(d);
+                    contadorOrdem++;
+                });
+                
+                // Inverte para exibir o mais recente no topo
+                projetosPublicosAll = tempArray.reverse();
+                container.innerHTML = '';
+
+                if (projetosPublicosAll.length === 0) { 
+                    empty.classList.replace('hidden', 'flex'); 
+                } else {
+                    empty.classList.replace('flex', 'hidden');
+                    projetosPublicosAll.forEach((d) => {
+                        let stCl = d.status === "Aprovado" ? "badge-aprovado" : d.status === "Rejeitado" ? "badge-rejeitado" : d.status === "Aprovado com ressalvas" ? "badge-ressalvas" : "badge-pendente";
+                        let icon = d.status === "Aprovado" ? "check" : d.status === "Rejeitado" ? "xmark" : d.status === "Aprovado com ressalvas" ? "clipboard-list" : "clock";
+                        
+                        let areaVeredito = "";
+                        if(d.status !== "Pendente" && d.motivoRejeicao) {
+                            let txtVer = d.status.includes("Aprovado") ? "Julgamento Ministerial" : "Justificativa Indeferimento";
+                            areaVeredito = `<div class="mt-6 pt-5 border-t border-white/5"><label class="text-[9px] font-bold uppercase tracking-widest text-white/30 ml-1 block mb-2">${txtVer}</label><div class="bg-black/30 border border-white/5 p-4 rounded-xl shadow-inner"><p class="text-sm text-white/70 italic font-medium leading-relaxed">${sanitize(d.motivoRejeicao)}</p></div></div>`;
+                        }
+
+                        container.innerHTML += `<div class="glass-card p-6 flex flex-col justify-between filter-card group">
+                            <div class="flex items-start gap-4 mb-5 pb-5 border-b border-white/5">
+                                <div class="avatar-red-glass w-12 group-hover:border-tre-brand transition-colors"><img src="${getAvatarUrl(d.nick)}"></div>
+                                <div class="w-full">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-tre-brand font-black text-xs uppercase tracking-widest">ORDEM #${d.numOrdemVisual}</span>
+                                        <span class="text-[9px] font-bold bg-white/5 border border-white/10 px-2 py-0.5 rounded text-white/50 uppercase">${sanitize(d.tipo)}</span>
+                                    </div>
+                                    <span class="font-black text-white text-lg group-hover:text-tre-brand transition-colors truncate block w-full">${sanitize(d.nick)}</span>
+                                </div>
+                            </div>
+                            
+                            <h3 class="font-bold text-white leading-snug mb-5 text-xl line-clamp-2" title="${sanitize(d.tema)}">${sanitize(d.tema)}</h3>
+                            <p class="text-[10px] text-white/40 uppercase font-bold tracking-widest mb-6"><i class="fa-solid fa-paper-plane mr-1 text-white/30"></i> Envio: ${formatarDataHora(d.dataEnvio)}</p>
+                            
+                            <div class="mt-auto flex items-center justify-between">
+                                <span class="point-badge ${stCl} shadow-lg"><i class="fa-solid fa-${icon} mr-1.5"></i> ${sanitize(d.status)}</span>
+                                <button onclick="lerPropostaPublica('${d.id}')" class="text-xs font-bold text-white/50 hover:text-white transition-colors uppercase tracking-widest">Ver Detalhes <i class="fa-solid fa-arrow-right"></i></button>
+                            </div>
+                            ${areaVeredito}
+                        </div>`;
+                    });
+                }
+            });
+        }
+
+        // ==========================================
+        // 6. LER PROPOSTA (MODAL BRANCO)
+        // ==========================================
+        function lerPropostaPublica(id) {
+            const p = projetosPublicosAll.find(x => x.id === id); if(!p) return;
+            document.getElementById('det-ordem').innerText = `ORDEM #${sanitize(p.numOrdemVisual)}`;
+            document.getElementById('det-tema').innerText = sanitize(p.tema); document.getElementById('det-autor').innerText = sanitize(p.nick);
+            document.getElementById('det-tipo').innerText = sanitize(p.tipo); document.getElementById('det-data').innerHTML = `<i class="fa-regular fa-clock mr-1"></i> ${formatarDataHora(p.dataEnvio)}`;
+            document.getElementById('det-descricao').innerHTML = p.descricao; 
+            const m = document.getElementById('modal-ler-proposta'), c = m.querySelector('div.relative.transform'); m.classList.remove('opacity-0', 'invisible'); setTimeout(() => c.classList.replace('scale-95', 'scale-100'), 10);
+        }
+
+        // ==========================================
+        // 7. LOGIN/CADASTRO E TRATAMENTO DE EMAIL
+        // ==========================================
+        function gerarEmailSeguro(nick) {
+            // Remove espaços e caracteres estranhos para evitar "Formato de e-mail inválido" no Firebase
+            return nick.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '') + "@tre.rcc";
+        }
+
+        function realizarLogin(e) { 
+            e.preventDefault(); 
+            const btn = document.getElementById('btn-login-submit'); 
+            btn.disabled=true; btn.innerHTML='Processando...'; 
+            const n = document.getElementById('login-nick').value.trim(); 
+            const s = document.getElementById('login-senha').value; 
+            
+            auth.signInWithEmailAndPassword(gerarEmailSeguro(n), s).then(() => {
+                window.location.href="admin.html";
+            }).catch(() => { 
+                document.getElementById('login-feedback').innerText="Nick ou Senha incorretos."; 
+                document.getElementById('login-feedback').classList.remove('hidden'); 
+                btn.disabled=false; btn.innerHTML='Autenticar'; 
+            }); 
+        }
+
+        function enviarCadastro(e) { 
+            e.preventDefault(); 
+            const btn = document.getElementById('btn-cadastro'); 
+            btn.disabled=true; btn.innerHTML='Processando...'; 
+            const n = document.getElementById('reg-nick').value.trim(); 
+            const s = document.getElementById('reg-senha').value; 
+            
+            auth.createUserWithEmailAndPassword(gerarEmailSeguro(n), s).then(res => { 
+                db.collection("solicitacoes_acesso").doc(res.user.uid).set({ 
+                    nick: n, status: "Pendente", role: "Convidado", dataSolicitacao: firebase.firestore.FieldValue.serverTimestamp() 
+                }).then(() => switchViewAuth('feedback')); 
+            }).catch(err => { 
+                document.getElementById('reg-feedback').innerText= (err.code === 'auth/weak-password') ? 'A senha precisa ter no mínimo 6 caracteres.' : err.message; 
+                document.getElementById('reg-feedback').classList.remove('hidden'); 
+                btn.disabled=false; btn.innerHTML='Enviar Pedido'; 
+            }); 
+        }
+    </script>
 </body>
 </html>
