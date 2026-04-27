@@ -19,8 +19,8 @@
         ────────────────────────────────────────── */
         :root {
             --brand:      #D31522;
-            --brand-glow: rgba(211, 21, 34, 0.15); /* Reduzido de 0.4 para 0.15 */
-            --brand-dim:  rgba(211, 21, 34, 0.05); /* Reduzido de 0.12 para 0.05 */
+            --brand-glow: rgba(211, 21, 34, 0.15); /* Glow reduzido de 0.4 para 0.15 */
+            --brand-dim:  rgba(211, 21, 34, 0.05); /* Fundo reduzido de 0.12 para 0.05 */
             --bg:         #06000D;
             --surface:    rgba(255,255,255,0.03);
             --border:     rgba(255,255,255,0.07);
@@ -166,7 +166,7 @@
             position: relative; overflow: hidden;
         }
 
-        /* Radial orbs (Iluminação Reduzida) */
+        /* Radial orbs (OPACIDADE REDUZIDA PARA REMOVER EXCESSO DE VERMELHO) */
         .orb {
             position: absolute; border-radius: 50%;
             filter: blur(80px); pointer-events: none;
@@ -256,7 +256,7 @@
         }
         .btn-primary:hover {
             background: #FF1A28;
-            box-shadow: 0 0 20px var(--brand-glow); /* Sombra ajustada */
+            box-shadow: 0 0 40px var(--brand-glow);
             transform: translateY(-2px);
         }
 
@@ -357,7 +357,8 @@
             content: '';
             position: absolute; top: 0; right: 0;
             width: 300px; height: 300px;
-            background: radial-gradient(circle, rgba(211,21,34,0.03) 0%, transparent 70%); /* Opacidade reduzida */
+            /* Suavizando o vermelho de fundo do card */
+            background: radial-gradient(circle, rgba(211,21,34,0.04) 0%, transparent 70%);
             pointer-events: none;
         }
 
@@ -508,7 +509,7 @@
         .protocol-card:hover {
             border-color: var(--border-hot);
             transform: translateY(-4px);
-            box-shadow: 0 20px 50px -10px rgba(211,21,34,0.15);
+            box-shadow: 0 20px 50px -10px rgba(211,21,34,0.2);
         }
         .protocol-card::after {
             content: '';
@@ -634,7 +635,8 @@
             content: '';
             position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
             width: 600px; height: 200px;
-            background: radial-gradient(ellipse, rgba(211,21,34,0.03) 0%, transparent 70%); /* Reduzido de 0.08 para 0.03 */
+            /* Suavizando o vermelho de fundo do footer */
+            background: radial-gradient(ellipse, rgba(211,21,34,0.03) 0%, transparent 70%);
             pointer-events: none;
         }
         .footer-logo { height: 36px; margin: 0 auto 1.25rem; opacity: 0.35; transition: opacity 0.3s; }
@@ -1075,7 +1077,7 @@ const db   = firebase.firestore();
 const auth = firebase.auth();
 
 // ══════════════════════════════════════════════════════
-// 2. LOADER E AUTENTICAÇÃO ANÔNIMA
+// 2. LOADER
 // ══════════════════════════════════════════════════════
 function hideLoader() {
     const l = document.getElementById('loader');
@@ -1102,7 +1104,7 @@ const revealObserver = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
 // ══════════════════════════════════════════════════════
-// 5. QUILLJS EDITOR
+// 5. QUILLJS
 // ══════════════════════════════════════════════════════
 const quill = new Quill('#quill-editor', {
     theme: 'snow',
@@ -1132,7 +1134,7 @@ quill.on('text-change', () => {
 });
 
 // ══════════════════════════════════════════════════════
-// 6. UTILIDADES & SANITIZAÇÃO
+// 6. UTILIDADES (GERADOR DE EMAIL SEGURO INCLUSO)
 // ══════════════════════════════════════════════════════
 function sanitize(str) {
     const div = document.createElement('div');
@@ -1158,7 +1160,6 @@ function toast(msg, type = 'success') {
 
 // FORMATADOR DE EMAIL SEGURO PARA LOGIN E CADASTRO
 function gerarEmailSeguro(nick) {
-    // Remove os espaços do nick para garantir compatibilidade no Firebase Auth
     return nick.toLowerCase().replace(/\s+/g, '') + "@treinadores.rcc";
 }
 
@@ -1175,9 +1176,11 @@ function closeModal(id) {
     m.classList.remove('open');
     document.body.style.overflow = '';
 }
+// Close on backdrop click
 document.querySelectorAll('.modal-overlay').forEach(m => {
     m.addEventListener('click', (e) => { if (e.target === m) closeModal(m.id); });
 });
+// Escape key
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => closeModal(m.id));
 });
@@ -1232,6 +1235,7 @@ function validateForm() {
     return valid;
 }
 
+// Live clear on input
 ['f-nick','f-tema'].forEach(id => {
     document.getElementById(id).addEventListener('input', () => {
         const errId = 'err-' + id.replace('f-','');
@@ -1243,11 +1247,12 @@ document.querySelectorAll('input[name="tipo_envio"]').forEach(r => {
 });
 
 // ══════════════════════════════════════════════════════
-// 9. FORM SUBMIT - ENVIAR PROPOSTA
+// 9. FORM SUBMIT
 // ══════════════════════════════════════════════════════
 document.getElementById('form-public').addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!validateForm()) {
+        // Scroll to first error
         const firstErr = document.querySelector('.form-error-msg.visible, .form-input.error, .quill-wrapper.error');
         if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
@@ -1286,7 +1291,7 @@ document.getElementById('form-public').addEventListener('submit', async (e) => {
 });
 
 // ══════════════════════════════════════════════════════
-// 10. FIRESTORE LISTENER — PROTOCOLOS E ESTATÍSTICAS
+// 10. FIRESTORE LISTENER — PROTOCOLOS
 // ══════════════════════════════════════════════════════
 let allDocs = [];
 let unsubPublic = null;
@@ -1355,7 +1360,7 @@ function renderProtocolos(docs) {
     });
 }
 
-// Search Function
+// Search
 let debounceTimer;
 function filtrarBusca() {
     clearTimeout(debounceTimer);
@@ -1369,13 +1374,14 @@ function filtrarBusca() {
     }, 250);
 }
 
-// ==========================================
-// 11. VER PROPOSTA COMPLETA (MODAL DINÂMICO)
-// ==========================================
+// ══════════════════════════════════════════════════════
+// 11. VER PROPOSTA COMPLETA (modal dinâmico)
+// ══════════════════════════════════════════════════════
 function verProposta(id) {
     const d = allDocs.find(x => x.id === id);
     if (!d) return;
 
+    // Build a temporary modal
     const existing = document.getElementById('modal-proposta');
     if (existing) existing.remove();
 
@@ -1404,9 +1410,9 @@ function verProposta(id) {
     requestAnimationFrame(() => openModal('modal-proposta'));
 }
 
-// ==========================================
-// 12. AUTH: LOGIN & CADASTRO BLINDADOS
-// ==========================================
+// ══════════════════════════════════════════════════════
+// 12. AUTH
+// ══════════════════════════════════════════════════════
 async function realizarLogin(e) {
     e.preventDefault();
     const btn  = document.getElementById('btn-login');
