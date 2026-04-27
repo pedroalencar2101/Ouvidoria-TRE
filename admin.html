@@ -40,7 +40,31 @@
         .glass-input { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); color: white; transition: all 0.3s ease; }
         .glass-input:focus, .glass-input:focus-within { background: rgba(255, 255, 255, 0.07); border-color: theme('colors.tre.brand'); outline: none; box-shadow: 0 0 15px rgba(211, 21, 34, 0.2); }
         
-        .point-badge { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 10px; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap;}
+        /* SISTEMA DE AVATARES IMPECCABLE E PROPORCIONAL (NOVO PADRÃO FIXO) */
+        .avatar-red-glass {
+            background: radial-gradient(circle at center, rgba(211, 21, 34, 0.4) 0%, rgba(10, 1, 2, 0.8) 100%);
+            border: 1px solid rgba(211, 21, 34, 0.4);
+            box-shadow: inset 0 0 10px rgba(211, 21, 34, 0.2);
+            backdrop-filter: blur(4px);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+            aspect-ratio: 1 / 1; /* FORÇA O CÍRCULO PERFEITO, SEMPRE */
+            width: 100%;
+        }
+        
+        /* CROP NÍTIDO EM ALTA DEFINIÇÃO (size=l) */
+        .avatar-red-glass img {
+            max-width: none;
+            width: 140%; /* Tamanho do zoom dentro do circulo */
+            height: auto;
+            object-fit: contain;
+            transform: translateY(12%); /* Alinhamento vertical (peito pra cima) */
+        }
+
+        /* BADGES DE STATUS */
+        .point-badge { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 10px; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; }
         .badge-pendente { background: rgba(245, 158, 11, 0.15); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.3); }
         .badge-aprovado { background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); }
         .badge-ressalvas { background: rgba(37, 99, 235, 0.15); color: #60A5FA; border: 1px solid rgba(37, 99, 235, 0.3); }
@@ -51,15 +75,6 @@
         
         #auth-loader { z-index: 99999; }
         body.role-convidado .only-admin { display: none !important; }
-
-        /* AVATAR RED GLASS (NOVO PADRÃO APPLE/TRE) */
-        .avatar-red-glass {
-            background: radial-gradient(circle at center, rgba(211, 21, 34, 0.4) 0%, rgba(10, 1, 2, 0.8) 100%);
-            border: 1px solid rgba(211, 21, 34, 0.4);
-            box-shadow: inset 0 0 10px rgba(211, 21, 34, 0.2);
-            backdrop-filter: blur(4px);
-            display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 50%;
-        }
 
         /* LEITURA BRANCA LIMPA (APENAS NO MODAL LER PROPOSTA) */
         .white-reading-pane { background-color: #FFFFFF !important; color: #000000 !important; border-radius: 0.75rem; padding: 1.5rem; }
@@ -114,8 +129,8 @@
 
         <div class="p-6 border-t border-white/5">
             <button onclick="abrirMeuPerfil()" class="w-full glass-card vivid-perfil p-4 flex items-center gap-3.5 mb-4 border border-white/10 hover:border-tre-brand/30 transition-all group">
-                <div class="w-12 h-12 avatar-red-glass flex-shrink-0 group-hover:border-tre-brand transition-colors">
-                    <img id="sidebar-avatar" src="" class="w-[140%] mt-3">
+                <div class="w-12 h-12 avatar-red-glass group-hover:border-tre-brand transition-colors">
+                    <img id="sidebar-avatar" src="">
                 </div>
                 <div class="text-left w-full overflow-hidden">
                     <p class="text-sm font-black text-white group-hover:text-tre-brand truncate" id="admin-user-nick">...</p>
@@ -271,14 +286,14 @@
                 <div class="glass-panel-simple rounded-2xl overflow-hidden p-1 shadow-3xl relative z-10">
                     <div class="overflow-x-auto pb-2">
                         <table class="w-full text-left border-collapse min-w-full text-sm">
-                            <thead class="bg-white/5 text-[10px] uppercase font-black tracking-widest text-white/40 border-b border-white/5">
+                            <thead class="bg-white/5 text-[10px] uppercase font-black tracking-widest text-white/40 border-b border-white/5 whitespace-nowrap">
                                 <tr>
-                                    <th class="p-4 px-6">Ordem</th>
-                                    <th class="p-4">Policial</th>
+                                    <th class="p-4 px-6 w-16">Ordem</th>
+                                    <th class="p-4 w-56">Policial</th>
                                     <th class="p-4">Tema / Proposta</th>
-                                    <th class="p-4">Registro de Datas</th>
-                                    <th class="p-4 text-center">Status</th>
-                                    <th class="p-4 text-right only-admin">Controles</th>
+                                    <th class="p-4 w-64">Registro de Datas</th>
+                                    <th class="p-4 text-center w-40">Status</th>
+                                    <th class="p-4 text-right only-admin w-32">Controles</th>
                                 </tr>
                             </thead>
                             <tbody id="table-historico-list"></tbody>
@@ -336,7 +351,7 @@
                 <div>
                     <span id="ler-ordem" class="text-tre-brand font-black text-xs md:text-sm tracking-widest uppercase mb-1 block">ORDEM #---</span>
                     <h2 id="ler-tema" class="text-xl md:text-3xl font-black text-white leading-tight">...</h2>
-                    <div class="flex items-center gap-3 mt-3 text-xs text-white/50 font-medium">
+                    <div class="flex items-center gap-3 mt-3 text-xs text-white/50 font-medium whitespace-nowrap">
                         <span><i class="fa-solid fa-user text-white/30 mr-1"></i> <span id="ler-autor" class="text-white">...</span></span>
                         <span>&bull;</span>
                         <span id="ler-tipo" class="bg-white/5 px-2 py-1 rounded border border-white/5 text-tre-brand font-bold">...</span>
@@ -363,16 +378,19 @@
 
     <div id="modal-veredito" class="fixed inset-0 z-[100] flex items-center justify-center p-4 opacity-0 invisible transition-all duration-300">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="toggleModal('modal-veredito')"></div>
-        <div class="relative w-full max-w-md bg-gradient-to-b from-[#1A0305] to-[#0A0102] border border-white/10 rounded-3xl shadow-2xl p-8 transform scale-95 transition-all text-center">
-            <div id="icone-veredito" class="w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto avatar-red-glass"></div>
+        <div class="relative w-full max-w-md bg-gradient-to-b from-[#1A0305] to-[#0A0102] border border-white/10 rounded-3xl shadow-2xl p-8 transform scale-95 transition-all text-center flex flex-col items-center">
+            <div id="icone-veredito-container" class="w-16 h-16 avatar-red-glass border-4 border-[#0A0102] shadow-2xl z-20 mb-4">
+                <img id="icone-veredito-img" src="" class="w-[140%] mt-3">
+            </div>
             <h2 id="titulo-veredito" class="text-xl font-black text-white uppercase mb-2">Veredito</h2>
-            <p class="text-white/50 text-sm mb-6">Deixe a justificativa técnica que será exibida no Histórico e Portal.</p>
+            <p class="text-white/50 text-sm mb-6">Deixe a justificativa técnica que será exibida publicamente.</p>
             
             <input type="hidden" id="form-ver-docId">
             <input type="hidden" id="form-ver-status">
+            
             <textarea id="texto-veredito" rows="4" placeholder="Sua justificativa..." class="w-full glass-input rounded-xl px-4 py-3 text-sm mb-6 resize-none custom-scrollbar"></textarea>
             
-            <div class="flex gap-2">
+            <div class="flex gap-2 w-full">
                 <button onclick="toggleModal('modal-veredito')" class="flex-1 bg-white/5 py-3 rounded-lg text-white font-bold text-xs transition-colors hover:bg-white/10">Cancelar</button>
                 <button onclick="confirmarVeredito(event)" id="btn-confirma-ver" class="flex-1 font-bold py-3 rounded-lg transition-all text-xs text-white">Confirmar</button>
             </div>
@@ -383,9 +401,10 @@
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="toggleModal('modal-perfil')"></div>
         <div class="relative w-full max-w-md bg-[#0A0102] border border-white/10 rounded-3xl shadow-2xl p-0 transform scale-95 transition-all flex flex-col overflow-hidden">
             
-            <div class="h-28 w-full bg-gradient-to-tr from-[#D31522]/40 to-black relative border-b border-white/10">
+            <div class="h-28 w-full bg-gradient-to-tr from-[#D31522]/40 to-black relative border-b border-white/10 flex items-center justify-center">
                 <button onclick="toggleModal('modal-perfil')" class="absolute top-4 right-4 text-white/40 hover:text-white z-10 bg-black/50 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md border border-white/10"><i class="fa-solid fa-xmark"></i></button>
-                <div class="absolute inset-0 opacity-20 bg-[url('trelogo.png')] bg-center bg-no-repeat bg-contain"></div>
+                <div class="absolute inset-0 opacity-20 bg-[url('trelogo.png')] bg-center bg-no-repeat bg-contain scale-50"></div>
+                <h2 id="modal-perfil-title" class="text-xl font-black text-white uppercase hidden">Ficha Ministerial</h2>
             </div>
 
             <div class="absolute top-12 left-1/2 -translate-x-1/2 w-28 h-28 rounded-full avatar-red-glass border-4 border-[#0A0102] shadow-2xl z-20">
@@ -398,14 +417,14 @@
                 
                 <p class="text-xs text-white/50 mb-6"><i class="fa-solid fa-calendar-check text-tre-brand mr-1"></i> Acesso desde: <span class="font-bold text-white" id="modal-perfil-dataRegistro">...</span></p>
                 
-                <div class="w-full text-left mb-6">
-                    <label class="text-[9px] font-bold uppercase tracking-widest text-white/40 ml-1">Biografia / Resumo</label>
-                    <textarea id="perfil-descricao" rows="2" placeholder="Sem informações." class="w-full glass-input rounded-xl px-4 py-3 text-sm font-medium custom-scrollbar resize-none"></textarea>
-                    <button id="btn-save-perfil" onclick="salvarDescricaoPerfil(event)" class="w-full bg-white/5 hover:bg-white/10 text-white font-bold py-2 rounded-xl mt-2 text-xs transition-colors hidden">Salvar Bio</button>
+                <div class="w-full text-left mb-6 border border-white/5 bg-white/5 rounded-xl p-4">
+                    <label class="text-[9px] font-bold uppercase tracking-widest text-white/40 ml-1 block mb-1.5">Biografia Profissional</label>
+                    <textarea id="perfil-descricao" rows="2" placeholder="Sem biografia." class="w-full glass-input rounded-xl px-4 py-3 text-sm font-medium custom-scrollbar resize-none"></textarea>
+                    <button id="btn-save-perfil" onclick="salvarDescricaoPerfil(event)" class="w-full bg-white/5 hover:bg-white/10 text-white font-bold py-2 rounded-xl mt-2 text-xs transition-colors hidden">Salvar Biografia</button>
                 </div>
 
                 <div id="panel-admin-gerenciar" class="w-full border-t border-white/10 pt-5 text-left hidden only-admin">
-                    <h4 class="text-[9px] font-black uppercase tracking-widest text-amber-500 mb-3"><i class="fa-solid fa-shield-halved mr-1"></i> Nível de Acesso Ministerial</h4>
+                    <h4 class="text-[9px] font-black uppercase tracking-widest text-amber-500 mb-3"><i class="fa-solid fa-shield-halved mr-1"></i> Controles Críticos</h4>
                     <div class="flex gap-2">
                         <div class="relative flex-1">
                             <button type="button" onclick="toggleCargoDropdown()" class="w-full glass-input rounded-xl px-4 py-2 text-xs font-bold flex items-center justify-between cursor-pointer focus:outline-none hover:bg-white/5">
@@ -417,9 +436,9 @@
                             </div>
                         </div>
                         <input type="hidden" id="select-mudar-cargo" value="Convidado">
-                        <button onclick="mudarCargoUsuario()" class="bg-amber-500/20 hover:bg-amber-500/40 text-amber-500 font-bold px-4 py-2 rounded-xl transition-all text-xs border border-amber-500/30">Aplicar</button>
+                        <button onclick="mudarCargoUsuario()" class="bg-amber-500/20 hover:bg-amber-500/40 text-amber-500 font-bold px-4 py-2 rounded-xl transition-all text-xs border border-amber-500/30">Mudar</button>
                     </div>
-                    <button onclick="expulsarUsuario()" class="w-full bg-red-500/10 hover:bg-red-500 hover:text-white text-red-500 font-bold py-2 rounded-xl mt-2 text-xs transition-all border border-red-500/20">Revogar Acesso Sistema</button>
+                    <button onclick="expulsarUsuario()" class="w-full bg-red-500/10 hover:bg-red-500 hover:text-white text-red-500 font-bold py-2 rounded-xl mt-2 text-xs transition-all border border-red-500/20">Revogar Credencial Permanente</button>
                 </div>
                 <input type="hidden" id="modal-perfil-uid">
             </div>
@@ -486,15 +505,17 @@
         let currentUserNick = "USUARIO"; let currentUserRole = "Convidado"; 
         let projetosGlobaisAll = []; let projetosPendentesAll = [];
 
-        // NOVO CROP DE AVATARES EM ALTA DEFINIÇÃO PARA O VIDRO VERMELHO
+        // USA O PROPORCIONAL CROP (size=l) SEMPRE
         function getAvatarUrl(nick) { return `https://www.habbo.com.br/habbo-imaging/avatarimage?user=${encodeURIComponent(nick)}&action=std&direction=2&head_direction=2&gesture=sml&size=l`; }
-        function getHabboAvatarHtml(nick, extraClasses = 'avatar-md') {
-            return `<div class="${extraClasses} avatar-red-glass flex-shrink-0 group-hover:border-tre-brand transition-colors"><img src="${getAvatarUrl(nick)}" class="w-[140%] mt-3" title="${sanitize(nick)}"></div>`;
-        }
         function sanitize(str) { const temp = document.createElement('div'); temp.textContent = str; return temp.innerHTML; }
+        
+        // HELPER DE AVATAR CORRIGIDO (Usa as classes proporcionais)
+        function getHabboAvatarHtml(nick, extraClasses = 'w-10') {
+            return `<div class="${extraClasses} avatar-red-glass group-hover:border-tre-brand transition-colors"><img src="${getAvatarUrl(nick)}" title="${sanitize(nick)}"></div>`;
+        }
 
         // ==========================================
-        // 2. MOTOR DE AUTENTICAÇÃO 
+        // 2. MOTOR DE AUTENTICAÇÃO
         // ==========================================
         auth.onAuthStateChanged((user) => {
             const loader = document.getElementById('auth-loader');
@@ -520,7 +541,7 @@
         function isAdmin() { return currentUserRole === "Admin"; }
 
         // ==========================================
-        // 3. UI, NAVEGAÇÃO E DATAS
+        // 3. UI E NAVEGAÇÃO
         // ==========================================
         function toggleSidebar() { const sb = document.getElementById('sidebar'), ov = document.getElementById('sidebar-overlay'); sb.classList.toggle('-translate-x-full'); ov.classList.toggle('hidden'); }
         function toggleModal(id) { const m = document.getElementById(id), c = m.querySelector('div.relative.transform'); if (m.classList.contains('opacity-0')) { m.classList.remove('opacity-0', 'invisible'); setTimeout(() => c.classList.replace('scale-95', 'scale-100'), 10); } else { c.classList.replace('scale-100', 'scale-95'); setTimeout(() => m.classList.add('opacity-0', 'invisible'), 200); } }
@@ -539,7 +560,7 @@
                 menuMeses.innerHTML = '';
                 for(let i = 0; i < 12; i++) {
                     let d = new Date(dataAtualGlobal.getFullYear(), dataAtualGlobal.getMonth() - i, 1); let n = `${mesesNomes[d.getMonth()]} ${d.getFullYear()}`;
-                    menuMeses.innerHTML += `<button onclick="selecionarFilterMes(this)" class="px-5 py-3 text-left hover:bg-white/10 transition-colors text-white/70 hover:text-white border-b border-white/5 w-full font-medium">${n}</button>`;
+                    menuMeses.innerHTML += `<button onclick="selecionarFilterMes(this)" class="px-5 py-3 text-left hover:bg-white/10 transition-colors text-white/70 hover:text-white border-b border-white/5 w-full font-medium z-[99999]">${n}</button>`;
                 }
             }
         });
@@ -573,21 +594,21 @@
                     if(d.status === "Aprovado") {
                         let stLogo = d.role === "Admin" ? '<i class="fa-solid fa-star text-amber-500 absolute -top-1 -right-1 text-[10px] bg-[#0A0102] rounded-full p-1 border border-amber-500/50 shadow-vivid z-10"></i>' : '';
                         let cardHtml = `<button onclick="abrirPerfil('${doc.id}')" class="vivid-perfil h-32 glass-card p-4 flex flex-col items-center justify-center text-center gap-3 border border-white/5 group relative">
-                            <div class="relative">${getHabboAvatarHtml(d.nick, 'avatar-md')}${stLogo}</div>
+                            <div class="relative">${getHabboAvatarHtml(d.nick, 'w-14')}${stLogo}</div>
                             <div class="w-full"><p class="text-sm font-black text-white group-hover:text-tre-brand truncate w-full">${sanitize(d.nick)}</p><p class="text-[9px] text-white/40 uppercase tracking-widest mt-0.5">${d.role === "Admin" ? 'Ministério' : 'Convidado'}</p></div></button>`;
                         if(d.role === "Admin") gridAdmins.innerHTML += cardHtml; else gridConvidados.innerHTML += cardHtml;
                     }
                     if(d.status === "Pendente") {
                         countPendente++;
-                        gridAc.innerHTML += `<div class="glass-card p-5 flex flex-col h-full"><div class="flex items-center gap-4 mb-4 pb-4 border-b border-white/5 group">${getHabboAvatarHtml(d.nick, 'avatar-sm')}<h4 class="font-bold text-white tracking-wide">${sanitize(d.nick)}</h4></div>
-                        <p class="text-sm text-white/70 mb-5 flex-grow">Solicitou acesso.</p>
+                        gridAc.innerHTML += `<div class="glass-card p-5 flex flex-col h-full"><div class="flex items-center gap-4 mb-4 pb-4 border-b border-white/5 group">${getHabboAvatarHtml(d.nick, 'w-10')}<h4 class="font-bold text-white tracking-wide">${sanitize(d.nick)}</h4></div>
+                        <p class="text-sm text-white/70 mb-5 flex-grow">Solicitou acesso solicitado.</p>
                         <div class="flex gap-2 mt-auto only-admin"><button onclick="julgarAcesso('${doc.id}', 'Aprovado')" class="flex-1 bg-emerald-500/20 text-emerald-400 py-2.5 rounded-lg text-xs font-bold hover:bg-emerald-500/40">Liberar</button><button onclick="julgarAcesso('${doc.id}', 'Rejeitado')" class="flex-1 bg-red-500/20 text-red-400 py-2.5 rounded-lg text-xs font-bold hover:bg-red-500/40">Negar</button></div></div>`;
                     }
                 });
                 if(countPendente === 0) { emptyAc.classList.replace('hidden', 'flex'); } else { emptyAc.classList.replace('flex', 'hidden'); }
                 hist.sort((a,b) => b.dataSolicitacao?.toDate() - a.dataSolicitacao?.toDate()).forEach(d => {
                     let st = d.status === 'Aprovado' ? 'emerald' : d.status === 'Rejeitado' || d.status === 'Revogado' ? 'red' : 'amber';
-                    tbHist.innerHTML += `<tr class="border-b border-white/5 hover:bg-white/5 text-white/80 group"><td class="p-4 px-6 font-bold flex items-center gap-3">${getHabboAvatarHtml(d.nick, 'avatar-sm')}${sanitize(d.nick)}</td><td class="p-4 text-center"><span class="point-badge point-${st}">${sanitize(d.status)}</span></td><td class="p-4 text-xs font-semibold">${d.role==="Admin"?"Ministério":"Convidado"}</td><td class="p-4 text-[10px] font-mono opacity-50">${formatarDataHora(d.dataSolicitacao)}</td></tr>`;
+                    tbHist.innerHTML += `<tr class="border-b border-white/5 hover:bg-white/5 text-white/80 group"><td class="p-4 px-6 font-bold flex items-center gap-3">${getHabboAvatarHtml(d.nick, 'w-10')}${sanitize(d.nick)}</td><td class="p-4 text-center"><span class="point-badge point-${st}">${sanitize(d.status)}</span></td><td class="p-4 text-xs font-semibold">${d.role==="Admin"?"Ministério":"Convidado"}</td><td class="p-4 text-[10px] font-mono opacity-50">${formatarDataHora(d.dataSolicitacao)}</td></tr>`;
                 });
             });
         }
@@ -612,7 +633,7 @@
                 projetosPendentesAll.forEach(d => {
                     container.innerHTML += `<div class="glass-panel-simple p-5 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-6 border-l-4 border-amber-500 hover:border-amber-400 transition-all hover:translate-x-1 group">
                         <div class="flex items-start gap-5">
-                            ${getHabboAvatarHtml(d.nick, 'avatar-md')}
+                            ${getHabboAvatarHtml(d.nick, 'w-14')}
                             <div>
                                 <div class="flex items-center gap-3 mb-1"><span class="text-amber-500 font-black text-[10px] tracking-widest uppercase">Ordem #${d.numOrdemVisual}</span><span class="bg-white/5 border border-white/10 rounded px-2 py-0.5 text-[9px] font-bold text-white/50 uppercase">${sanitize(d.tipo)}</span></div>
                                 <h3 class="text-white font-black text-lg md:text-xl leading-tight mb-1 truncate max-w-lg">${sanitize(d.tema)}</h3>
@@ -635,24 +656,24 @@
             filtrados.forEach(d => {
                 let ic = d.status === "Aprovado" ? "check" : d.status === "Rejeitado" ? "xmark" : d.status === "Aprovado com ressalvas" ? "clipboard-list" : "clock";
                 let icBtnClass = d.status === "Aprovado" ? "badge-aprovado" : d.status === "Rejeitado" ? "badge-rejeitado" : d.status === "Aprovado com ressalvas" ? "badge-ressalvas" : "badge-pendente";
-                let btns = `<button onclick="abrirLeituraProposta('${d.id}')" class="bg-white/5 hover:bg-white/20 text-white w-8 h-8 rounded-lg transition-colors mr-1" title="Ler Inteiro"><i class="fa-solid fa-eye"></i></button><button onclick="iniciarEdicaoHistorico('${d.id}')" class="bg-white/5 hover:bg-white/20 text-amber-500 w-8 h-8 rounded-lg transition-colors mr-1" title="Editar Veredito"><i class="fa-solid fa-pen"></i></button><button onclick="apagarHistorico('${d.id}')" class="bg-red-500/10 hover:bg-red-500/30 text-red-500 w-8 h-8 rounded-lg transition-colors"><i class="fa-solid fa-trash"></i></button>`;
+                let btns = `<button onclick="abrirLeituraProposta('${d.id}')" class="bg-white/5 hover:bg-white/20 text-white w-8 h-8 rounded-lg transition-colors mr-1" title="Ler Inteiro"><i class="fa-solid fa-eye"></i></button><button onclick="iniciarEdicaoHistorico('${d.id}')" class="bg-white/5 hover:bg-white/20 text-amber-500 w-8 h-8 rounded-lg transition-colors mr-1" title="Retificar Registro Ministerial"><i class="fa-solid fa-pen"></i></button><button onclick="apagarHistorico('${d.id}')" class="bg-red-500/10 hover:bg-red-500/30 text-red-500 w-8 h-8 rounded-lg transition-colors"><i class="fa-solid fa-trash"></i></button>`;
                 
-                let textVeredito = d.dataJulgamento ? `<span class="text-white/50 block mt-1"><i class="fa-solid fa-gavel mr-1 text-white/30"></i> Veredito: ${formatarDataHora(d.dataJulgamento)}</span>` : '';
-                let textEdicao = d.dataEdicao ? `<span class="text-amber-500/60 block mt-1"><i class="fa-solid fa-pen mr-1 text-amber-500/40"></i> Editado: ${formatarDataHora(d.dataEdicao)}</span>` : '';
+                let textVeredito = d.dataJulgamento ? `<span class="text-white/50 block mt-1 whitespace-nowrap"><i class="fa-solid fa-gavel mr-1 text-white/30"></i> Julg: ${formatarDataHora(d.dataJulgamento)}</span>` : '';
+                let textEdicao = d.dataEdicao ? `<span class="text-amber-500/60 block mt-1 whitespace-nowrap"><i class="fa-solid fa-pen mr-1 text-amber-500/40"></i> Edit: ${formatarDataHora(d.dataEdicao)}</span>` : '';
 
-                list.innerHTML += `<tr class="border-b border-white/5 hover:bg-white/5 text-white/80 filter-row group">
+                list.innerHTML += `<tr class="border-b border-white/5 hover:bg-white/5 text-white/80 group">
                     <td class="p-4 px-6 font-black text-tre-brand">#${d.numOrdemVisual}</td>
-                    <td class="p-4 flex items-center gap-3">${getHabboAvatarHtml(d.nick, 'avatar-sm')}<span class="font-bold text-white">${sanitize(d.nick)}</span></td>
+                    <td class="p-4"><div class="flex items-center gap-3">${getHabboAvatarHtml(d.nick, 'w-10')}<span class="font-bold text-white whitespace-nowrap">${sanitize(d.nick)}</span></div></td>
                     <td class="p-4">
                         <div class="font-semibold text-white/90 leading-tight max-w-[250px] truncate mb-1" title="${sanitize(d.tema)}">${sanitize(d.tema)}</div>
-                        <span class="text-[9px] text-white/40 uppercase tracking-widest">${sanitize(d.tipo)}</span>
+                        <span class="text-[9px] text-white/40 uppercase tracking-widest whitespace-nowrap">${sanitize(d.tipo)}</span>
                     </td>
-                    <td class="p-4 text-[10px] uppercase font-bold tracking-wider leading-relaxed">
+                    <td class="p-4 text-[10px] uppercase font-bold tracking-wider leading-relaxed whitespace-nowrap">
                         <span class="text-white/70 block"><i class="fa-solid fa-paper-plane mr-1 text-white/30"></i> Envio: ${formatarDataHora(d.dataEnvio)}</span>
                         ${textVeredito} ${textEdicao}
                     </td>
-                    <td class="p-4 text-center"><span class="point-badge ${icBtnClass}"><i class="fa-solid fa-${ic}"></i> ${sanitize(d.status)}</span></td>
-                    <td class="p-4 text-right only-admin">${btns}</td>
+                    <td class="p-4 text-center"><span class="point-badge ${icBtnClass}"><i class="fa-solid fa-${ic} mr-1"></i> ${sanitize(d.status)}</span></td>
+                    <td class="p-4 text-right only-admin whitespace-nowrap">${btns}</td>
                 </tr>`;
             });
             filtrarHistoricoBusca(); aplicarPermissoesUI();
@@ -660,15 +681,15 @@
 
         function renderizarRankingOuvidoria() {
             const list = document.getElementById('table-ranking-ouvidoria');
-            let aprovadosMes = projetosGlobaisAll.filter(p => p.status.includes('Aprovado') && p.dataJulgamento && formatarMesAno(p.dataJulgamento.toDate()) === mesAtualStr);
+            let aprovadosMes = projetosGlobaisAll.filter(p => (p.status === 'Aprovado' || p.status === 'Aprovado com ressalvas') && p.dataJulgamento && formatarMesAno(p.dataJulgamento.toDate()) === mesAtualStr);
             let mapa = {}; aprovadosMes.forEach(p => { mapa[p.nick] = (mapa[p.nick] || 0) + 1; });
             let ranking = Object.keys(mapa).map(nick => ({ nick: nick, count: mapa[nick] })).sort((a, b) => b.count - a.count);
-            list.innerHTML = ''; if(ranking.length === 0) { list.innerHTML = '<tr><td colspan="3" class="p-10 text-center opacity-40">Nenhum projeto aprovado neste mês.</td></tr>'; return; }
+            list.innerHTML = ''; if(ranking.length === 0) { list.innerHTML = '<tr><td colspan="3" class="p-10 text-center opacity-40">Mês sem aprovados.</td></tr>'; return; }
             ranking.forEach((r, index) => {
                 let pos = index + 1; let posClass = pos === 1 ? 'text-amber-500 text-2xl' : pos === 2 ? 'text-gray-300 text-xl' : pos === 3 ? 'text-orange-400 text-lg' : 'text-white/30 text-sm';
                 list.innerHTML += `<tr class="border-b border-white/5 hover:bg-white/5 transition-colors group">
                     <td class="p-4 px-6 text-center font-black ${posClass}">${pos}º</td>
-                    <td class="p-4 font-bold flex items-center gap-3 text-lg">${getHabboAvatarHtml(r.nick, 'avatar-md')}${sanitize(r.nick)}</td>
+                    <td class="p-4 flex items-center gap-3">${getHabboAvatarHtml(r.nick, 'w-14')}<span class="font-bold text-white text-lg">${sanitize(r.nick)}</span></td>
                     <td class="p-4 text-center"><span class="bg-emerald-500/20 text-emerald-400 font-black px-4 py-2 rounded-xl text-xl shadow-inner border border-emerald-500/20">${r.count}</span></td>
                 </tr>`;
             });
@@ -676,31 +697,34 @@
 
         function renderizarControleMedalhas() {
             const list = document.getElementById('table-medalhas-list');
-            let aprovadosMes = projetosGlobaisAll.filter(p => p.status.includes('Aprovado') && p.dataJulgamento && formatarMesAno(p.dataJulgamento.toDate()) === mesAtualStr);
-            list.innerHTML = ''; if(aprovadosMes.length === 0) { list.innerHTML = '<tr><td colspan="4" class="p-10 text-center opacity-40">Nenhum projeto aguardando medalha neste mês.</td></tr>'; return; }
+            let aprovadosMes = projetosGlobaisAll.filter(p => (p.status === 'Aprovado' || p.status === 'Aprovado com ressalvas') && p.dataJulgamento && formatarMesAno(p.dataJulgamento.toDate()) === mesAtualStr);
+            list.innerHTML = ''; if(aprovadosMes.length === 0) { list.innerHTML = '<tr><td colspan="4" class="p-10 text-center opacity-40">Mês sem aprovados.</td></tr>'; return; }
             aprovadosMes.forEach(p => {
                 let btnHtml = ""; let statusHtml = "";
                 if(p.medalhaPostada) {
-                    statusHtml = `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded flex flex-col items-center"><i class="fa-solid fa-check mb-1"></i> Postado por ${sanitize(p.medalhaPostadaPor)}</span>`;
+                    statusHtml = `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded flex flex-col items-center whitespace-nowrap"><i class="fa-solid fa-check mb-1"></i> Postado: ${sanitize(p.medalhaPostadaPor)}</span>`;
                     btnHtml = `<button disabled class="bg-white/5 text-white/20 px-4 py-2 rounded-lg text-xs font-bold cursor-not-allowed">Já Postado</button>`;
                 } else {
-                    statusHtml = `<span class="bg-amber-500/10 text-amber-500 border border-amber-500/30 text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded flex flex-col items-center"><i class="fa-solid fa-clock mb-1"></i> Pendente</span>`;
-                    btnHtml = `<button onclick="confirmarMedalhaRCC('${p.id}')" class="bg-blue-500 hover:bg-blue-600 text-white shadow-lg px-4 py-2 rounded-lg text-xs font-bold transition-all hover:scale-105"><i class="fa-solid fa-award mr-1"></i> Marcar +20 RCC</button>`;
+                    statusHtml = `<span class="bg-amber-500/10 text-amber-500 border border-amber-500/30 text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded flex flex-col items-center whitespace-nowrap"><i class="fa-solid fa-clock mb-1"></i> Pendente</span>`;
+                    btnHtml = `<button onclick="confirmarMedalhaRCC('${p.id}')" class="bg-blue-500 hover:bg-blue-600 text-white shadow-lg px-4 py-2 rounded-lg text-xs font-bold transition-all hover:scale-105 whitespace-nowrap"><i class="fa-solid fa-award mr-1"></i> Marcar +20 RCC</button>`;
                 }
                 list.innerHTML += `<tr class="border-b border-white/5 hover:bg-white/5 transition-colors group">
-                    <td class="p-4 px-6"><div class="font-bold flex items-center gap-3 mb-1">${getHabboAvatarHtml(p.nick, 'avatar-sm')} ${sanitize(p.nick)}</div><span class="text-xs text-white/50 truncate max-w-[200px] block font-medium">${sanitize(p.tema)}</span></td>
-                    <td class="p-4 text-[10px] text-white/40 uppercase font-bold tracking-widest leading-relaxed">Envio: ${formatarDataHora(p.dataEnvio)}<br><span class="text-emerald-400">Aprov: ${formatarDataHora(p.dataJulgamento)}</span></td>
+                    <td class="p-4 px-6">
+                        <div class="flex items-center gap-3 mb-1.5">${getHabboAvatarHtml(p.nick, 'w-10')}<span class="font-bold text-white whitespace-nowrap">${sanitize(p.nick)}</span></div>
+                        <span class="text-xs text-white/50 truncate max-w-[200px] block font-medium" title="${sanitize(p.tema)}">${sanitize(p.tema)}</span>
+                    </td>
+                    <td class="p-4 text-[10px] text-white/40 uppercase font-bold tracking-widest leading-relaxed whitespace-nowrap">Envio: ${formatarDataHora(p.dataEnvio)}<br><span class="text-emerald-400">Aprov: ${formatarDataHora(p.dataJulgamento)}</span></td>
                     <td class="p-4 text-center">${statusHtml}</td>
-                    <td class="p-4 text-right only-admin">${btnHtml}</td>
+                    <td class="p-4 text-right only-admin whitespace-nowrap">${btnHtml}</td>
                 </tr>`;
             });
             aplicarPermissoesUI();
         }
 
-        function confirmarMedalhaRCC(id) { if(confirm("Confirma que você já postou as +20 Medalhas Temporárias no perfil deste Policial no RCC System?")) { db.collection("ouvidoria_tre").doc(id).update({ medalhaPostada: true, medalhaPostadaPor: currentUserNick, dataMedalhaPostada: firebase.firestore.FieldValue.serverTimestamp() }).catch(()=>alert("Erro ao salvar no banco.")); } }
+        function apagarHistorico(id) { if(confirm("ALERTA CRÍTICO: Excluir permanentemente este protocolo ministerial? Não há volta.")) db.collection("ouvidoria_tre").doc(id).delete(); }
 
         // ==========================================
-        // 6. MOTOR DE JULGAMENTO (LER, APROVAR, EDITAR)
+        // 5. MOTOR DE JULGAMENTO (LER, APROVAR, EDITAR)
         // ==========================================
         function abrirLeituraProposta(id) {
             const p = projetosGlobaisAll.find(x => x.id === id); if(!p) return;
@@ -720,39 +744,39 @@
 
         function prepararVeredito(id, statusFinal) {
             toggleModal('modal-ler-proposta'); document.getElementById('form-ver-docId').value = id; document.getElementById('form-ver-status').value = statusFinal;
-            const icone = document.getElementById('icone-veredito'); const titulo = document.getElementById('titulo-veredito'); const btn = document.getElementById('btn-confirma-ver'); document.getElementById('texto-veredito').value = "";
-            const p = projetosGlobaisAll.find(x=>x.id===id);
-            if(statusFinal === 'Aprovado') { icone.innerHTML = `<img src="${getAvatarUrl(p.nick)}" class="w-[140%] mt-3">`; icone.classList.replace('border-white/10', 'border-emerald-500'); titulo.innerText = "Deferir Proposta"; btn.className = "flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-lg transition-all text-xs"; } 
-            else if (statusFinal === 'Aprovado com ressalvas') { icone.innerHTML = `<img src="${getAvatarUrl(p.nick)}" class="w-[140%] mt-3">`; icone.classList.replace('border-white/10', 'border-blue-500'); titulo.innerText = "Aprovar com Ressalvas"; btn.className = "flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-all text-xs"; }
-            else { icone.innerHTML = `<img src="${getAvatarUrl(p.nick)}" class="w-[140%] mt-3">`; icone.classList.replace('border-white/10', 'border-red-500'); titulo.innerText = "Negar Proposta"; btn.className = "flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-lg transition-all text-xs"; }
+            const icone = document.getElementById('icone-veredito-img'); const container = document.getElementById('icone-veredito-container'); const titulo = document.getElementById('titulo-veredito'); const btn = document.getElementById('btn-confirma-ver'); document.getElementById('texto-veredito').value = "";
+            const p = projetosGlobaisAll.find(x=>x.id===id); icone.src = getAvatarUrl(p.nick);
+            
+            // COR DA MOLDURA NO VEREDITO
+            if(statusFinal === 'Aprovado') { container.style.borderColor = "#34D399"; container.style.boxShadow = "0 0 15px rgba(52, 211, 153, 0.5)"; titulo.innerText = "Deferir Proposta ✅"; btn.className = "flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-lg transition-all text-xs"; } 
+            else if (statusFinal === 'Aprovado com ressalvas') { container.style.borderColor = "#60A5FA"; container.style.boxShadow = "0 0 15px rgba(96, 165, 250, 0.5)"; titulo.innerText = "Aprovar c/ Ressalvas 📋"; btn.className = "flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-all text-xs"; }
+            else { container.style.borderColor = "#F87171"; container.style.boxShadow = "0 0 15px rgba(248, 113, 113, 0.5)"; titulo.innerText = "Negar Proposta ❌"; btn.className = "flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-lg transition-all text-xs"; }
             setTimeout(()=> { toggleModal('modal-veredito'); }, 300);
         }
 
         function confirmarVeredito(e) {
             e.preventDefault(); const id = document.getElementById('form-ver-docId').value; const st = document.getElementById('form-ver-status').value; const motivo = document.getElementById('texto-veredito').value.trim(); const btn = document.getElementById('btn-confirma-ver');
-            if(st === 'Rejeitado' && !motivo) { alert("Para negar, é obrigatório deixar uma justificativa."); return; }
+            if(st === 'Rejeitado' && !motivo) { alert("Obrigatório justificar negação ministerial."); return; }
             btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
             db.collection("ouvidoria_tre").doc(id).update({ status: st, motivoRejeicao: motivo || "Deferido. Encaminhado para implementação.", dataJulgamento: firebase.firestore.FieldValue.serverTimestamp(), julgadoPor: currentUserNick })
-            .then(() => { toggleModal('modal-veredito'); }).catch(() => alert("Erro ao processar.")).finally(() => { btn.disabled = false; btn.innerText = "Confirmar"; });
+            .then(() => { toggleModal('modal-veredito'); }).catch(() => alert("Erro técnico ao salvar.")).finally(() => { btn.disabled = false; btn.innerText = "Confirmar"; });
         }
 
         function julgarAcesso(docId, st) { db.collection("solicitacoes_acesso").doc(docId).update({ status: st }).catch(() => alert("Erro de permissão.")); }
-        function apagarHistorico(id) { if(confirm("ALERTA CRÍTICO: Confirmar exclusão permanente deste protocolo? Não há volta.")) db.collection("ouvidoria_tre").doc(id).delete(); }
 
         function iniciarEdicaoHistorico(id) {
             const p = projetosGlobaisAll.find(x => x.id === id); if(!p) return;
             document.getElementById('edith-id').value = id; document.getElementById('edith-nick').value = p.nick; document.getElementById('edith-tipo').value = p.tipo || "Projeto"; document.getElementById('edith-tema').value = p.tema; document.getElementById('edith-status').value = p.status; 
-            document.getElementById('edith-motivo').value = p.motivoRejeicao || ""; 
-            toggleModal('modal-edit-historico');
+            document.getElementById('edith-motivo').value = p.motivoRejeicao || ""; toggleModal('modal-edit-historico');
         }
         function salvarEdicaoHistorico(e) {
             e.preventDefault(); const id = document.getElementById('edith-id').value; 
             const update = { nick: document.getElementById('edith-nick').value.trim(), tipo: document.getElementById('edith-tipo').value, tema: document.getElementById('edith-tema').value.trim(), status: document.getElementById('edith-status').value, motivoRejeicao: document.getElementById('edith-motivo').value.trim(), editadoPor: currentUserNick, dataEdicao: firebase.firestore.FieldValue.serverTimestamp() };
-            db.collection("ouvidoria_tre").doc(id).update(update).then(()=> { toggleModal('modal-edit-historico'); alert("Registro Ministerial Atualizado."); });
+            db.collection("ouvidoria_tre").doc(id).update(update).then(()=> { toggleModal('modal-edit-historico'); alert("Registro Ministerial Retificado."); });
         }
 
         // ==========================================
-        // 7. GESTÃO DE PERFIL (ID CARD PREMIUM)
+        // 7. GESTÃO DE PERFIL
         // ==========================================
         function toggleCargoDropdown() { const menu = document.getElementById('menu-cargo-dropdown'); const seta = document.getElementById('icone-cargo-seta'); menu.classList.toggle('opacity-0'); menu.classList.toggle('invisible'); menu.classList.toggle('translate-y-2'); seta.classList.toggle('rotate-180'); }
         function selecionarCargoMenu(valor, texto) { document.getElementById('select-mudar-cargo').value = valor; document.getElementById('texto-cargo-selecionado').innerText = texto; toggleCargoDropdown(); }
@@ -774,7 +798,7 @@
             });
         }
         function salvarDescricaoPerfil(e) { e.preventDefault(); db.collection("solicitacoes_acesso").doc(auth.currentUser.uid).update({ descricao: document.getElementById('perfil-descricao').value.trim() }).then(()=> { toggleModal('modal-perfil'); alert("Salvo."); }); }
-        function mudarCargoUsuario() { const uid = document.getElementById('modal-perfil-uid').value; const r = document.getElementById('select-mudar-cargo').value; db.collection("solicitacoes_acesso").doc(uid).update({ role: r }).then(()=> { toggleModal('modal-perfil'); alert("Nível Atualizado."); }); }
+        function mudarCargoUsuario() { const uid = document.getElementById('modal-perfil-uid').value; const r = document.getElementById('select-mudar-cargo').value; db.collection("solicitacoes_acesso").doc(uid).update({ role: r }).then(()=> { toggleModal('modal-perfil'); alert("Nível Ministerial Atualizado."); }); }
         function expulsarUsuario() { const uid = document.getElementById('modal-perfil-uid').value; if(confirm("Revogar credencial permanentemente?")) { db.collection("solicitacoes_acesso").doc(uid).update({ status: "Revogado", role: "---" }).then(()=> { toggleModal('modal-perfil'); alert("Acesso Revogado."); }); } }
     </script>
 </body>
